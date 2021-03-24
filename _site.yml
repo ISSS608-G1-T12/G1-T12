@@ -1,0 +1,12 @@
+name: "G1-T12"
+title: "G1-T12 Group Project"
+description: |
+  G1-T12 Group Project
+output_dir: "_site"
+navbar:
+  right:
+    - text: "Home"
+      href: index.html
+    - text: "About"
+      href: about.html
+output: distill::distill_article

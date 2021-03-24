@@ -1,0 +1,5 @@
+---
+title: "G1-T12 Group Project"
+site: distill::distill_website
+listing: posts
+---
