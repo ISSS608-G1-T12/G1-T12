@@ -15,5 +15,22 @@
     "preview": {},
     "last_modified": "2021-03-24T23:02:05+08:00",
     "input_file": {}
+  },
+  {
+    "path": "posts/2021-03-24-assignment-andre/",
+    "title": "Assignment - Andre",
+    "description": "A short description of the post.",
+    "author": [
+      {
+        "name": "Nora Jones",
+        "url": "https://example.com/norajones"
+      }
+    ],
+    "date": "2021-03-24",
+    "categories": [],
+    "contents": "\r\nhello hello\r\n\r\n\r\n\r\n",
+    "preview": {},
+    "last_modified": "2021-03-28T15:38:43+08:00",
+    "input_file": "assignment-andre.utf8.md"
   }
 ]

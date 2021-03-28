@@ -1,4 +1,4 @@
-distill::create_post('Assignment - Yi Heen')---
+---
 title: "Assignment - Andre"
 description: |
   A short description of the post.
