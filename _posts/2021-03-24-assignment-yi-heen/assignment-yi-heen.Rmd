@@ -1,9 +1,14 @@
 ---
-title: "Assignment - Yi Heen"
+title: "Investing 101: A visual and predictive guide for the rookie investor - Yi Heen"
 description: |
-  A short description of the post.
+  Existing financial data websites such as Yahoo Finance do a good job in providing historical price data and technical indicators, but the beginner investor lacks the knowledge to properly utilise and benefit from these. In addition, we have also identified several gaps in such websites.
+  
+  For one, these websites do not provide tools to allow the user to compare stocks meaningfully or zoom in to the statistical properties of financial returns. For example, a user is unable to conduct correlation analysis or visualize the distribution of returns. Secondly, these websites also do not provide any form of forecasting to aid in investors’ decisions.
+    
+  This project aims to improve on the current offering of financial data websites through, Exploratory Data Analysis, Time-Series Forecasting and also Time-Series Clustering.\
+  
 author:
-  - name: Nora Jones
+  - name: Yi Heen, Boey
     url: https://example.com/norajones
 date: 03-24-2021
 output:
