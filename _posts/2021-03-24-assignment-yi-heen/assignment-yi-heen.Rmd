@@ -5,11 +5,11 @@ description: |
   
   For one, these websites do not provide tools to allow the user to compare stocks meaningfully or zoom in to the statistical properties of financial returns. For example, a user is unable to conduct correlation analysis or visualize the distribution of returns. Secondly, these websites also do not provide any form of forecasting to aid in investors’ decisions.
     
-  This project aims to improve on the current offering of financial data websites through, Exploratory Data Analysis, Time-Series Forecasting and also Time-Series Clustering.\
+  This project aims to improve on the current offering of financial data websites through, Exploratory Data Analysis, Time-Series Forecasting and also Time-Series Clustering.
   
 author:
   - name: Yi Heen, Boey
-    url: https://example.com/norajones
+    url: https://www.linkedin.com/in/yiheen-boey/
 date: 03-24-2021
 output:
   distill::distill_article:
@@ -21,8 +21,103 @@ output:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-Distill is a publication format for scientific and technical writing, native to the web.
+## 1. Overview
 
-Learn more about using Distill at <https://rstudio.github.io/distill>.
+### 1.1 Background
+
+Traditional financial data websites usually shy away from giving recommendations or advising users on investing decisions. While in depth studies are often conducted and used in academia or research, the outputs of these studies are often not accessible nor timely enough for the regular user. This means that these websites and their applications are limited in their use-cases. This can be due to issues arising from financial or legal liability if users act on the recommendations coming from these financial websites. As such we feel that this a gap between what is available publicly and user requirements. 
+
+### 1.2 Objective and Motivation
+
+**dsfds**
 
 
+### 1.3 Time Series Analysis and Forecasting
+
+Time series data is a sequential collection of numerical data points. Particularly for investing, a time series data-set tracks the movement of a chosen index over a period of time with readings recorded at ***regular intervals*** (e.g. daily, monthly, yearly). 
+
+Time series analysis allows users to uncover meaningful information and trends in data collected over time. Time series forecasting on the other hand, uses information contained within historical values and associated patterns to forecast future movements. Most often, we look at trends, cyclical fluctuations and issues of seasonality. Through the control of parameters associated with each forecasting method, users will try to fine-tune the forecast. The performance of the forecast can be measured through methods such as the Mean Squared Error (MSE).
+
+As a demonstration of the time series analysis and the forecasting capabilities of the proposed Shiny Application: The ***gf*** Index will be used as an example for this report. 
+
+## 2. Proposed Visualization
+
+### 2.1 Sketch of Proposed Visualization
+
+### 2.2 Suggested Interactivity in the Proposed Visualization
+
+## 3. Building the Visualization
+
+### 3.1 Setting up the enviroment/libraries
+
+First, we run this first line of code to clear the environment and remove existing R objects (if any)
+
+```{r, echo=TRUE, eval=TRUE, fig.cap="Starting on a clean slate"}
+
+rm(list=ls())
+
+```
+
+This code chunk checks if required packages are installed. If they are not installed, the next line of code will install them. The following line is then use to import the library into the current working environment.
+
+```{r, echo=TRUE, eval=TRUE, fig.cap="Installing and importing libraries"}
+
+packages = c('sf','tmap','tidyverse','forecast','tseries','readxl','tidyquant','dygraphs')
+for (p in packages) {
+  if(!require(p,character.only = T)){
+    install.packages(p)
+  }
+  library(p,character.only = T)
+}
+
+```
+
+### 3.2 Data Preparation
+
+*The application will use open source and live data obtained through the [**tidyquant**](https://cran.r-project.org/web/packages/tidyquant/index.html) package.* 
+
+For the purposes of this assignment, we will use the time series data from one single company - *Apple (Ticker: AAPL)*, as an example to illustrate the capabilities and functions of the application. There is no methodical reason to explain why Apple is used for the example other than the fact that it is one of the most recognisable companies in the market. The final product will be scaled up considerably to include more stocks that the users can choose to perform time series analysis and forecasts on. 
+
+In the code chunk below, we define the key parameters for the time series data-set *ticker_data_daily*. Once again - in the final application these parameters are user defined/selected. 
+
+1. The beginning date of the time series data *from_date*
+
+2. The ending date of the time series data *to_date*
+
+3. The ticker of the stock that we selected *to_date*
+
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Importing the required data"}
+
+from_date <- "2018-01-01"
+to_date <- "2020-12-31"
+
+ticker_selected <- "AAPL" 
+
+ticker_data_daily <- tq_get(ticker_selected,
+                            get = "stock.prices",
+                            from = from_date,
+                            to = to_date)
+
+```
+
+Next we call the glimpse function to take a quick look at the table, data structures, data types and data format to ensure everything is imported as it should be. Particularly, the date column in a time series data-set must be corrected identified as date in order to move on with analysis and forecasting. Since the data has been imported correctly as seen below, there is no need for any further transformations and we can proceed to the next step. 
+
+```{r, eval=TRUE, out.width="100%"}
+
+glimpse(ticker_data_daily)
+
+```
+
+### 3.3 Data Visualization - Time Series Analysis
+### 3.4 Data Visualization - Time Series Forecasting
+
+## 4. Conclusions and Insights
+
+## 5. References
+
+https://blogs.oracle.com/ai-and-datascience/post/performing-a-time-series-analysis-on-the-sampp-500-stock-index#:~:text=Time%2Dseries%20analysis%20is%20a,to%20predict%20future%20stock%20values 
+
+https://machinelearningmastery.com/time-series-forecasting-performance-measures-with-python/
+
+
+https://yiqiaoyin.files.wordpress.com/2017/05/time-series-analysis-on-stock-returns.pdf
