@@ -62,7 +62,7 @@ This code chunk checks if required packages are installed. If they are not insta
 
 ```{r, echo=TRUE, eval=TRUE, fig.cap="Installing and importing libraries"}
 
-packages = c('sf','tmap','tidyverse','forecast','tseries','readxl','tidyquant','dygraphs')
+packages = c('sf','tmap','tidyverse','forecast','tseries','readxl','tidyquant','dygraphs','TSstudio','plotly','tsibble','ggplot2')
 for (p in packages) {
   if(!require(p,character.only = T)){
     install.packages(p)
@@ -108,8 +108,149 @@ glimpse(ticker_data_daily)
 
 ```
 
+The data is imported as a tibble dataframe (tbl_df), as such it has to be converted to a time series in order for us to use it for time series analysis and forecasting. 
+
+```{r, echo=TRUE, eval=TRUE}
+
+ticker_data_daily_tsbl <- as_tsibble(ticker_data_daily, key = symbol)
+
+```
+Calling the class of the two objects will show us that the data object has been changed from a tibble dataframe to a tibble time series. 
+
+```{r, echo=TRUE, eval=TRUE}
+
+class(ticker_data_daily)[1]
+
+class(ticker_data_daily_tsbl)[1]
+
+```
+
 ### 3.3 Data Visualization - Time Series Analysis
+
+With the tibble timeseries data, we can now plot a timeseries chart for a visual analysis of the data. 
+
+```{r, layout="l-page", echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Plotting the timeseries data"}
+
+# Building the plot 
+p <- ggplot(ticker_data_daily_tsbl, aes(x=date, y=close)) +
+        geom_line( color="black") +
+        xlab("Date") +
+        ylab("Closing Price (USD $)") + 
+        scale_x_date(date_breaks = "months" , date_labels = "%b-%y") +
+        theme(axis.text.x=element_text(angle=60, hjust=1)) +
+        ggtitle("AAPL Closing Price from Jan 2018 - Dec 2020")
+
+# Call the ggplotly function to make the static plot into an interactive one
+ggplotly(p)
+
+```
+
+
+```{r, include = FALSE, eval=TRUE, out.width="100%", fig.cap="Importing the required data"}
+
+from_date2 <- "2018-01-01"
+to_date2 <- "2020-12-31"
+
+ticker_selected2 <- "TSLA" 
+
+ticker_data_daily2 <- tq_get(ticker_selected2,
+                            get = "stock.prices",
+                            from = from_date2,
+                            to = to_date2)
+
+ticker_data_daily_tsbl2 <- as_tsibble(ticker_data_daily2, key = symbol)
+
+ticker_selected3 <- "NFLX" 
+
+ticker_data_daily3 <- tq_get(ticker_selected3,
+                            get = "stock.prices",
+                            from = from_date2,
+                            to = to_date2)
+
+ticker_data_daily_tsbl3 <- as_tsibble(ticker_data_daily3, key = symbol)
+
+ticker_selected4 <- "GOOGL" 
+
+ticker_data_daily4 <- tq_get(ticker_selected4,
+                            get = "stock.prices",
+                            from = from_date2,
+                            to = to_date2)
+
+ticker_data_daily_tsbl4 <- as_tsibble(ticker_data_daily4, key = symbol)
+
+ticker_selected5 <- "FB" 
+
+ticker_data_daily5 <- tq_get(ticker_selected5,
+                            get = "stock.prices",
+                            from = from_date2,
+                            to = to_date2)
+
+ticker_data_daily_tsbl5 <- as_tsibble(ticker_data_daily5, key = symbol)
+
+```
+
+In the final Shiny application, users can select multiple stock tickers (time series data) to plot on the same chart and compare them side by side as well. 
+
+```{r, layout="l-page", echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Plotting multiple timeseries data"}
+
+# Building the plot 
+p <- ggplot(ticker_data_daily_tsbl, aes(x=date, y=close)) +
+        geom_line(aes(color = 'AAPL')) +
+        geom_line(data=ticker_data_daily_tsbl2,aes(color = 'TSLA')) +
+        geom_line(data=ticker_data_daily_tsbl3,aes(color = 'NFLX')) +
+        geom_line(data=ticker_data_daily_tsbl4,aes(color = 'GOOGL')) +
+        geom_line(data=ticker_data_daily_tsbl5,aes(color = 'FB')) +
+        xlab("Date") +
+        ylab("Closing Price (USD $)") + 
+        scale_x_date(date_breaks = "months" , date_labels = "%b-%y") +
+        theme(axis.text.x=element_text(angle=60, hjust=1),legend.title = element_text(colour="black", size=10, face="bold")) +
+        ggtitle("AAPL/TSLA Closing Price from Jan 2018 - Dec 2020") +
+        scale_color_manual(name = "Model fit",
+                        breaks = c("AAPL","TSLA","NFLX","GOOGL","FB"),
+                        values = c("AAPL" = "grey40", "TSLA" = "red","NFLX"="black","GOOGL"="#009E73","FB"="blue"))
+# Call the ggplotly function to make the static plot into an interactive one
+ggplotly(p)
+
+```
+
+In some cases, plotting the closing prices on a logarithmic scale will help make the plot more proportionate and utilize space better.
+
+```{r, layout="l-page", echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Plotting multiple timeseries data"}
+
+# Building the plot 
+p <- ggplot(ticker_data_daily_tsbl, aes(x=date, y=close)) +
+        geom_line(aes(color = 'AAPL')) +
+        geom_line(data=ticker_data_daily_tsbl2,aes(color = 'TSLA')) +
+        geom_line(data=ticker_data_daily_tsbl3,aes(color = 'NFLX')) +
+        geom_line(data=ticker_data_daily_tsbl4,aes(color = 'GOOGL')) +
+        geom_line(data=ticker_data_daily_tsbl5,aes(color = 'FB')) +
+        xlab("Date") +
+        ylab("Closing Price (USD $)") + 
+        scale_x_date(date_breaks = "months" , date_labels = "%b-%y") +
+        scale_y_continuous(trans='log10') + #this line is added
+        theme(axis.text.x=element_text(angle=60, hjust=1),legend.title = element_text(colour="black", size=10, face="bold")) +
+        ggtitle("AAPL/TSLA Closing Price from Jan 2018 - Dec 2020") +
+        scale_color_manual(name = "Model fit",
+                        breaks = c("AAPL","TSLA","NFLX","GOOGL","FB"),
+                        values = c("AAPL" = "grey40", "TSLA" = "red","NFLX"="black","GOOGL"="#009E73","FB"="blue"))
+# Call the ggplotly function to make the static plot into an interactive one
+ggplotly(p)
+
+```
+
+
+
 ### 3.4 Data Visualization - Time Series Forecasting
+
+```{r}
+
+train_indices <- seq_len(length.out = floor(x = 0.8 * nrow(x = ticker_data_daily)))
+train <- ticker_data_daily[train_indices,]
+test <- ticker_data_daily[-train_indices,]
+
+```
+
+
 
 ## 4. Conclusions and Insights
 
