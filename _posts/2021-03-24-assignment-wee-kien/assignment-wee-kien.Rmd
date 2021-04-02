@@ -162,7 +162,7 @@ The following code chunk creates a clean candlestick chart without indicators fo
 
 For charting, we use the dygraph package. We specify dyCandlestick() to create a candlestick chart, and dyRangeSelector() to allow users to have the ability to toggle the range on the charts. In addition, specifying the group = "charting" argument allows for synchronization between charts sharing the same argument value. Changes made to either affects both charts interactively.
 
-```{r, echo=TRUE, eval=TRUE, fig.cap="Normal graphs without indicators"}
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Normal graphs without indicators"}
 ticker_data_daily_xts <- tk_xts(
   ticker_data_daily %>%  select(date, open,high,low,close) )
 
@@ -182,7 +182,7 @@ benchmark_data_daily_xts %>%
 
 The following code chunk creates a similar candlestick chart, this time with the simple moving averages technical indicator.
 
-```{r, echo=TRUE, eval=TRUE, fig.cap="Candlestick graphs with simple moving average indicators"}
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Candlestick graphs with simple moving average indicators"}
 # 20-day SMA
 sma_fast <- SMA(ticker_data_daily_xts$close, n=20)
 # 40-day SMA
@@ -228,7 +228,7 @@ chart_sma_bm %>%
 
 The following code chunk creates a similar candlestick chart, this time with the Bollinger Bands technical indicator.
 
-```{r, echo=TRUE, eval=TRUE, fig.cap="Candlestick graphs with bollinger bands indicators"}
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Candlestick graphs with bollinger bands indicators"}
 bb20 <- BBands(ticker_data_daily_xts$close, sd=2.0, n=14, maType=EMA)
 
 ticker_data_daily_xts_bb <- data.frame(ticker_data_daily_xts, bb20)
