@@ -34,23 +34,6 @@
     "input_file": "assignment-andre.utf8.md"
   },
   {
-    "path": "posts/2021-03-24-assignment-wee-kien/",
-    "title": "Investing 101: A visual and predictive guide for the rookie investor - Wee Kien",
-    "description": "Existing financial data websites such as Yahoo Finance do a good job in providing historical price data and technical indicators, but the beginner investor lacks the knowledge to properly utilise and benefit from these. In addition, we have also identified several gaps in such websites.\n\nFor one, these websites do not provide tools to allow the user to compare stocks meaningfully or zoom in to the statistical properties of financial returns. For example, a user is unable to conduct correlation analysis or visualize the distribution of returns. Secondly, these websites also do not provide any form of forecasting to aid in investors’ decisions.\n  \nThis project aims to improve on the current offering of financial data websites through, Exploratory Data Analysis, Time-Series Forecasting and also Time-Series Clustering.",
-    "author": [
-      {
-        "name": "Wee Kien Ng",
-        "url": "https://example.com/norajones"
-      }
-    ],
-    "date": "2021-03-24",
-    "categories": [],
-    "contents": "\r\nDistill is a publication format for scientific and technical writing, native to the web.\r\nLearn more about using Distill at https://rstudio.github.io/distill.\r\n\r\n\r\n\r\n",
-    "preview": {},
-    "last_modified": "2021-03-28T16:04:05+08:00",
-    "input_file": "assignment-wee-kien.utf8.md"
-  },
-  {
     "path": "posts/2021-03-24-assignment-yi-heen/",
     "title": "Investing 101: A visual and predictive guide for the rookie investor - Yi Heen",
     "description": "Existing financial data websites such as Yahoo Finance do a good job in providing historical price data and technical indicators, but the beginner investor lacks the knowledge to properly utilise and benefit from these. In addition, we have also identified several gaps in such websites.\n\nFor one, these websites do not provide tools to allow the user to compare stocks meaningfully or zoom in to the statistical properties of financial returns. For example, a user is unable to conduct correlation analysis or visualize the distribution of returns. Secondly, these websites also do not provide any form of forecasting to aid in investors’ decisions.\n  \nThis project aims to improve on the current offering of financial data websites through, Exploratory Data Analysis, Time-Series Forecasting and also Time-Series Clustering.",
@@ -66,5 +49,22 @@
     "preview": {},
     "last_modified": "2021-04-01T00:20:41+08:00",
     "input_file": "assignment-yi-heen.utf8.md"
+  },
+  {
+    "path": "posts/2021-03-24-assignment-wee-kien/",
+    "title": "Investing 101: A visual and predictive guide for the rookie investor - Wee Kien",
+    "description": "Existing financial data websites such as Yahoo Finance do a good job in providing historical price data and technical indicators, but the beginner investor lacks the knowledge to properly utilise and benefit from these. In addition, we have also identified several gaps in such websites.\n\nFor one, these websites do not provide tools to allow the user to compare stocks meaningfully or zoom in to the statistical properties of financial returns. For example, a user is unable to conduct correlation analysis or visualize the distribution of returns. Secondly, these websites also do not provide any form of forecasting to aid in investors’ decisions.\n  \nThis project aims to improve on the current offering of financial data websites through, Exploratory Data Analysis, Time-Series Forecasting and also Time-Series Clustering.",
+    "author": [
+      {
+        "name": "Wee Kien, Ng (Vincent)",
+        "url": "https://www.linkedin.com/in/ngweekiensg/"
+      }
+    ],
+    "date": "2021-03-24",
+    "categories": [],
+    "contents": "\r\n1. Overview\r\n1.1 Background\r\nTraditional financial data websites usually shy away from giving recommendations or advising users on investing decisions. While in depth studies are often conducted and used in academia or research, the outputs of these studies are often not accessible nor timely enough for the regular user. This means that these websites and their applications are limited in their use-cases. This can be due to issues arising from financial or legal liability if users act on the recommendations coming from these financial websites. As such we feel that this a gap between what is available publicly and user requirements.\r\n1.2 Objective and Motivation\r\nTO BE ADDED\r\nTo talk about what other modules will focus on.\r\nWhat we are doing in this particular module.\r\nCharting and technical analysis\r\nCorrelation analysis between selected portfolio of stocks vs a benchmark index\r\nPortfolio analysis:\r\nIndividual portfolio returns\r\nEquity curve/ portfolio growth over time\r\n\r\n1.3 Charting and Technical Analysis\r\n1.4 Correlation Analysis\r\n1.5 Portfolio Analysis\r\n2. Proposed Visualization\r\n2.1 Sketch of Proposed Visualization\r\n2.2 Suggested Interactivity in the Proposed Visualization\r\n3. Building the Visualization\r\n3.1 Setting up the environment/ packages\r\nFirst, we run this first line of code to clear the environment and remove existing R objects (if any)\r\n\r\n\r\nrm(list=ls())\r\n\r\n\r\n\r\nThis code chunk checks if required packages are installed. If they are not installed, the next line of code will install them. The following line is then use to import the library into the current working environment.\r\n\r\n\r\npackages = c('tidyverse','tidyquant','dygraphs','plotly','ggplot2')\r\nfor (p in packages) {\r\n  if(!require(p,character.only = T)){\r\n    install.packages(p)\r\n  }\r\n  library(p,character.only = T)\r\n}\r\n\r\n\r\n\r\n3.2 Charting and Technical Analysis\r\n3.3 Correlation Analysis\r\n3.4 Portfolio Analysis\r\n4. Conclusions and Insights\r\n5. References\r\n\r\n\r\n\r\n",
+    "preview": {},
+    "last_modified": "2021-04-02T18:43:04+08:00",
+    "input_file": "assignment-wee-kien.utf8.md"
   }
 ]
