@@ -14,6 +14,8 @@ date: 03-24-2021
 output:
   distill::distill_article:
     self_contained: false
+    toc: true
+    toc_depth: 3
 ---
 
 
@@ -29,7 +31,7 @@ Traditional financial data websites usually shy away from giving recommendations
 
 ### 1.2 Objective and Motivation
 
-**dsfds**
+This motivation of building this application and its functionality is **to bridge the gap between user requirements and current market offerings**. The main objective of this sub-section is to allow users to have a forecast of **how the stock prices are likely to move in order to identify potential entry/exit points.** 
 
 
 ### 1.3 Time Series Analysis and Forecasting
@@ -38,7 +40,7 @@ Time series data is a sequential collection of numerical data points. Particular
 
 Time series analysis allows users to uncover meaningful information and trends in data collected over time. Time series forecasting on the other hand, uses information contained within historical values and associated patterns to forecast future movements. Most often, we look at trends, cyclical fluctuations and issues of seasonality. Through the control of parameters associated with each forecasting method, users will try to fine-tune the forecast. The performance of the forecast can be measured through methods such as the Mean Squared Error (MSE).
 
-As a demonstration of the time series analysis and the forecasting capabilities of the proposed Shiny Application: The ***gf*** Index will be used as an example for this report. 
+As a demonstration of the time series analysis and the forecasting capabilities of the proposed Shiny Application: The company ***APPLE***  will be used as an example for this report. 
 
 ## 2. Proposed Visualization
 
@@ -62,7 +64,13 @@ This code chunk checks if required packages are installed. If they are not insta
 
 ```{r, echo=TRUE, eval=TRUE, fig.cap="Installing and importing libraries"}
 
-packages = c('sf','tmap','tidyverse','forecast','tseries','readxl','tidyquant','dygraphs','TSstudio','plotly','tsibble','ggplot2')
+packages = c('sf','tmap','tidyverse','forecast',
+             'tseries','readxl','tidyquant',
+             'dygraphs','TSstudio','plotly',
+             'tsibble','ggplot2','tidymodels',
+             'modeltime','modeltime.ensemble',
+             'timetk','glmnet','randomForest')
+
 for (p in packages) {
   if(!require(p,character.only = T)){
     install.packages(p)
@@ -84,12 +92,13 @@ In the code chunk below, we define the key parameters for the time series data-s
 
 2. The ending date of the time series data *to_date*
 
-3. The ticker of the stock that we selected *to_date*
+3. The ticker of the stock that we selected *AAPL*
 
 ```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Importing the required data"}
 
 from_date <- "2018-01-01"
 to_date <- "2020-12-31"
+
 
 ticker_selected <- "AAPL" 
 
@@ -108,149 +117,292 @@ glimpse(ticker_data_daily)
 
 ```
 
-The data is imported as a tibble dataframe (tbl_df), as such it has to be converted to a time series in order for us to use it for time series analysis and forecasting. 
+We also drop the unneeded columns as we will be looking specifically at the adjusted close prices for this exercise.
+
+Why do we use adjusted close prices?:
+*The adjusted closing price amends a stock's closing price to accurately reflect that stock's value after taking corporate actions (e.g. stock splits, dividends) into account. These corporate actions can affect the closing prices. It is often used when examining historical returns or doing a detailed analysis of past performance.*
 
 ```{r, echo=TRUE, eval=TRUE}
 
-ticker_data_daily_tsbl <- as_tsibble(ticker_data_daily, key = symbol)
-
-```
-Calling the class of the two objects will show us that the data object has been changed from a tibble dataframe to a tibble time series. 
-
-```{r, echo=TRUE, eval=TRUE}
-
-class(ticker_data_daily)[1]
-
-class(ticker_data_daily_tsbl)[1]
+ticker_daily_adjclose <- subset(ticker_data_daily, select = -c(3,4,5,6,7))
 
 ```
 
-### 3.3 Data Visualization - Time Series Analysis
+### 3.3 Data Visualization - Time Series
 
-With the tibble timeseries data, we can now plot a timeseries chart for a visual analysis of the data. 
-
-```{r, layout="l-page", echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Plotting the timeseries data"}
-
-# Building the plot 
-p <- ggplot(ticker_data_daily_tsbl, aes(x=date, y=close)) +
-        geom_line( color="black") +
-        xlab("Date") +
-        ylab("Closing Price (USD $)") + 
-        scale_x_date(date_breaks = "months" , date_labels = "%b-%y") +
-        theme(axis.text.x=element_text(angle=60, hjust=1)) +
-        ggtitle("AAPL Closing Price from Jan 2018 - Dec 2020")
-
-# Call the ggplotly function to make the static plot into an interactive one
-ggplotly(p)
-
-```
-
-
-```{r, include = FALSE, eval=TRUE, out.width="100%", fig.cap="Importing the required data"}
-
-from_date2 <- "2018-01-01"
-to_date2 <- "2020-12-31"
-
-ticker_selected2 <- "TSLA" 
-
-ticker_data_daily2 <- tq_get(ticker_selected2,
-                            get = "stock.prices",
-                            from = from_date2,
-                            to = to_date2)
-
-ticker_data_daily_tsbl2 <- as_tsibble(ticker_data_daily2, key = symbol)
-
-ticker_selected3 <- "NFLX" 
-
-ticker_data_daily3 <- tq_get(ticker_selected3,
-                            get = "stock.prices",
-                            from = from_date2,
-                            to = to_date2)
-
-ticker_data_daily_tsbl3 <- as_tsibble(ticker_data_daily3, key = symbol)
-
-ticker_selected4 <- "GOOGL" 
-
-ticker_data_daily4 <- tq_get(ticker_selected4,
-                            get = "stock.prices",
-                            from = from_date2,
-                            to = to_date2)
-
-ticker_data_daily_tsbl4 <- as_tsibble(ticker_data_daily4, key = symbol)
-
-ticker_selected5 <- "FB" 
-
-ticker_data_daily5 <- tq_get(ticker_selected5,
-                            get = "stock.prices",
-                            from = from_date2,
-                            to = to_date2)
-
-ticker_data_daily_tsbl5 <- as_tsibble(ticker_data_daily5, key = symbol)
-
-```
-
-In the final Shiny application, users can select multiple stock tickers (time series data) to plot on the same chart and compare them side by side as well. 
-
-```{r, layout="l-page", echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Plotting multiple timeseries data"}
-
-# Building the plot 
-p <- ggplot(ticker_data_daily_tsbl, aes(x=date, y=close)) +
-        geom_line(aes(color = 'AAPL')) +
-        geom_line(data=ticker_data_daily_tsbl2,aes(color = 'TSLA')) +
-        geom_line(data=ticker_data_daily_tsbl3,aes(color = 'NFLX')) +
-        geom_line(data=ticker_data_daily_tsbl4,aes(color = 'GOOGL')) +
-        geom_line(data=ticker_data_daily_tsbl5,aes(color = 'FB')) +
-        xlab("Date") +
-        ylab("Closing Price (USD $)") + 
-        scale_x_date(date_breaks = "months" , date_labels = "%b-%y") +
-        theme(axis.text.x=element_text(angle=60, hjust=1),legend.title = element_text(colour="black", size=10, face="bold")) +
-        ggtitle("AAPL/TSLA Closing Price from Jan 2018 - Dec 2020") +
-        scale_color_manual(name = "Model fit",
-                        breaks = c("AAPL","TSLA","NFLX","GOOGL","FB"),
-                        values = c("AAPL" = "grey40", "TSLA" = "red","NFLX"="black","GOOGL"="#009E73","FB"="blue"))
-# Call the ggplotly function to make the static plot into an interactive one
-ggplotly(p)
-
-```
-
-In some cases, plotting the closing prices on a logarithmic scale will help make the plot more proportionate and utilize space better.
-
-```{r, layout="l-page", echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Plotting multiple timeseries data"}
-
-# Building the plot 
-p <- ggplot(ticker_data_daily_tsbl, aes(x=date, y=close)) +
-        geom_line(aes(color = 'AAPL')) +
-        geom_line(data=ticker_data_daily_tsbl2,aes(color = 'TSLA')) +
-        geom_line(data=ticker_data_daily_tsbl3,aes(color = 'NFLX')) +
-        geom_line(data=ticker_data_daily_tsbl4,aes(color = 'GOOGL')) +
-        geom_line(data=ticker_data_daily_tsbl5,aes(color = 'FB')) +
-        xlab("Date") +
-        ylab("Closing Price (USD $)") + 
-        scale_x_date(date_breaks = "months" , date_labels = "%b-%y") +
-        scale_y_continuous(trans='log10') + #this line is added
-        theme(axis.text.x=element_text(angle=60, hjust=1),legend.title = element_text(colour="black", size=10, face="bold")) +
-        ggtitle("AAPL/TSLA Closing Price from Jan 2018 - Dec 2020") +
-        scale_color_manual(name = "Model fit",
-                        breaks = c("AAPL","TSLA","NFLX","GOOGL","FB"),
-                        values = c("AAPL" = "grey40", "TSLA" = "red","NFLX"="black","GOOGL"="#009E73","FB"="blue"))
-# Call the ggplotly function to make the static plot into an interactive one
-ggplotly(p)
-
-```
-
-
-
-### 3.4 Data Visualization - Time Series Forecasting
+We can now plot a timeseries chart for a visual analysis of the data. The chart below shows the trend of stock prices for the years 2018-2020. The slider below it also allows users to zoom in on a data range to have a closer look at the data on a day to day basis. In the Shiny application where users can select the date-range of the data to import, the slider will come in handy when selected date ranges are big.
 
 ```{r}
 
-train_indices <- seq_len(length.out = floor(x = 0.8 * nrow(x = ticker_data_daily)))
-train <- ticker_data_daily[train_indices,]
-test <- ticker_data_daily[-train_indices,]
+ticker_daily_adjclose %>%
+    plot_time_series(date, adjusted, 
+                     .smooth_size = 0.2,
+                     .interactive = TRUE,
+                     .plotly_slider = TRUE)
+
+
+```
+
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Importing other tickers for comparison"}
+
+from_date <- "2018-01-01"
+to_date <- "2020-12-31"
+
+
+ticker_selected <- c("AAPL","AMZN","FB","GOOG","NFLX","TSLA") 
+
+ticker_data_daily <- tq_get(ticker_selected,
+                            get = "stock.prices",
+                            from = from_date,
+                            to = to_date)
+
+ticker_daily_adjclose <- subset(ticker_data_daily, select = -c(3,4,5,6,7))
+
+```
+
+```{r}
+
+ticker_daily_adjclose %>%
+    group_by(symbol) %>%
+    plot_time_series(date, adjusted, 
+                     .smooth_size = 0.2,
+                     .facet_ncol  = 2,    
+                     .facet_scales = "fixed",
+                     .interactive = TRUE)
+
+
+```
+
+```{r}
+
+ticker_daily_adjclose %>%
+    group_by(symbol) %>%
+    plot_time_series(date, adjusted, 
+                     .smooth_size = 0.2,
+                     .facet_ncol  = 2, 
+                     .facet_scales = "free",
+                     .interactive = TRUE)
+
+
+```
+
+```{r}
+
+ticker_daily_adjclose %>%
+    mutate(year = year(date)) %>%
+    plot_time_series(date, adjusted,
+                     .smooth_size = 0.2,
+                     .facet_vars   = c(symbol, year), # add groups/facets
+                     .color_var    = year,            # color by year
+                     .facet_ncol   = 3,
+                     .facet_scales = "free",
+                     .interactive  = FALSE)
+
+
+```
+
+```{r}
+
+ticker_daily_adjclose %>%
+    plot_time_series(date, adjusted,
+                     .color_var    = year(date),
+                     .facet_vars   = contains("symbol"),
+                     .facet_ncol   = 2,
+                     .facet_scales = "free",
+                     .interactive  = FALSE)
+
+
+```
+
+### 3.4 Time Series Forecasting
+
+Before we go into time series forecasting proper. We will need to further breakdown the data into a training dataset to build the model and a testing dataset which will be used to determine the efficacy of the model. For the purposes of this paper, we will use 3 months worth of data for the testing dataset but this can be changed. This can be changed by the user but this in turn will affect the model outputs in terms of accuracy and amount of data available for training the models.
+
+The following code chunk is then used to create the training and testing sets. 
+
+```{r, eval=TRUE, out.width="100%", fig.cap="Importing the required data"}
+
+from_date <- "2018-01-01"
+to_date <- "2020-12-31"
+
+
+ticker_selected <- "AAPL" 
+
+ticker_data_daily <- tq_get(ticker_selected,
+                            get = "stock.prices",
+                            from = from_date,
+                            to = to_date)
+
+ticker_daily_adjclose <- subset(ticker_data_daily, select = -c(3,4,5,6,7))
 
 ```
 
 
+```{r}
+splits <- time_series_split(ticker_daily_adjclose, assess = "3 months", cumulative = TRUE)
+
+splits %>%
+    tk_time_series_cv_plan() %>%
+    plot_time_series_cv_plan(date, adjusted, .interactive = TRUE)
+```
+```{r}
+
+recipe_spec <- recipe(adjusted ~ date, training(splits)) %>%
+    step_timeseries_signature(date) %>%
+    step_rm(matches("(.iso$)|(.xts$)")) %>%
+    step_normalize(matches("(index.num$)|(_year$)")) %>%
+    step_dummy(all_nominal()) %>%
+    step_fourier(date, K = 1, period = 12)
+
+recipe_spec %>% prep() %>% juice()
+
+```
+```{r}
+
+# 1 ARIMA
+
+model_spec_arima <- arima_reg() %>%
+    set_engine("auto_arima")
+
+wflw_fit_arima <- workflow() %>%
+    add_model(model_spec_arima) %>%
+    add_recipe(recipe_spec %>% step_rm(all_predictors(), -date)) %>%
+    fit(training(splits))
+
+# 2 Prophet
+
+model_spec_prophet <- prophet_reg() %>%
+    set_engine("prophet")
+
+wflw_fit_prophet <- workflow() %>%
+    add_model(model_spec_prophet) %>%
+    add_recipe(recipe_spec %>% step_rm(all_predictors(), -date)) %>%
+    fit(training(splits))
+
+# 3 Elastic Net
+
+model_spec_glmnet <- linear_reg(
+    mixture = 0.9,
+    penalty = 4.36e-6
+) %>%
+    set_engine("glmnet")
+
+wflw_fit_glmnet <- workflow() %>%
+    add_model(model_spec_glmnet) %>%
+    add_recipe(recipe_spec %>% step_rm(date)) %>%
+    fit(training(splits))
+
+# 4 Random Forest
+
+model_spec_rf <- rand_forest(trees = 500, min_n = 50) %>%
+  set_engine("randomForest")
+
+wflw_fit_rf <- workflow() %>%
+  add_model(model_spec_rf) %>%
+  add_recipe(recipe_spec %>% step_rm(date)) %>%
+  fit(training(splits))
+
+# 5 Boosted Prophet
+
+model_spec_prophet_boost <- prophet_boost() %>%
+  set_engine("prophet_xgboost", daily.seasonality = TRUE) 
+
+wflw_fit_prophet_boost <- workflow() %>%
+  add_model(model_spec_prophet_boost) %>%
+  add_recipe(recipe_spec) %>%
+  fit(training(splits))
+
+```
+```{r}
+
+ticker_models <- modeltime_table(
+    wflw_fit_arima,
+    wflw_fit_prophet,
+    wflw_fit_glmnet,
+    wflw_fit_rf,
+    wflw_fit_prophet_boost
+    
+)
+
+ticker_models
+
+```
+
+```{r}
+calibration_table <- ticker_models %>%
+  modeltime_calibrate(testing(splits))
+
+calibration_table
+
+```
+
+
+
+```{r}
+
+calibration_table %>%
+  modeltime_forecast(actual_data = ticker_daily_adjclose) %>%
+  plot_modeltime_forecast(.interactive = TRUE,
+                          .plotly_slider =  TRUE)
+
+
+```
+
+```{r}
+
+calibration_table %>%
+  modeltime_accuracy() %>%
+  table_modeltime_accuracy(.interactive = TRUE)
+
+```
+
+
+```{r}
+
+ensemble_fit <- ticker_models %>%
+    # Remove Random Forest and GLMNET due to low accuracy
+    filter(.model_id != 3 & .model_id != 4 ) %>%
+    ensemble_average(type = "mean")
+
+ensemble_fit
+
+```
+
+
+
+
+
+```{r}
+
+calibration_tbl <- modeltime_table(ensemble_fit) %>%
+    modeltime_calibrate(testing(splits))
+
+# Forecast vs Test Set
+calibration_tbl %>%
+    modeltime_forecast(
+        new_data    = testing(splits),
+        actual_data = ticker_daily_adjclose
+    ) %>%
+    plot_modeltime_forecast(.interactive = TRUE)
+
+```
+
+
+
+```{r}
+
+refit_tbl <- calibration_tbl %>%
+    modeltime_refit(ticker_daily_adjclose)
+
+refit_tbl %>%
+    modeltime_forecast(
+        h = "3 months",
+        actual_data = ticker_daily_adjclose
+    ) %>%
+    plot_modeltime_forecast(.interactive = TRUE,
+                            .plotly_slider = TRUE)
+
+```
 
 ## 4. Conclusions and Insights
 
@@ -262,3 +414,4 @@ https://machinelearningmastery.com/time-series-forecasting-performance-measures-
 
 
 https://yiqiaoyin.files.wordpress.com/2017/05/time-series-analysis-on-stock-returns.pdf
+
