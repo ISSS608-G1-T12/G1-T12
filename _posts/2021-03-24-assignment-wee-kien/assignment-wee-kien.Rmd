@@ -390,8 +390,172 @@ port_rolling_corr_plotly
 
 ### 3.4 Portfolio Analysis
 
+Similar to the previous module, users will be able to specify the start and end dates for the period under analysis. In addition, they specify which the stock symbols for 4 stocks + 1 benchmark index. These stocks symbols will be used to form the portfolio for further analysis.
+
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Setting the start and end dates, selecting stock symbols"}
+from_date <- "2016-01-01"
+to_date <- "2019-12-31"
+portfolio_ticker_selection <- c("AAPL", "GOOG", "NFLX", "TSLA", "XLK")
+benchmark_ticker_selection <- "XLK"
+initial_investment_capital <- 10000
+```
+
+In the following code chunk, we calculate the monthly returns for the selected stock symbols.
+
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Calculating monthly returns for the selected stock symbols"}
+stock_returns_monthly <- portfolio_ticker_selection %>%
+    tq_get(get  = "stock.prices",
+           from = from_date,
+           to   = to_date) %>%
+    group_by(symbol) %>%
+    tq_transmute(select     = adjusted, 
+                 mutate_fun = periodReturn, 
+                 period     = "monthly", 
+                 col_rename = "Ra")
+head(stock_returns_monthly)
+```
+
+In the following code chunk, we specify the weights of portfolio 1, and visualize the monthly returns using plotly. We create a new field called gain_loss, where gains are visualized as green, while losses are visualized as red. 
+
+We further add a smoothing line (in blue) as an additional layer onto our graph. This allows us to quickly see a general trend of the portfolio across the period. 
+
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Visualization the monthly returns of Portfolio 1"}
+wts_1 <- c(0.25, 0.25, 0.25, 0.25, 0.00)
+portfolio_returns_monthly_1 <- stock_returns_monthly %>%
+    tq_portfolio(assets_col  = symbol, 
+                 returns_col = Ra, 
+                 weights     = wts_1, 
+                 col_rename  = "Ra") %>% 
+    mutate(gain_loss = if_else(Ra > 0, "gain", "loss"))
+
+portfolio_returns_monthly_1
+
+port_returns_1_plotly <- portfolio_returns_monthly_1 %>%
+    ggplot(aes(x = date, y = Ra)) +
+    geom_bar(stat = "identity", aes(fill = gain_loss)) +
+    scale_fill_manual("legend", values = c("gain" = "green4", "loss" = "red")) +
+    labs(title = "Portfolio Returns 1",
+         x = "", y = "Monthly Returns") +
+    geom_smooth(method = "lm") +
+    theme_tq() +
+    scale_color_tq() +
+    scale_y_continuous(labels = scales::percent)
+
+port_returns_1_plotly <- ggplotly(port_returns_1_plotly)
+port_returns_1_plotly
+
+```
+
+Similarly, we specify weights for the 2nd portfolio and do create a visualization in the same style.
+
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Visualization the monthly returns of Portfolio 2"}
+wts_2 <- c(0.40, 0.30, 0.20, 0.10, 0.00)
+portfolio_returns_monthly_2 <- stock_returns_monthly %>%
+    tq_portfolio(assets_col  = symbol, 
+                 returns_col = Ra, 
+                 weights     = wts_2, 
+                 col_rename  = "Ra") %>% 
+    mutate(gain_loss = if_else(Ra > 0, "gain", "loss"))
+
+port_returns_2_plotly <- portfolio_returns_monthly_2 %>%
+    ggplot(aes(x = date, y = Ra)) +
+    geom_bar(stat = "identity", aes(fill = gain_loss)) +
+    scale_fill_manual("legend", values = c("gain" = "green4", "loss" = "red")) +
+    labs(title = "Portfolio Returns 2",
+         x = "", y = "Monthly Returns") +
+    geom_smooth(method = "lm") +
+    theme_tq() +
+    scale_color_tq() +
+    scale_y_continuous(labels = scales::percent)
+port_returns_2_plotly <- ggplotly(port_returns_2_plotly)
+port_returns_2_plotly
+
+```
+
+Similarly, we specify weights for the 3rd portfolio and do create a visualization in the same style.
+
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Visualization the monthly returns of Portfolio 3"}
+wts_3 <- c(0.20, 0.20, 0.20, 0.20, 0.20)
+portfolio_returns_monthly_3 <- stock_returns_monthly %>%
+    tq_portfolio(assets_col  = symbol, 
+                 returns_col = Ra, 
+                 weights     = wts_3, 
+                 col_rename  = "Ra")%>% 
+    mutate(gain_loss = if_else(Ra > 0, "gain", "loss"))
+
+port_returns_3_plotly <- portfolio_returns_monthly_3 %>%
+    ggplot(aes(x = date, y = Ra)) +
+    geom_bar(stat = "identity", aes(fill = gain_loss)) +
+    scale_fill_manual("legend", values = c("gain" = "green4", "loss" = "red")) +
+    labs(title = "Portfolio Returns 3",
+         x = "", y = "Monthly Returns") +
+    geom_smooth(method = "lm") +
+    theme_tq() +
+    scale_color_tq() +
+    scale_y_continuous(labels = scales::percent)
+port_returns_3_plotly <- ggplotly(port_returns_3_plotly)
+port_returns_3_plotly
+
+```
 
 
+In the following code chunk, we create a weights table. Here, we create 3 sets of weights for the selected 5 symbols (4 stocks + 1 benchmark index).
+
+When designing the shiny app, users will be able to set the various weights for the 3 different portfolios.
+
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Creating a weights table"}
+weights <- c(
+    0.25, 0.25, 0.25, 0.25, 0.00,
+    0.40, 0.30, 0.20, 0.10, 0.00, 
+    0.20, 0.20, 0.20, 0.20, 0.20
+)
+
+weights_table <-  tibble(portfolio_ticker_selection) %>%
+    tq_repeat_df(n = 3) %>%
+    bind_cols(tibble(weights)) %>%
+    group_by(portfolio)
+weights_table
+```
+
+In the following code chunk, we scale the single portfolio to 3, for subsequent multiple portfolio comparison analysis.
+
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Scaling a single portfolio to 3"}
+stock_returns_monthly_multi <- stock_returns_monthly %>%
+    tq_repeat_df(n = 3)
+head(stock_returns_monthly_multi)
+```
+
+In the following code chunk, we apply the weights table to the previously calculated monthly returns of the 3 portfolios. In addition, the initial investment capital is used along with the monthly returns to create the portfolio equity position every month.
+
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Applying the weights table to calculate the various portfolios' monthly returns"}
+portfolio_growth_monthly_multi <- stock_returns_monthly_multi %>%
+    tq_portfolio(assets_col   = symbol, 
+                 returns_col  = Ra, 
+                 weights      = weights_table, 
+                 col_rename   = "investment.growth",
+                 wealth.index = TRUE) %>%
+    mutate(investment.growth = investment.growth * initial_investment_capital)
+portfolio_growth_monthly_multi
+```
+
+In the following code chunk, we create an equity curve comparing the performance of the 3 portfolios created.
+
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Creating an equity curve comparing the performance of the 3 portfolios"}
+portfolio_plotly <- portfolio_growth_monthly_multi %>%
+    ggplot(aes(x = date, y = investment.growth, color = factor(portfolio))) +
+    geom_line(size = 1.5) + geom_point() +
+    labs(title = "Portfolio Growth - Plotly",
+         subtitle = "Comparing Multiple Portfolios",
+         caption = "Which of the 3 portfolios is the best?",
+         x = "", y = "Portfolio Value",
+         color = "Portfolio") +
+    geom_smooth(method = "loess") +
+    theme_tq() +
+    scale_color_tq() +
+    scale_y_continuous(labels = scales::dollar)
+portfolio_plotly <- ggplotly(portfolio_plotly)
+portfolio_plotly
+```
 
 
 
