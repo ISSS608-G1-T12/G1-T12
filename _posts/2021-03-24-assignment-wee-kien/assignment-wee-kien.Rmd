@@ -126,7 +126,7 @@ Users will be able to specify the start and end dates for the period under analy
 
 ```{r, echo=TRUE, eval=TRUE, fig.cap="Setting the start and end dates of the period under analysis"}
 from_date <- "2016-01-01"
-to_date <- "2018-12-31"
+to_date <- "2019-12-31"
 period_type <- "days"
 # "days"/ "weeks"/ "months"/ "years"
 ```
@@ -262,7 +262,131 @@ chart_bband_bm %>%
 
 ### 3.3 Correlation Analysis
 
+Similar to the previous module, users will be able to specify the start and end dates for the period under analysis. In addition, they are able to specify the periodicity (e.g. days, weeks, months, years).
 
+```{r, echo=TRUE, eval=TRUE, fig.cap="Setting the start and end dates of the period under analysis"}
+from_date <- "2016-01-01"
+to_date <- "2019-12-31"
+period_type <- "days"
+# "days"/ "weeks"/ "months"/ "years"
+```
+
+In the following code chunk, users select 4 stock symbols to form a portfolio, and an accompanying underlying benchmark index symbol. Data extracted is based on adjusted prices. For the purposes of measuring returns, a monthly periodicity is selected to avoid noise in the short term (e.g. daily).
+
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Extracting data for a selected portfolio of stocks"}
+port_corr_ticker_selection <- c("TSLA", "AAPL", "GOOG", "NFLX")
+port_corr_benchmark_ticker <- "XLK"
+
+PORT_mth <- port_corr_ticker_selection %>%
+    tq_get(get  = "stock.prices",
+           from = from_date,
+           to   = to_date) %>%
+    group_by(symbol) %>%
+    tq_transmute(select     = adjusted, 
+                 mutate_fun = to.period, 
+                 period     = "months")
+head(PORT_mth)
+
+```
+
+In the following code chunk, users are able to visualize the monthly stock prices for the 4 chosen stocks in a facet wrap for convenience. The plots are made interactive using the plotly package.
+
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Visualizing monthly stock prices for the portfolio of stocks"}
+
+port_mth_plotly <- PORT_mth %>%
+        ggplot(aes(x = date, y = adjusted, color = symbol)) +
+        geom_line(size = 1) +
+        labs(title = "Monthly Stock Prices",
+             x = "", y = "", color = "") +
+        facet_wrap(~ symbol, ncol = 2, scales = "free_y") +
+        scale_y_continuous(labels = scales::dollar) +
+        theme_tq() + 
+        scale_color_tq()
+port_mth_plotly <- ggplotly(port_mth_plotly) %>% 
+        layout(yaxis = list(title = list(text = "Adjusted Prices", standoff = 20L)))
+port_mth_plotly
+
+```
+
+In the following code chunk, users are able to visualize anomalous points in the monthly stock prices for the 4 chosen stocks in a facet wrap for convenience. The plots are made interactive using the plotly package. While stocks in general may exhibit a volatile nature, such anomalous points in time may provide some indication of a turning point where stocks have been overbought or oversold in the short term.
+
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Visualizing anomaly diagnostics points for the 4 stocks"}
+
+PORT_mth %>%
+    group_by(symbol) %>%
+    plot_anomaly_diagnostics(date, adjusted, .facet_ncol = 2) %>% 
+    layout(yaxis = list(title = list(text = "Adjusted Prices", standoff = 20L)))
+
+```
+
+In the following code chunk, the monthly returns are calculated for both the selected portfolio stocks and the accompanying benchmark index.
+
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Calculating monthly returns for portfolio stocks and benchmark index"}
+
+PORT_returns_monthly <- port_corr_ticker_selection %>%
+    tq_get(get  = "stock.prices",
+           from = from_date,
+           to   = to_date) %>%
+    group_by(symbol) %>%
+    tq_transmute(select     = adjusted, 
+                 mutate_fun = periodReturn, 
+                 period     = "monthly")
+
+head(PORT_returns_monthly)
+
+# Baseline Returns
+baseline_returns_monthly <- port_corr_benchmark_ticker %>%
+    tq_get(get  = "stock.prices",
+           from = from_date,
+           to   = to_date) %>%
+    tq_transmute(select     = adjusted, 
+                 mutate_fun = periodReturn,
+                 period     = "monthly")
+
+```
+
+In the following code chunk, a left join is performed to combine the monthly returns of the portfolio and the benchmark index returns.
+
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Performing a left join to bring in the baseline benchmark returns"}
+
+returns_joined <- left_join(PORT_returns_monthly, 
+                            baseline_returns_monthly,
+                            by = "date")
+head(returns_joined)
+
+```
+
+In the following code chunk, the runCor function is used to evaluate the rolling correlations using the xy pattern.
+
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Rolling correlations between portfolio stocks and benchmark is calculated"}
+
+PORT_rolling_corr <- returns_joined %>%
+    tq_transmute_xy(x          = monthly.returns.x, 
+                    y          = monthly.returns.y,
+                    mutate_fun = runCor,
+                    n          = 6,
+                    col_rename = "rolling.corr.6")
+tail(PORT_rolling_corr)
+```
+
+In the following code chunk, the rolling correlations previously calculated are not visualized using plotly.
+
+```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Rolling correlations are visualized"}
+
+port_rolling_corr_plotly <- PORT_rolling_corr %>%
+        ggplot(aes(x = date, y = rolling.corr.6, color = symbol)) +
+        geom_hline(yintercept = 0, color = palette_light()[[1]]) +
+        geom_line(size = 1) +
+        labs(title = "Portfolio of selected stocks: Six Month Rolling Correlation to XLK",
+             x = "", y = "", color = "") +
+        facet_wrap(~ symbol, ncol = 2) +
+        theme_tq() + 
+        scale_color_tq()
+
+port_rolling_corr_plotly <- ggplotly(port_rolling_corr_plotly) %>% 
+        layout(yaxis = list(title = list(text = "Rolling Correlation", standoff = 20L)))
+port_rolling_corr_plotly
+```
 
 ### 3.4 Portfolio Analysis
 
