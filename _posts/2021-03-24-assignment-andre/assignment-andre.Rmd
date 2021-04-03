@@ -8,16 +8,381 @@ description: |
   This project aims to improve on the current offering of financial data websites through, Exploratory Data Analysis, Time-Series Forecasting and also Time-Series Clustering.
 author:
   - name: Andre Lee
-    url: https://example.com/norajones
+    url: {}
 date: 03-24-2021
 output:
   distill::distill_article:
     self_contained: false
+    toc: true
+    toc_depth : 3
 ---
 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
+```{r}
+#Load packages
+packages = c("tidyquant","tidyverse","ggpubr","ggplot2","dplyr","cluster","formattable","reshape2","magrittr","zoo","quantmod","tibble","ggdendro","knitr","kableExtra","dendextend","plotly","scales")
+for (p in packages){
+  if(!require(p,character.only = T)){
+    install.packages(p)
+  }
+  library(p,character.only = T)
+  
+}
+```
 
-hello hello
+## 1. Overview
+
+### 1.1. Background
+
+The Nasdaq-100 Index is a basket of the 100 largest non-financial companies listed on the Nasdaq Exchange. Companies listed in the Nasdaq-100 Index largely belong to the technology sector, and some household names include Apple, Google, Tesla and Facebook. 
+
+The performance of the Nasdaq-100 Index is largely seen as a barometer as to how well the technology sector is performing. COVID-19 accelerated the rise of the digital economy and drove digital transformation initiatives in companies around the world; it also proved to be a boon for technology industries such as cloud computing, videoconferencing and cybersecurity. Many stocks in these industries experienced massive gains in 2020.
+
+There has been huge investor interest in technology stocks following their outperformance in 2020 and the ongoing hype of digitisation. Many rookie investors have also entered the fray, hoping to be involved in these companies' growth.
+
+
+### 1.2. Objective and Motivation
+
+This sub-module aims to aid rookie investors in picking technology-centric stocks for their portfolios through a method that is seldom made available to retail investors - clustering.
+
+
+### 1.3. Hierarchical Clustering
+
+Cluster Analysis is an unsupervised learning technique for separating subjects into clusters, based on combinations of input variables, so that each subject is more similar to other subjects in its cluster than to subjects outside the cluster. Each cluster thus describes, in terms of the data collected, the class to which its members belong.
+
+Hierarchical clustering is a clustering method that, as the name suggests, builds hierarchy of clusters. The algorithm starts with all the data points assigned to a cluster of their own. A distance similarity measure is applied to merge two nearest clusters into the same cluster. This continues until there is only one single cluster left. A dendogram can then be used to show the hierarchy of clusters.
+
+For this sub-module, hierarchical clustering will be carried out on 5 variables which have been selected to cover a holistic range of financial indicators of a company. The time horizon for a clustering is one year. The 5 variables are as follows:
+
+
+
+
+```{r}
+df <- data.frame(financial_ratio = c("1-Year Return","1-Year Volatility","Dividend Yield","Return on Assets","Total Debt to Total Assets"), 
+                 definition = (c("Return on an investment generated over a year and calculated as a percentage of the initial amount of investment.", 
+                                 "Statistical measure of the rate of fluctuations in the price of a security over 1 year. Volatility is also known as standard deviation.",
+                                 "Shows how much a company pays out in dividends each year relative to its stock price, expressed as a percentage.",
+                                 "A type of return on investment (ROI) metric that measures the profitability of a business in relation to its total assets. The higher the return, the more productive and efficient management is in utilizing economic resources",
+                 "A leverage ratio that indicates the percentage of assets that are being financed with debt. The higher the ratio, the greater the degree of leverage and financial risk")), 
+    Financial_Aspect = (c("Financial Return","Market volatility","Payout to Shareholders" ,"Profitability","Leverage")))
+
+kable(df, col.names = c("Financial Ratio", "Definition", "Financial Aspect"), escape = F) %>%
+  kable_styling(latex_options = "hold_position") %>%
+  column_spec(1, bold = T, width = "20cm") %>%
+   column_spec(2, width = "30cm") %>%
+  column_spec(3, width = "13cm") %>%
+  row_spec(0, align = "c", background = "gray")
+```
+
+## 2. Proposed visualization
+
+### 2.1. Sketch of Proposed Visualization
+
+## 3. Building the Visualization
+
+### 3.1 Required Libraries
+
+### 3.2 Data Preparation
+
+The features of the data used in this sub-module is as follows:
+
+```{r}
+df <- data.frame(element= c("Stock Universe","Time Period","Variables"), 
+                 description = c("Current 89 component stocks of NASDAQ-100 Index. Only 89 component stocks are used instead of 100 because the other component stocks have incomplete data for at least one of the variables which we are interested to cluster the stocks by.",
+                 "2015 to 2020",
+                 "1-Year Return, 1-Year Volatility, Dividend Yield, Return on Assets, Total Debt to Total Assets") )
+
+kable(df, col.names = c("Element", "Description"), escape = F) %>%
+  kable_styling(latex_options = "hold_position") %>%
+  column_spec(1, bold = T) %>%
+   column_spec(2, width = "30cm") %>%
+
+  row_spec(0, align = "c", background = "gray")
+```
+
+
+There are 2 main data sources for this sub-module: 
+1) Bloomberg Terminal
+2) tidyquant package on R
+
+
+```{r}
+df <- data.frame(datasource = c("Bloomberg Terminal","tidyquant package"), 
+                 purpose = c("Pull historical financial ratios and volatility for the stocks",
+                 "Pull historical prices for the stocks and use package functions to calculate annual returns"))
+
+kable(df, col.names = c("Data Source", "Purpose"), escape = F) %>%
+  kable_styling(latex_options = "hold_position") %>%
+  column_spec(1, bold = T) %>%
+   column_spec(2, width = "30cm") %>%
+  
+  row_spec(0, align = "c", background = "gray")
+```
+
+The Bloomberg Terminal is used to pull the historical yearly financial ratios and volatility for the stocks. Bloomberg nicely stores these data points which can be easily pulled into csv format. 
+
+```{r eval=TRUE, echo=FALSE, code.cap = "Read dataset pulled from Bloomberg, create Year column"}
+library(rmarkdown)
+bloomberg_data <- read_csv("nasdaq_ratios.csv") %>%
+  mutate(across(where(is.numeric), round, 2))
+
+bloomberg_data$Date <- as.Date(bloomberg_data$Date, format="%d/%m/%y") #convert to date format
+bloomberg_data$Year <- format(bloomberg_data$Date, format="%Y") #Make a Year column
+bloomberg_data$Year <- as.numeric(bloomberg_data$Year)
+
+paged_table(bloomberg_data)
+```
+
+
+We use tidyquant package solely to pull historical prices of the stocks. The reason we use tidyquant rather than using Bloomberg is because tidyquant package has functions which can help us calculate returns for different periodicities, such as annual or monthly.
+
+```{r eval=TRUE, echo=FALSE, fig.cap = "Use tidyquant to pull stock prices for NASDAQ-100 Index Constituents from 2015"}
+Stocks <- 
+  tq_get(c("AAPL",  "ADBE",  "ADI"  , "ADP" ,  "ADSK" , "ALGN" , "ALXN",  "AMAT",  "AMD" ,  "AMGN" , "AMZN",  "ANSS" , "ATVI" , "AVGO"  ,"BIDU" , "BIIB",  "BKNG" , "CDNS" , "CDW" ,  "CERN" , "CHKP",  "CHTR",  "CMCSA",
+"COST" , "CPRT" , "CSCO" , "CSX" ,  "CTAS" , "CTSH",  "DLTR", "DXCM" , "EA",    "EBAY" , "EXC" ,  "FAST","FB",  "FISV" , "FOXA",  "GILD",  "GOOGL", "IDXX" , "ILMN",
+ "INCY" , "INTC" , "INTU",  "ISRG" , "JD" ,   "KHC" , 
+ "KLAC" , "LRCX" , "LULU",  "MAR" ,  "MCHP",  "MDLZ", 
+ "MELI" , "MNST"  ,"MRVL"  ,"MSFT" , "MU"  ,  "MXIM" ,
+ "NFLX" , "NTES",  "NVDA" , "NXPI" , "ORLY" , "PAYX" ,
+ "PCAR" , "PEP" ,  "PYPL"  ,"QCOM",  "REGN" , "ROST" ,
+ "SBUX" , "SGEN",  "SIRI" , "SNPS" , "SWKS" , "TCOM", 
+ "TEAM" , "TMUS" , "TSLA" , "TXN"  , "VRSK",  "VRSN", 
+ "VRTX" , "WBA"  , "XEL" ,  "XLNX" , "ZM" ), 
+ get = "stock.prices", from = "2015-01-01") %>%
+  group_by(symbol)
+
+
+returns_yearly <- 
+  Stocks %>%
+    tq_transmute(select = adjusted, mutate_fun = periodReturn, period = "yearly") 
+
+returns_yearly$Year <- format(returns_yearly$date, format="%Y") %>%
+  as.numeric(returns_yearly$Year)
+
+returns_yearly_final <- returns_yearly  %>% 
+  
+  select('symbol','yearly.returns','Year') %>% #select columns
+  rename('Ticker' = 'symbol',
+         '1-Year Return' = 'yearly.returns') %>%
+  mutate(across(where(is.numeric), round, 2))
+
+paged_table(returns_yearly_final)
+```
+
+After pulling the required data from Bloomberg and tidyquant, we end up with 2 tibbles: bloomberg_data (from Bloomberg) and returns_yearly (from tidyquant). We then join them into one single tibble by inner joining on the columns 'Ticker' and 'Year'. This gives a single tibble containing the past 5 years' historical data, made up of the 5 variables we will be conducting clustering on, for the 89 Nasdaq-100 stocks.
+
+In this example, we do the clustering on the year 2017, on the variables '1-Year Return','1-Year Volatility','Average Dividend Yield','Return on Assets' and 'Total Debt to Total Assets'. The following table shows all the stocks' values for the variables in 2017:
+
+```{r echo=FALSE}
+combine <- dplyr::inner_join(bloomberg_data, returns_yearly_final, by =c("Ticker"="Ticker","Year"="Year"))
+
+#Select the year and the variables columns for the final dataframe to undergo clustering
+select_yearfilter <- combine %>%
+  filter(Year == 2017) %>% #select the year
+  select('Ticker','1-Year Return','1-Year Volatility','Average Dividend Yield','Return on Assets','Total Debt to Total Assets') %>% #select the variables to cluster
+  #column_to_rownames('Ticker') %>% #make the Ticker column become rownames 
+  mutate(across(where(is.numeric), round, 2))
+paged_table(select_yearfilter)
+```
+```{r ECHO=FALSE}
+select_yearfilter <- select_yearfilter %>%
+  column_to_rownames('Ticker') #make the Ticker column become rownames 
+```
+### 3.3 Visualisation of Results
+
+Once we have selected the year and the variables, we proceed with the actual hierarchical clustering. 
+
+Cluster analysis uses the concept of proximity matrix as measures of similarity and dissimilarity between the different data points. As the data is in continuous form, the Euclidean distance was used for computing the proximity using the dist function. The linkage method used here is “Ward.D2”. 
+
+
+```{r echo=TRUE}
+
+clust_dist <- dist(select_yearfilter,method = "euclidean")
+clust <- hclust(clust_dist , method = "ward.D2")
+```
+
+We then plot the dendrogram, with the user able to choose how many clusters to cut the dendrogram into, with the clusters being clearly outlined. In this case, user specifies to cut into k=20 clusters.
+
+```{r eval=FALSE, fig.height=20}
+plot(clust)
+rect.hclust(clust, k=20, border = "cadetblue") #choose to cut into 20 clusters
+# groups<- cutree(clust,k=20)
+# abline(h=3, col = 'red')
+
+```
+
+```{r fig.height=20, ECHO=TRUE}
+clust_dend <- as.dendrogram(clust)
+plot(clust_dend, horiz = TRUE)
+rect.dendrogram(clust_dend, k=20, horiz = TRUE, border = "red", lty = 5, lwd = 2)
+```
+
+We can visualise on the line graph below each cluster's characteristics for each variable. plotly interactivity has been added so that individual clusters can be isolated by double-clicking on the cluster in the legend:
+
+```{r echo=FALSE, fig.width=15, fig.height=10,out.width='130%',out.height='100%'}
+#Get breakdown of stocks in each cluster
+groups<- data.frame(cutree(clust, k =20))
+
+#Merge the stocks with the variables
+cluster_breakdown <- merge(groups,select_yearfilter, by = 0, all = TRUE)
+
+cluster_breakdown <- subset(cluster_breakdown, select = -Row.names) 
+  
+colnames(cluster_breakdown)[1] <- "Cluster"
+
+#Get average values of each variable for each cluster
+final_cluster_breakdown <- cluster_breakdown %>%
+  group_by(Cluster) %>%
+  summarise(across(everything(),mean))
+
+#Multiply 1-Year Return by 100 to make it in same scale as other variables
+final_cluster_breakdown$`1-Year Return`<- final_cluster_breakdown$`1-Year Return` * 100
+
+final_cluster_breakdown_melt <- melt(final_cluster_breakdown,id = "Cluster")
+```
+
+```{r}
+p <- ggplot(data = final_cluster_breakdown_melt) +
+  geom_line(aes(x=variable, y = value, colour = as.factor(Cluster), group = Cluster)) +
+  labs(colour="Cluster" , y= "value (%)") +
+  theme(axis.text.x  = element_text(angle=45, hjust = 1))
+
+fig <- ggplotly(p)
+
+fig
+```
+
+## 4. Making use of Clustering Output
+
+Following the Hierarchical Clustering, we explore a use case for the output. First, we get the average Return and Volatility for all the stocks in each cluster for the year which we filtered by. A Return/Volatility ratio, also known as Sharpe ratio, is calculated. This is a risk-adjusted return, and we rank the clusters by this metric.
+
+```{r}
+
+final_cluster_breakdown$`Returns to Volatility` = final_cluster_breakdown$`1-Year Return` / final_cluster_breakdown$`1-Year Volatility`
+
+final_cluster_breakdown_ordered <- final_cluster_breakdown %>%
+  arrange(desc(`Returns to Volatility`)) %>%
+  select('Cluster','Returns to Volatility','1-Year Return','1-Year Volatility') %>%
+  mutate(across(where(is.numeric), round, 2))
+paged_table(final_cluster_breakdown_ordered)
+
+```
+
+We see that Cluster 4 had the highest Return/Volatility ratio, so we proceed to see how this cluster performed in the next year, 2018. Taking a look at Cluster 4, we see the cluster has the following stocks: ADP, ANSS, CTSH, GOOGL, ISRG, PAYX, PYPL, SNPS. 
+
+The XLK ETF is an Exchange Traded Fund which seeks to provide an effective representation of the technology sector of the S&P 500 Index. Back-testing how a portfolio of $10,000 containing an equal weight of Cluster 4 stocks performed in 2018 versus the XLK benchmark, we get the following chart:
+
+```{r}
+Ra <- c("ADP", "ANSS", "CTSH", "GOOGL", "ISRG", "PAYX", "PYPL", "SNPS") %>%
+    tq_get(get  = "stock.prices",
+           from = "2018-01-01",
+           to   = "2018-12-31") %>%
+    group_by(symbol) %>%
+    tq_transmute(select     = adjusted, 
+                 mutate_fun = periodReturn, 
+                 period     = "monthly", 
+                 col_rename = "Ra")
+
+wts <- c(0.125, 0.125, 0.125,0.125,0.125,0.125,0.125,0.125)
+portfolio_growth_monthly <- Ra %>%
+    tq_portfolio(assets_col   = symbol, 
+                 returns_col  = Ra, 
+                 weights      = wts, 
+                 col_rename   = "investment.growth",
+                 wealth.index = TRUE) %>%
+  mutate(investment.growth = investment.growth * 10000)
+
+portfolio_growth_monthly$Symbol = 'Cluster 4 Stocks'
+
+
+Rb <- c("XLK") %>%
+    tq_get(get  = "stock.prices",
+           from = "2018-01-01",
+           to   = "2018-12-31") %>%
+    group_by(symbol) %>%
+    tq_transmute(select     = adjusted, 
+                 mutate_fun = periodReturn, 
+                 period     = "monthly", 
+                 col_rename = "Rb")
+
+index_growth_monthly <- Rb %>%
+    tq_portfolio(assets_col   = symbol, 
+                 returns_col  = Rb, 
+                
+                 col_rename   = "investment.growth",
+                 wealth.index = TRUE) %>%
+  mutate(investment.growth = investment.growth * 10000)
+index_growth_monthly$Symbol = 'XLK Benchmark'
+
+combined <- dplyr::bind_rows(index_growth_monthly, portfolio_growth_monthly) %>%
+ggplot(aes(x = date, y = investment.growth, colour = Symbol)) +
+    geom_line() +
+    labs(title = "Portfolio Growth of $10,000 starting from Jan 2018",
+         subtitle = "Cluster 4 Stocks vs XLK ETF (Tech Sector Benchmark)",
+         x = "", y = "Portfolio Value") +
+
+    theme_tq() +
+    scale_color_tq() +
+    scale_y_continuous(labels = scales::dollar)
+
+combined
+```
+We observe that if we used the Clustering Analysis in 2017 to guide us in selecting our portfolio for 2018, it would have allowed us to outperform the XLK Benchmark. By investing in Cluster 4 stocks, a $10,000 portfolio at the start of 2018 would have grown to $10,400 by the end of the year. This is in contrast to the XLK benchmark which actually lost money. In this situation, we witness how clustering analysis allowed the investor to outperform the benchmark in 2018!
+
+## 5. Interactivity
+
+The illustration so far is of a static nature. In the eventual final product, the following interactivity features are proposed:
+
+```{r}
+df <- data.frame(datasource = c("Year","Variables"), 
+                 Elaboration = c("User will be able to select any one year from 2015-2020 to conduct the clustering on",
+                 "The default 5 variables are '1-Year Return','1-Year Volatility','Average Dividend Yield','Return on Assets' and 'Total Debt to Total Assets'. User will be able to deselect any variables which may not be of interest."))
+
+kable(df, col.names = c("Interactivity", "Elaboration"), escape = F) %>%
+  kable_styling(latex_options = "hold_position") %>%
+  column_spec(1, bold = T) %>%
+   column_spec(2, width = "30cm") %>%
+  
+  row_spec(0, align = "c", background = "gray")
+```
+
+## 6. Conclusion and Insights
+
+The example in the above section of how we can use clustering analysis to enhance portfolio selection decisions is just one of many possibilities. For example, an investor can also use the analysis to construct a portfolio consisting of stocks from different clusters so as to arrive at a portfolio consisting of stocks of differing characteristics for the sake of diversification.
+
+Clustering analysis can provide rookie investors with an alternative perspective of portfolio construction. Combined with other forms of analysis, it could prove to be a useful tool in enhancing returns.
+
+## 7. References
+
+https://www.investopedia.com/terms/n/nasdaq100.asp
+
+https://corporatefinanceinstitute.com/resources/knowledge/
+
+https://www.analyticsvidhya.com/blog/2016/11/an-introduction-to-clustering-and-different-methods-of-clustering/
+
+http://www.sthda.com/english/wiki/beautiful-dendrogram-visualizations-in-r-5-must-known-methods-unsupervised-machine-learning  
+
+https://www.ssga.com/us/en/institutional/etfs/funds/the-technology-select-sector-spdr-fund-xlk
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+{r}
+# data.frame(cutree(clust, k=20))
+d <- data.frame(Cluster_ID = cutree(clust,k=20)) %>%
+  filter(Cluster_ID == 4)
+d
+```
