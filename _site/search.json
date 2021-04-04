@@ -6,14 +6,14 @@
       "description": "Some additional details about the blog",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2021-03-24T23:02:08+08:00"
+      "last_modified": "2021-03-28T15:32:55+08:00"
     },
     {
       "path": "index.html",
       "title": "G1-T12 Group Project",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2021-03-24T23:02:10+08:00"
+      "last_modified": "2021-03-28T16:37:46+08:00"
     }
   ],
   "collections": ["posts/posts.json"]
