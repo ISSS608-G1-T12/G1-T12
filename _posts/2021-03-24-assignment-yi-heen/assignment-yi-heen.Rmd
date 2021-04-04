@@ -40,7 +40,12 @@ Time series data is a sequential collection of numerical data points. Particular
 
 Time series analysis allows users to uncover meaningful information and trends in data collected over time. Time series forecasting on the other hand, uses information contained within historical values and associated patterns to forecast future movements. Most often, we look at trends, cyclical fluctuations and issues of seasonality. Through the control of parameters associated with each forecasting method, users will try to fine-tune the forecast. The performance of the forecast can be measured through methods such as the Mean Squared Error (MSE).
 
+### 1.4 Scope 
+
 As a demonstration of the time series analysis and the forecasting capabilities of the proposed Shiny Application: The company ***APPLE***  will be used as an example for this report. 
+
+For the purposes of this assignment, we will use the time series data from one single company - *Apple (Ticker: AAPL)*, as an example to illustrate the capabilities and functions of the application. There is no methodical reason to explain why Apple is used for the example other than the fact that it is one of the most recognisable companies in the market. The final product will be scaled up considerably to include more stocks that the users can choose to perform time series analysis and forecasts on. 
+
 
 ## 2. Proposed Visualization
 
@@ -83,8 +88,6 @@ for (p in packages) {
 ### 3.2 Data Preparation
 
 *The application will use open source and live data obtained through the [**tidyquant**](https://cran.r-project.org/web/packages/tidyquant/index.html) package.* 
-
-For the purposes of this assignment, we will use the time series data from one single company - *Apple (Ticker: AAPL)*, as an example to illustrate the capabilities and functions of the application. There is no methodical reason to explain why Apple is used for the example other than the fact that it is one of the most recognisable companies in the market. The final product will be scaled up considerably to include more stocks that the users can choose to perform time series analysis and forecasts on. 
 
 In the code chunk below, we define the key parameters for the time series data-set *ticker_data_daily*. Once again - in the final application these parameters are user defined/selected. 
 
@@ -186,34 +189,6 @@ ticker_daily_adjclose %>%
 
 ```
 
-```{r}
-
-ticker_daily_adjclose %>%
-    mutate(year = year(date)) %>%
-    plot_time_series(date, adjusted,
-                     .smooth_size = 0.2,
-                     .facet_vars   = c(symbol, year), # add groups/facets
-                     .color_var    = year,            # color by year
-                     .facet_ncol   = 3,
-                     .facet_scales = "free",
-                     .interactive  = FALSE)
-
-
-```
-
-```{r}
-
-ticker_daily_adjclose %>%
-    plot_time_series(date, adjusted,
-                     .color_var    = year(date),
-                     .facet_vars   = contains("symbol"),
-                     .facet_ncol   = 2,
-                     .facet_scales = "free",
-                     .interactive  = FALSE)
-
-
-```
-
 ### 3.4 Time Series Forecasting
 
 Before we go into time series forecasting proper. We will need to further breakdown the data into a training dataset to build the model and a testing dataset which will be used to determine the efficacy of the model. For the purposes of this paper, we will use 3 months worth of data for the testing dataset but this can be changed. This can be changed by the user but this in turn will affect the model outputs in terms of accuracy and amount of data available for training the models.
@@ -238,12 +213,14 @@ ticker_daily_adjclose <- subset(ticker_data_daily, select = -c(3,4,5,6,7))
 ```
 
 
-```{r}
+```{r, fig.align="center",layout='l-page'}
+
 splits <- time_series_split(ticker_daily_adjclose, assess = "3 months", cumulative = TRUE)
 
 splits %>%
     tk_time_series_cv_plan() %>%
     plot_time_series_cv_plan(date, adjusted, .interactive = TRUE)
+
 ```
 ```{r}
 
@@ -338,7 +315,7 @@ calibration_table
 
 
 
-```{r}
+```{r, fig.align="center",layout='l-page'}
 
 calibration_table %>%
   modeltime_forecast(actual_data = ticker_daily_adjclose) %>%
@@ -348,7 +325,7 @@ calibration_table %>%
 
 ```
 
-```{r}
+```{r, fig.align="center",layout='l-page'}
 
 calibration_table %>%
   modeltime_accuracy() %>%
@@ -372,7 +349,7 @@ ensemble_fit
 
 
 
-```{r}
+```{r, fig.align="center",layout='l-page'}
 
 calibration_tbl <- modeltime_table(ensemble_fit) %>%
     modeltime_calibrate(testing(splits))
@@ -389,7 +366,7 @@ calibration_tbl %>%
 
 
 
-```{r}
+```{r, fig.align="center",layout='l-page'}
 
 refit_tbl <- calibration_tbl %>%
     modeltime_refit(ticker_daily_adjclose)
