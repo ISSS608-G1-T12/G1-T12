@@ -31,14 +31,14 @@ Traditional financial data websites usually shy away from giving recommendations
 
 ### 1.2 Objective and Motivation
 
-This motivation of building this application and its functionality is **to bridge the gap between user requirements and current market offerings**. The main objective of this sub-section is to allow users to have a forecast of **how the stock prices are likely to move in order to identify potential entry/exit points.** 
+This motivation of building this submodule and its functionality is **to bridge the gap between user requirements and current market offerings** and its main objective of this sub-section is to allow users to have a forecast of **how the stock prices are likely to move in order to identify potential entry/exit points.** 
 
 
 ### 1.3 Time Series Analysis and Forecasting
 
 Time series data is a sequential collection of numerical data points. Particularly for investing, a time series data-set tracks the movement of a chosen index over a period of time with readings recorded at ***regular intervals*** (e.g. daily, monthly, yearly). 
 
-Time series analysis allows users to uncover meaningful information and trends in data collected over time. Time series forecasting on the other hand, uses information contained within historical values and associated patterns to forecast future movements. Most often, we look at trends, cyclical fluctuations and issues of seasonality. Through the control of parameters associated with each forecasting method, users will try to fine-tune the forecast. The performance of the forecast can be measured through methods such as the Mean Squared Error (MSE).
+Time series analysis allows users to uncover meaningful information and trends in data collected over time. Time series forecasting on the other hand, uses information contained within historical values and associated patterns to forecast future movements. Most often, we look at trends, cyclical fluctuations and issues of seasonality. 
 
 ### 1.4 Scope 
 
@@ -133,20 +133,22 @@ ticker_daily_adjclose <- subset(ticker_data_daily, select = -c(3,4,5,6,7))
 
 ### 3.3 Data Visualization - Time Series
 
-We can now plot a timeseries chart for a visual analysis of the data. The chart below shows the trend of stock prices for the years 2018-2020. The slider below it also allows users to zoom in on a data range to have a closer look at the data on a day to day basis. In the Shiny application where users can select the date-range of the data to import, the slider will come in handy when selected date ranges are big.
+We can now plot a timeseries chart for a visual analysis of the data. The chart below shows the trend of stock prices for the years 2018-2020. The slider below it also allows users to zoom in on a data range to have a closer look at the data on a day to day basis. In the Shiny application where users can select the date-range of the data to import, the slider will come in handy when selected date ranges are big. 
 
-```{r}
+```{r,layout='l-page', echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Time Series Plot for AAPL Stock Adjusted Closing Prices."}
 
 ticker_daily_adjclose %>%
     plot_time_series(date, adjusted, 
                      .smooth_size = 0.2,
+                     .title = "AAPL Adjusted Closing Prices 2018-2020",
                      .interactive = TRUE,
                      .plotly_slider = TRUE)
 
 
 ```
+While not part of this exercise, we can also quickly look at how to compare our time series in relation to the one (AAPL) that we are looking at. This code chunk used once again relies on the *tidyquant* package to pull in data from the remain FAANG stocks and also TSLA which has been performing phenomenally over the past year.
 
-```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Importing other tickers for comparison"}
+```{r, echo=TRUE, eval=TRUE, out.width="100%"}
 
 from_date <- "2018-01-01"
 to_date <- "2020-12-31"
@@ -163,7 +165,9 @@ ticker_daily_adjclose <- subset(ticker_data_daily, select = -c(3,4,5,6,7))
 
 ```
 
-```{r}
+Once we have the data, now we will plot them as facet charts so that we can have a closer look at the trends each time series has (code chunk above it). In this plot, the scales are fixed, i.e. the y-axes are synchronized across the rows. This is not very useful to us as the high prices of the AMZN, NFLX, GOOG, TSLA stocks make the trends in AAPL and FB imperceptible. 
+
+```{r,fig.align="center",layout='l-page',echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Plotting other tickers for comparison"}
 
 ticker_daily_adjclose %>%
     group_by(symbol) %>%
@@ -176,14 +180,16 @@ ticker_daily_adjclose %>%
 
 ```
 
-```{r}
+Here we have added another line '.facet_scales = "free"', this frees up the scale to be plotted independently of other charts. Immediately, the trends in AAPL and FB are showing and the chart becomes a lot more useful. More comparisons across different time series can be found in the other sub-modules. As such, we will now go into forecasting proper. 
+
+```{r,fig.align="center",layout='l-page',echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Freeing the Facet Scales"}
 
 ticker_daily_adjclose %>%
     group_by(symbol) %>%
     plot_time_series(date, adjusted, 
                      .smooth_size = 0.2,
                      .facet_ncol  = 2, 
-                     .facet_scales = "free",
+                     .facet_scales = "free", #added
                      .interactive = TRUE)
 
 
@@ -191,11 +197,12 @@ ticker_daily_adjclose %>%
 
 ### 3.4 Time Series Forecasting
 
-Before we go into time series forecasting proper. We will need to further breakdown the data into a training dataset to build the model and a testing dataset which will be used to determine the efficacy of the model. For the purposes of this paper, we will use 3 months worth of data for the testing dataset but this can be changed. This can be changed by the user but this in turn will affect the model outputs in terms of accuracy and amount of data available for training the models.
 
-The following code chunk is then used to create the training and testing sets. 
+#### Step 1 - Data prep
 
-```{r, eval=TRUE, out.width="100%", fig.cap="Importing the required data"}
+```{r, eval=TRUE, out.width="100%"}
+
+# Resetting tickers to just AAPL
 
 from_date <- "2018-01-01"
 to_date <- "2020-12-31"
@@ -212,17 +219,28 @@ ticker_daily_adjclose <- subset(ticker_data_daily, select = -c(3,4,5,6,7))
 
 ```
 
+Before we go into time series forecasting proper. We will need to further breakdown the data into a training dataset to build the model and a testing dataset which will be used to determine the efficacy of the model. For the purposes of this paper, we will use 3 months worth of data for the testing dataset but this can be changed. This can be changed by the user but this in turn will affect the model outputs in terms of accuracy and amount of data available for training the models.
 
-```{r, fig.align="center",layout='l-page'}
+The following code chunk is then used to create the training and testing sets. 
+
+
+```{r,fig.align="center",layout='l-page',echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Splitting the time series dataset"}
 
 splits <- time_series_split(ticker_daily_adjclose, assess = "3 months", cumulative = TRUE)
 
 splits %>%
     tk_time_series_cv_plan() %>%
-    plot_time_series_cv_plan(date, adjusted, .interactive = TRUE)
+    plot_time_series_cv_plan(date, adjusted,
+                             .title = "Time Series Cross Validation Plan",
+                             .interactive = TRUE)
 
 ```
-```{r}
+
+#### Step 2 - Modeling
+
+Next we create a Feature Engineering Recipe that can be applied to the data in order to create features that machine learning models can utilize. 
+
+```{r,echo=TRUE, eval=TRUE, layout='l-page'}
 
 recipe_spec <- recipe(adjusted ~ date, training(splits)) %>%
     step_timeseries_signature(date) %>%
@@ -234,7 +252,21 @@ recipe_spec <- recipe(adjusted ~ date, training(splits)) %>%
 recipe_spec %>% prep() %>% juice()
 
 ```
-```{r}
+We will then create a few forecasting models that the application will use to forecast the forward prices. More literature can be found in the hyperlinks below and the code chunk follows below.
+
+The models that we have included so far are:
+
+1. [ARIMA](https://rdrr.io/cran/forecast/man/Arima.html)
+
+2. [Prophet](https://cran.r-project.org/web/packages/prophet/prophet.pdf)
+
+3. [Elastic Net](https://cran.r-project.org/web/packages/glmnet/index.html)
+
+4. [Decision Tree](https://rstudio-pubs-static.s3.amazonaws.com/439628_922355dd3b0e442db12c7a408769b63e.html)
+
+5. [Prophet with XG Boost](https://rdrr.io/cran/modeltime/man/prophet_boost.html)
+
+```{r,echo=TRUE, eval=TRUE}
 
 # 1 ARIMA
 
@@ -290,7 +322,9 @@ wflw_fit_prophet_boost <- workflow() %>%
   fit(training(splits))
 
 ```
-```{r}
+Next we then create a modeltime_table using the modeltime package. This is to allow for easier calibration and refitting at the later parts of the forecasting.
+
+```{r,echo=TRUE, eval=TRUE}
 
 ticker_models <- modeltime_table(
     wflw_fit_arima,
@@ -305,17 +339,15 @@ ticker_models
 
 ```
 
-```{r}
+##### Step 3 - Calibration and Testing
+
+
+Next we calibrate the model using the test data that we obtain by splitting the full time series dataset into training and testing sets. Using the codechunk below, we also plot the forecasts of all 5 models against that of the actual test data. This will give us a rough idea of the accuracy of model.
+
+```{r,echo=TRUE, eval=TRUE, fig.align="center",layout='l-page'}
+
 calibration_table <- ticker_models %>%
   modeltime_calibrate(testing(splits))
-
-calibration_table
-
-```
-
-
-
-```{r, fig.align="center",layout='l-page'}
 
 calibration_table %>%
   modeltime_forecast(actual_data = ticker_daily_adjclose) %>%
@@ -325,6 +357,8 @@ calibration_table %>%
 
 ```
 
+Of course, it is obvious that not all models workout. From the previous chart, we can tell that the Random Forest model and the GLMNet Model are producing results way off from the test data set. This means that we should consider dropping those models while building the final application. We then build a modeltime_accuracy table to determine which models to drop quantitatively. Using MAPE as a measure, we will select only the top 3 models in building the ensemble model, which means that in this scenario, we will drop the Random Forest and GLMNet Models.
+
 ```{r, fig.align="center",layout='l-page'}
 
 calibration_table %>%
@@ -333,11 +367,14 @@ calibration_table %>%
 
 ```
 
+##### Step 4 - Building the Ensemble model
+
+When we present the timeseries forecastting results, we will only present a unified/aggregated set of forecasts from the ensemble model to avoid confusing the user. In our application, the ensemble model uses the mean of the forecast of the models with the top 3 MAPE measures. The mean of the forecasts will then be shown in the chart as the expected future share price of the stock that the users will use for decision making. The ensemble model approach is used to combine the strengths and eliminate the weaknenss of each model.
 
 ```{r}
 
 ensemble_fit <- ticker_models %>%
-    # Remove Random Forest and GLMNET due to low accuracy
+    # Remove Random Forest and GLMNET due to low accuracy - CHANGE TO INTERACTIVE
     filter(.model_id != 3 & .model_id != 4 ) %>%
     ensemble_average(type = "mean")
 
@@ -345,9 +382,7 @@ ensemble_fit
 
 ```
 
-
-
-
+Next we plot the ensemble model results against the test data. From the plot, we can see that the trend of the forecast is largely similar to that of the test data.
 
 ```{r, fig.align="center",layout='l-page'}
 
@@ -364,7 +399,7 @@ calibration_tbl %>%
 
 ```
 
-
+Finally, we refit the ensemble model results against the full dataset in order to forecast forward, this is done using the model_refit function. We can also see the confidence intervals of the future prices. The larger the confidence interval is will indicate a more volatile stock price. This is also the final visual that users will interact with when using the shiny application. The steps taken to get to this point are largely transparent to the user and will not be shown. 
 
 ```{r, fig.align="center",layout='l-page'}
 
@@ -383,6 +418,7 @@ refit_tbl %>%
 
 ## 4. Conclusions and Insights
 
+
 ## 5. References
 
 https://blogs.oracle.com/ai-and-datascience/post/performing-a-time-series-analysis-on-the-sampp-500-stock-index#:~:text=Time%2Dseries%20analysis%20is%20a,to%20predict%20future%20stock%20values 
@@ -391,4 +427,6 @@ https://machinelearningmastery.com/time-series-forecasting-performance-measures-
 
 
 https://yiqiaoyin.files.wordpress.com/2017/05/time-series-analysis-on-stock-returns.pdf
+
+https://cran.r-project.org/web/packages/modeltime.ensemble/vignettes/getting-started-with-modeltime-ensemble.html
 
