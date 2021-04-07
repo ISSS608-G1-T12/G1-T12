@@ -47,15 +47,9 @@ As a demonstration of the time series analysis and the forecasting capabilities 
 For the purposes of this assignment, we will use the time series data from one single company - *Apple (Ticker: AAPL)*, as an example to illustrate the capabilities and functions of the application. There is no methodical reason to explain why Apple is used for the example other than the fact that it is one of the most recognisable companies in the market. The final product will be scaled up considerably to include more stocks that the users can choose to perform time series analysis and forecasts on. 
 
 
-## 2. Proposed Visualization
+## 2. Building the Visualization
 
-### 2.1 Sketch of Proposed Visualization
-
-### 2.2 Suggested Interactivity in the Proposed Visualization
-
-## 3. Building the Visualization
-
-### 3.1 Setting up the enviroment/libraries
+### 2.1 Setting up the enviroment/libraries
 
 First, we run this first line of code to clear the environment and remove existing R objects (if any)
 
@@ -85,7 +79,7 @@ for (p in packages) {
 
 ```
 
-### 3.2 Data Preparation
+### 2.2 Data Preparation
 
 *The application will use open source and live data obtained through the [**tidyquant**](https://cran.r-project.org/web/packages/tidyquant/index.html) package.* 
 
@@ -131,7 +125,7 @@ ticker_daily_adjclose <- subset(ticker_data_daily, select = -c(3,4,5,6,7))
 
 ```
 
-### 3.3 Data Visualization - Time Series
+### 2.3 Data Visualization - Time Series
 
 We can now plot a timeseries chart for a visual analysis of the data. The chart below shows the trend of stock prices for the years 2018-2020. The slider below it also allows users to zoom in on a data range to have a closer look at the data on a day to day basis. In the Shiny application where users can select the date-range of the data to import, the slider will come in handy when selected date ranges are big. 
 
@@ -146,56 +140,7 @@ ticker_daily_adjclose %>%
 
 
 ```
-While not part of this exercise, we can also quickly look at how to compare our time series in relation to the one (AAPL) that we are looking at. This code chunk used once again relies on the *tidyquant* package to pull in data from the remain FAANG stocks and also TSLA which has been performing phenomenally over the past year.
-
-```{r, echo=TRUE, eval=TRUE, out.width="100%"}
-
-from_date <- "2018-01-01"
-to_date <- "2020-12-31"
-
-
-ticker_selected <- c("AAPL","AMZN","FB","GOOG","NFLX","TSLA") 
-
-ticker_data_daily <- tq_get(ticker_selected,
-                            get = "stock.prices",
-                            from = from_date,
-                            to = to_date)
-
-ticker_daily_adjclose <- subset(ticker_data_daily, select = -c(3,4,5,6,7))
-
-```
-
-Once we have the data, now we will plot them as facet charts so that we can have a closer look at the trends each time series has (code chunk above it). In this plot, the scales are fixed, i.e. the y-axes are synchronized across the rows. This is not very useful to us as the high prices of the AMZN, NFLX, GOOG, TSLA stocks make the trends in AAPL and FB imperceptible. 
-
-```{r,fig.align="center",layout='l-page',echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Plotting other tickers for comparison"}
-
-ticker_daily_adjclose %>%
-    group_by(symbol) %>%
-    plot_time_series(date, adjusted, 
-                     .smooth_size = 0.2,
-                     .facet_ncol  = 2,    
-                     .facet_scales = "fixed",
-                     .interactive = TRUE)
-
-
-```
-
-Here we have added another line '.facet_scales = "free"', this frees up the scale to be plotted independently of other charts. Immediately, the trends in AAPL and FB are showing and the chart becomes a lot more useful. More comparisons across different time series can be found in the other sub-modules. As such, we will now go into forecasting proper. 
-
-```{r,fig.align="center",layout='l-page',echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Freeing the Facet Scales"}
-
-ticker_daily_adjclose %>%
-    group_by(symbol) %>%
-    plot_time_series(date, adjusted, 
-                     .smooth_size = 0.2,
-                     .facet_ncol  = 2, 
-                     .facet_scales = "free", #added
-                     .interactive = TRUE)
-
-
-```
-
-### 3.4 Time Series Forecasting
+### 2.4 Time Series Forecasting
 
 
 #### Step 1 - Data prep
@@ -361,21 +306,31 @@ Of course, it is obvious that not all models workout. From the previous chart, w
 
 ```{r, fig.align="center",layout='l-page'}
 
-calibration_table %>%
-  modeltime_accuracy() %>%
-  table_modeltime_accuracy(.interactive = TRUE)
+accuracies <- calibration_table %>%
+                modeltime_accuracy()
+                #table_modeltime_accuracy()
 
 ```
 
 ##### Step 4 - Building the Ensemble model
 
-When we present the timeseries forecastting results, we will only present a unified/aggregated set of forecasts from the ensemble model to avoid confusing the user. In our application, the ensemble model uses the mean of the forecast of the models with the top 3 MAPE measures. The mean of the forecasts will then be shown in the chart as the expected future share price of the stock that the users will use for decision making. The ensemble model approach is used to combine the strengths and eliminate the weaknenss of each model.
+When we present the time series forecasting results, we will only present a unified/aggregated set of forecasts from the ensemble model to avoid confusing the user. In our application, the ensemble model uses the mean of the forecast of the models with the top 3 MAPE measures. The mean of the forecasts will then be shown in the chart as the expected future share price of the stock that the users will use for decision making. The ensemble model approach is used to combine the strengths and eliminate the weaknenss of each model.
 
+```{r}
+
+retain_models <- accuracies %>%
+                    top_n(-3,mape)
+
+retain_indexes <- list(retain_models$.model_id)
+
+retain_indexes
+
+```
 ```{r}
 
 ensemble_fit <- ticker_models %>%
     # Remove Random Forest and GLMNET due to low accuracy - CHANGE TO INTERACTIVE
-    filter(.model_id != 3 & .model_id != 4 ) %>%
+    subset(.model_id %in% retain_indexes[[1]]) %>%
     ensemble_average(type = "mean")
 
 ensemble_fit
@@ -416,8 +371,14 @@ refit_tbl %>%
 
 ```
 
-## 4. Conclusions and Insights
+## 3. Conclusions and Insights
 
+
+## 4. Proposed Visualization
+
+### 4.1 Sketch of Proposed Visualization
+
+### 4.2 Suggested Interactivity in the Proposed Visualization
 
 ## 5. References
 
