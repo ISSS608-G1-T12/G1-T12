@@ -12,6 +12,7 @@ author:
     url: https://www.linkedin.com/in/yiheen-boey/
 date: 03-24-2021
 output:
+preview: 
   distill::distill_article:
     self_contained: false
     toc: true
