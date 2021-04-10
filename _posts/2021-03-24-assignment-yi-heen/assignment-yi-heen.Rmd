@@ -48,6 +48,14 @@ For the purposes of this assignment, we will use the time series data from one s
 
 ## 2. Literature Review
 
+In the literature review conducted, there are two key methods for forecasting future stock prices. Firstly - fundamental analysis, which uses the information provided in a company’s financial statement and annual reports, and secondly technical analysis, which uses past trends in the stock market. 
+
+In this report, historical prices are sole data points used to predict the movement in stock prices. While similar to technical analysis in using past data, time series forecasting is not the same as technical analysis and can be seen as a natural extension/logical next step after conducting technical analysis. The main difference is that time series forecasting gives you an exact forecasted price, while technical analysis only predicts the future movement (up/down) of the price (Berdiell, 2015).
+
+The fundamental idea of this method is to seek out patterns in the historical stock prices with a hybrid approach. A hybrid approach combine multiple different models to forecast stock prices. For example, the papers of Markowska-Kaczmar and Dziedzic (2008) and Wang et al (2015) both proposed tackling stock price forecasting with an amalgamation of multiple models instead of just relying on one form of forecasting. This has been shown to result in superior forecasting accuracy and performance as compared to using a dedicated forecasting method. The researches of Dey et al. (2016) has also shown similar results albeit with some overfitting issues and a limited testing scenario. 
+
+With the literature review conducted in mind, the application that we built will draw on the researches conducted by the others beforehand to build a more robust hybrid forecasting model. The modification that is made with regards to the existing hybrid techniques is that the application will do a forecast based on 5 different model then present the mean of the 3 best performing ones. This means that not all models will make the cut in the final forecast presented to the users. 
+
 ## 3. Building the Visualization
 
 ### 3.1 Setting up the enviroment/libraries
@@ -429,3 +437,6 @@ https://yiqiaoyin.files.wordpress.com/2017/05/time-series-analysis-on-stock-retu
 
 https://cran.r-project.org/web/packages/modeltime.ensemble/vignettes/getting-started-with-modeltime-ensemble.html
 
+https://core.ac.uk/download/pdf/43552332.pdf
+
+https://www.sciencedirect.com/science/article/abs/pii/S0305048311001435?via%3Dihub
