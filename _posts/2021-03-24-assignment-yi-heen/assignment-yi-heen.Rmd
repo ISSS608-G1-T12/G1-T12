@@ -440,3 +440,5 @@ https://cran.r-project.org/web/packages/modeltime.ensemble/vignettes/getting-sta
 https://core.ac.uk/download/pdf/43552332.pdf
 
 https://www.sciencedirect.com/science/article/abs/pii/S0305048311001435?via%3Dihub
+
+https://www.researchgate.net/publication/309492895_Forecasting_to_Classification_Predicting_the_direction_of_stock_market_price_using_Xtreme_Gradient_Boosting?channel=doi&linkId=581384c008aedc7d8961e371&showFulltext=true
