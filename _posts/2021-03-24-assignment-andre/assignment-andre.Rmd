@@ -21,6 +21,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
+
 ```{r}
 #Load packages
 packages = c("tidyquant","tidyverse","ggpubr","ggplot2","dplyr","cluster","formattable","reshape2","zoo","tibble","ggdendro","knitr","kableExtra","dendextend","plotly","scales","data.table")
@@ -122,42 +123,40 @@ kable(df, col.names = c("Data Source", "Purpose"), escape = F) %>%
   row_spec(0, align = "c", background = "gray")
 ```
 
-The Bloomberg Terminal is used to pull the historical yearly financial ratios and volatility for the stocks. Bloomberg nicely stores these data points which can be easily pulled into csv format. 
+The Bloomberg Terminal is used to pull the historical yearly financial ratios and volatility for the stocks. Bloomberg nicely stores these data points which can be easily pulled into csv format. For each stock in our stock universe, yearly historical values from 2015-2020 are pulled for the variables as mentioned above: 'Dividend Yield', 'Return on Assets', 'Total Debt to Assets', '1-Year Volatility'. The resultant dataframe is shown below: 
 
-```{r eval=TRUE, echo=FALSE, code.cap = "Read dataset pulled from Bloomberg, create Year column"}
+```{r eval=TRUE, echo=TRUE, code.cap = "Read dataset pulled from Bloomberg, create Year column"}
 library(rmarkdown)
 bloomberg_data <- read_csv("nasdaq_ratios.csv") %>%
   mutate(across(where(is.numeric), round, 2))
 
-bloomberg_data$Date <- as.Date(bloomberg_data$Date, format="%d/%m/%y") #convert to date format
-bloomberg_data$Year <- format(bloomberg_data$Date, format="%Y") #Make a Year column
-bloomberg_data$Year <- as.numeric(bloomberg_data$Year)
+#convert to date format
+bloomberg_data$Date <- as.Date(bloomberg_data$Date, format="%d/%m/%y") 
+#Make a Year column
+bloomberg_data$Year <- format(bloomberg_data$Date, format="%Y") 
+#Make Year into numeric form
+bloomberg_data$Year <- as.numeric(bloomberg_data$Year) 
 
 paged_table(bloomberg_data)
 ```
+<center>**Table 1 (bloomberg_data): Data from Bloomberg**</center><br/>
 
 
-We use tidyquant package solely to pull historical prices of the stocks. The reason we use tidyquant rather than using Bloomberg is because tidyquant package has functions which can help us calculate returns for different periodicities, such as annual or monthly.
+
+We use tidyquant package solely to pull historical prices of the stocks, which we then convert to yearly returns. The reason we use tidyquant rather than using Bloomberg is because tidyquant package has functions which can help us automatically calculate returns for different periodicities, such as annual or monthly. In this context, we look at yearly returns from 2015-2020 for the stocks in our stock universe.
 
 ```{r eval=TRUE, echo=FALSE, fig.cap = "Use tidyquant to pull stock prices for NASDAQ-100 Index Constituents from 2015"}
+ #Get Stock Prices from 2015
 Stocks <- 
-  tq_get(c("AAPL",  "ADBE",  "ADI"  , "ADP" ,  "ADSK" , "ALGN" , "ALXN",  "AMAT",  "AMD" ,  "AMGN" , "AMZN",  "ANSS" , "ATVI" , "AVGO"  ,"BIDU" , "BIIB",  "BKNG" , "CDNS" , "CDW" ,  "CERN" , "CHKP",  "CHTR",  "CMCSA",
-"COST" , "CPRT" , "CSCO" , "CSX" ,  "CTAS" , "CTSH",  "DLTR", "DXCM" , "EA",    "EBAY" , "EXC" ,  "FAST","FB",  "FISV" , "FOXA",  "GILD",  "GOOGL", "IDXX" , "ILMN",
- "INCY" , "INTC" , "INTU",  "ISRG" , "JD" ,   "KHC" , 
- "KLAC" , "LRCX" , "LULU",  "MAR" ,  "MCHP",  "MDLZ", 
- "MELI" , "MNST"  ,"MRVL"  ,"MSFT" , "MU"  ,  "MXIM" ,
- "NFLX" , "NTES",  "NVDA" , "NXPI" , "ORLY" , "PAYX" ,
- "PCAR" , "PEP" ,  "PYPL"  ,"QCOM",  "REGN" , "ROST" ,
- "SBUX" , "SGEN",  "SIRI" , "SNPS" , "SWKS" , "TCOM", 
- "TEAM" , "TMUS" , "TSLA" , "TXN"  , "VRSK",  "VRSN", 
+  tq_get(c("AAPL",  "ADBE",  "ADI"  , "ADP" ,  "ADSK" , "ALGN" , "ALXN",  "AMAT",  "AMD" ,  "AMGN" , "AMZN",  "ANSS" , "ATVI" , "AVGO"  ,"BIDU" , "BIIB",  "BKNG" , "CDNS" , "CDW" ,  "CERN" , "CHKP",  "CHTR",  "CMCSA","COST" , "CPRT" , "CSCO" , "CSX" ,  "CTAS" , "CTSH",  "DLTR", "DXCM" , "EA",    "EBAY" , "EXC" ,  "FAST","FB",  "FISV" , "FOXA",  "GILD",  "GOOGL", "IDXX" , "ILMN", "INCY" , "INTC" , "INTU",  "ISRG" , "JD" ,   "KHC" , "KLAC" ,"LRCX" , "LULU",  "MAR" ,  "MCHP",  "MDLZ",  "MELI" , "MNST"  ,"MRVL"  ,"MSFT" , "MU"  ,  "MXIM" , "NFLX" , "NTES",  "NVDA" , "NXPI" , "ORLY" , "PAYX" , "PCAR" , "PEP" ,  "PYPL"  ,"QCOM",  "REGN" , "ROST" , "SBUX" , "SGEN",  "SIRI" , "SNPS" , "SWKS" , "TCOM",  "TEAM" , "TMUS" , "TSLA" , "TXN"  , "VRSK", "VRSN",
  "VRTX" , "WBA"  , "XEL" ,  "XLNX" , "ZM" ), 
  get = "stock.prices", from = "2015-01-01") %>%
   group_by(symbol)
 
-
+#Turn Prices into Yearly Returns
 returns_yearly <- 
   Stocks %>%
-    tq_transmute(select = adjusted, mutate_fun = periodReturn, period = "yearly") 
+    tq_transmute(select = adjusted, mutate_fun = periodReturn, period = "yearly")  
 
 returns_yearly$Year <- format(returns_yearly$date, format="%Y") %>%
   as.numeric(returns_yearly$Year)
@@ -171,10 +170,11 @@ returns_yearly_final <- returns_yearly  %>%
 
 paged_table(returns_yearly_final)
 ```
+<center>**Table 2 (returns_yearly): Data from tidyquant**</center><br/>
 
 After pulling the required data from Bloomberg and tidyquant, we end up with 2 tibbles: bloomberg_data (from Bloomberg) and returns_yearly (from tidyquant). We then join them into one single tibble by inner joining on the columns 'Ticker' and 'Year'. This gives a single tibble containing the past 5 years' historical data, made up of the 5 variables we will be conducting clustering on, for the 89 Nasdaq-100 stocks.
 
-In this example, we do the clustering on the year 2017, on the variables '1-Year Return','1-Year Volatility','Average Dividend Yield','Return on Assets' and 'Total Debt to Total Assets'. The following table shows all the stocks' values for the variables in 2017:
+In this example, we do the clustering on the year 2017, on the 5 variables '1-Year Return','1-Year Volatility','Average Dividend Yield','Return on Assets' and 'Total Debt to Total Assets'. The following table shows all the stocks' values for the variables in 2017:
 
 ```{r echo=FALSE}
 combine <- dplyr::inner_join(bloomberg_data, returns_yearly_final, by =c("Ticker"="Ticker","Year"="Year"))
@@ -185,8 +185,12 @@ select_yearfilter <- combine %>%
   select('Ticker','1-Year Return','1-Year Volatility','Average Dividend Yield','Return on Assets','Total Debt to Total Assets') %>% #select the variables to cluster
   #column_to_rownames('Ticker') %>% #make the Ticker column become rownames 
   mutate(across(where(is.numeric), round, 2))
+
 paged_table(select_yearfilter)
 ```
+<center>**Table 3 (combine): Combined data from Bloomberg and tidyquant, for the year 2017**</center><br/>
+
+
 ```{r ECHO=FALSE}
 select_yearfilter <- select_yearfilter %>%
   column_to_rownames('Ticker') #make the Ticker column become rownames 
@@ -205,7 +209,7 @@ clust_dist <- dist(select_yearfilter,method = "euclidean")
 clust <- hclust(clust_dist , method = "ward.D2")
 ```
 
-We then plot the dendrogram, with the user able to choose how many clusters to cut the dendrogram into, with the clusters being clearly outlined. In this case, user specifies to cut into k=20 clusters.
+We then plot the dendrogram, with the user able to choose how many clusters to cut the dendrogram into, with the clusters being clearly outlined in red dotted lines. In this case, user specifies to cut into k=20 clusters.
 
 ```{r eval=FALSE, fig.height=20}
 plot(clust)
@@ -215,7 +219,7 @@ rect.hclust(clust, k=20, border = "cadetblue") #choose to cut into 20 clusters
 
 ```
 
-```{r fig.height=20, ECHO=TRUE}
+```{r fig.height=20, echo=TRUE}
 clust_dend <- as.dendrogram(clust)
 plot(clust_dend, horiz = TRUE)
 rect.dendrogram(clust_dend, k=20, horiz = TRUE, border = "red", lty = 5, lwd = 2)
@@ -223,7 +227,7 @@ rect.dendrogram(clust_dend, k=20, horiz = TRUE, border = "red", lty = 5, lwd = 2
 
 We can visualise on the line graph below each cluster's characteristics for each variable. plotly interactivity has been added so that individual clusters can be isolated by double-clicking on the cluster in the legend:
 
-```{r echo=FALSE, fig.width=15, fig.height=10,out.width='130%',out.height='100%'}
+```{r echo=TRUE, fig.width=15, fig.height=10,out.width='130%',out.height='100%'}
 #Get breakdown of stocks in each cluster
 groups<- data.frame(cutree(clust, k =20))
 
@@ -243,9 +247,20 @@ final_cluster_breakdown <- cluster_breakdown %>%
 final_cluster_breakdown$`1-Year Return`<- final_cluster_breakdown$`1-Year Return` * 100
 
 final_cluster_breakdown_melt <- melt(final_cluster_breakdown,id = "Cluster")
+
+#Plot line graph
+p <- ggplot(data = final_cluster_breakdown_melt) +
+  geom_line(aes(x=variable, y = value, colour = as.factor(Cluster), group = Cluster)) +
+  labs(colour="Cluster" , y= "value (%)") +
+  theme(axis.text.x  = element_text(angle=45, hjust = 1))
+
+#Give plotly interactivity to graph
+fig <- ggplotly(p)
+
+fig
 ```
 
-```{r}
+```{r eval=FALSE}
 p <- ggplot(data = final_cluster_breakdown_melt) +
   geom_line(aes(x=variable, y = value, colour = as.factor(Cluster), group = Cluster)) +
   labs(colour="Cluster" , y= "value (%)") +
@@ -271,6 +286,7 @@ final_cluster_breakdown_ordered <- final_cluster_breakdown %>%
 paged_table(final_cluster_breakdown_ordered)
 
 ```
+<center>**Table 4: Clusters ranked by descending order of Sharpe ratio**</center><br/>
 
 We see that Cluster 4 had the highest Return/Volatility ratio, so we proceed to see how this cluster performed in the next year, 2018. We first see each cluster's constituent stocks:
 
@@ -379,7 +395,9 @@ kable(df, col.names = c("Interactivity", "Elaboration"), escape = F) %>%
 
 ## 6. Conclusion and Insights
 
-The example in the above section of how we can use clustering analysis to enhance portfolio selection decisions is just one of many possibilities. For example, an investor can also use the analysis to construct a portfolio consisting of stocks from different clusters so as to arrive at a portfolio consisting of stocks of differing characteristics for the sake of diversification.
+The example of investing in Cluster 4 stocks is an example of momentum investing by betting that Cluster 4's Returns/Volatility outperformance in 2017 would carry on in 2018. This is just one way of how we can use clustering analysis to enhance portfolio selection decisions. 
+
+Another useful use case for clustering analysis is portfolio diversification. For example, an investor can also use the analysis to construct a portfolio consisting of stocks from different clusters so as to arrive at a diversified portfolio consisting of stocks of differing characteristics. By diversifying in this manner, if companies of a certain kind of financial profile experience a downturn during a period (for example stocks with higher Total Debt to Total Assets in the event of a hike in interest rates), the investor's portfolio performance will be shielded by the presence of other stocks of a lower debt profile.
 
 Clustering analysis can provide rookie investors with an alternative perspective of portfolio construction. Combined with other forms of analysis, it could prove to be a useful tool in enhancing returns.
 
@@ -395,46 +413,7 @@ http://www.sthda.com/english/wiki/beautiful-dendrogram-visualizations-in-r-5-mus
 
 https://www.ssga.com/us/en/institutional/etfs/funds/the-technology-select-sector-spdr-fund-xlk
 
+https://cran.r-project.org/web/packages/tidyquant/vignettes/TQ05-performance-analysis-with-tidyquant.html
 
 
 
-
-
-
-
-
- 
-
-
-
-```{r}
-# data.frame(cutree(clust, k=20))
-d <- data.frame(Cluster_ID = cutree(clust,k=20)) 
-  # filter(Cluster_ID == 4)
-d
-```
-
-```{r}
-# creates a single item vector of the clusters    
-myclusters <- cutree(clust, k=20)
-# myclusters <- tibble::rownames_to_column(myclusters,"Stock")
-# myclusters$Stock <- rownames(myclusters)
-# make the dataframe of two columns cluster number and label
-clusterDF <-  data.frame(Cluster = as.numeric(unlist(myclusters)),
-                         Branch = names(myclusters))
-
-# sort by cluster ascending
-clusterDFSort <- clusterDF %>% arrange(Cluster)
-
-# get final table of stocks in each cluster
-agg=aggregate(clusterDFSort$Branch, list(clusterDFSort$Cluster), paste, collapse=",") %>%
-  rename(
-    Cluster = Group.1,
-    Stocks = x
-  )
-# clusterDF
-agg
-```
-```{r}
-table(cutree(clust,20))
-```
