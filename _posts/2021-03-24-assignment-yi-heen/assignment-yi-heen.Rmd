@@ -6,13 +6,12 @@ description: |
   For one, these websites do not provide tools to allow the user to compare stocks meaningfully or zoom in to the statistical properties of financial returns. For example, a user is unable to conduct correlation analysis or visualize the distribution of returns. Secondly, these websites also do not provide any form of forecasting to aid in investors’ decisions.
     
   This project aims to improve on the current offering of financial data websites through, Exploratory Data Analysis, Time-Series Forecasting and also Time-Series Clustering.
-  
+preview: final.png  
 author:
   - name: Yi Heen, Boey
     url: https://www.linkedin.com/in/yiheen-boey/
 date: 03-24-2021
 output:
-preview: 
   distill::distill_article:
     self_contained: false
     toc: true
