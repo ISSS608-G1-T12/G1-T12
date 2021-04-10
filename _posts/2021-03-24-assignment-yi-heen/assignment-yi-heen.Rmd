@@ -46,10 +46,11 @@ As a demonstration of the time series analysis and the forecasting capabilities 
 
 For the purposes of this assignment, we will use the time series data from one single company - *Apple (Ticker: AAPL)*, as an example to illustrate the capabilities and functions of the application. There is no methodical reason to explain why Apple is used for the example other than the fact that it is one of the most recognisable companies in the market. The final product will be scaled up considerably to include more stocks that the users can choose from in order to perform time series forecasts on. 
 
+## 2. Literature Review
 
-## 2. Building the Visualization
+## 3. Building the Visualization
 
-### 2.1 Setting up the enviroment/libraries
+### 3.1 Setting up the enviroment/libraries
 
 First, we run this first line of code to clear the environment and remove existing R objects (if any)
 
@@ -79,7 +80,7 @@ for (p in packages) {
 
 ```
 
-### 2.2 Data Preparation
+### 3.2 Data Preparation
 
 *The application will use open source and live data obtained through the [**tidyquant**](https://cran.r-project.org/web/packages/tidyquant/index.html) package.* 
 
@@ -125,7 +126,7 @@ ticker_daily_adjclose <- subset(ticker_data_daily, select = -c(3,4,5,6,7))
 
 ```
 
-### 2.3 Data Visualization - Time Series
+### 3.3 Data Visualization - Time Series
 
 We can now plot a timeseries chart for a visual analysis of the data. The chart below shows the trend of stock prices for the years 2018-2020. The slider below it also allows users to zoom in on a data range to have a closer look at the data on a day to day basis. In the Shiny application where users can select the date-range of the data to import, the slider will come in handy when selected date ranges are big. 
 
@@ -140,7 +141,7 @@ ticker_daily_adjclose %>%
 
 
 ```
-### 2.4 Time Series Forecasting
+### 3.4 Time Series Forecasting
 
 
 #### Step 1 - Data prep
@@ -369,7 +370,7 @@ refit_tbl %>%
 
 ```
 
-## 3. Insights
+## 4. Insights
 
 ##### Insight 1
 
@@ -383,7 +384,7 @@ knitr::include_graphics("comparison.png")
 
 ##### Insight 2
 
-Including a table for model accuracy and all the different accuracy measures will also help the user choose a better forecasting model. While the current report chooses MAPE as its accuracy measure, other investors might prefer different accuracy measures that can result in different forecasts. A short explainer will be included to describe each accuracy measure and how they differ from each other. 
+Including a table for model accuracy and all the different accuracy measures will also help the user choose a better forecasting model. While the current report chooses MAPE as its accuracy measure, other investors might prefer different accuracy measures that can result in different forecasts. A short explanation will be included to describe each accuracy measure and how they differ from each other. 
 
 The number of models included in the ensemble model will remain at 3 in order to prevent the forecast from being distorted by unreliable models. 
 
@@ -396,14 +397,26 @@ table_modeltime_accuracy(accuracies)
 
 ```
 
-##### Insight 3
-
-
 ## 4. Proposed Visualization
 
-### 4.1 Sketch of Proposed Visualization
+### 4.1 Suggested Interactivity in the Proposed Visualization
 
-### 4.2 Suggested Interactivity in the Proposed Visualization
+1. Input ticker of stock to be forecasting
+
+2. Time period of time series data ingesting for forecasting
+
+3. Accuracy Measure of Forecasted Models (e.g. MAE/MAPE/MASE/SMAPE/RMSE/RSQ)
+
+4. Forecasting Period (between 1 month and 12 months)
+
+## 4.2 Sketch of Proposed Visualization
+
+The proposed design is as follows.
+
+```{r, fig.align="center",echo=FALSE, out.width="100%", fig.cap="Handdrawn sketch of the Shiny Application sub-module."}
+knitr::include_graphics("sketch.png")
+```
+
 
 ## 5. References
 
