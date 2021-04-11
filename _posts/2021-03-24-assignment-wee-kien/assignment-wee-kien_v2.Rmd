@@ -14,6 +14,8 @@ date: 03-24-2021
 output:
   distill::distill_article:
     self_contained: false
+    toc: true
+    toc_depth: 3
 ---
 
 
@@ -27,7 +29,13 @@ knitr::opts_chunk$set(echo = FALSE)
 
 Traditional financial data websites usually shy away from giving recommendations or advising users on investing decisions. While in depth studies are often conducted and used in academia or research, the outputs of these studies are often not accessible nor timely enough for the regular user. This means that these websites and their applications are limited in their use-cases. This can be due to issues arising from financial or legal liability if users act on the recommendations coming from these financial websites. As such we feel that this a gap between what is available publicly and user requirements. 
 
-### 1.2 Objective/ Motivation and literature review
+### 1.2 Literature review, Objective/ Motivation 
+
+In the literature review conducted, it was found that there have been various attempts by users to provide tools for analysing stock price action. Existing charting or dashboarding tools often focus on only simple charting or technical indicator functionalities. Most open source/ free tools *only offer the various functionalities in isolation*, and users are *unable to have a holistic view* uniting technical analysis, portfolio analysis, and the other components to allow for complete decision making when *making buying and selling decisions.*
+
+In the final product, the team will put together various sub-modules spanning across:  **Charting, Technical Analysis, Correlation Analysis**, Clustering, Forecasting, **Portfolio Analysis.**
+
+The motivation of building this sub-module is to focus on those mentioned in bold above.
 
 This sub-module aims to provide rookie investors with tools to observe: a) The price action of various securities, b) Correlation of chosen stocks vs an underlying benchmark, and c) Portfolio performance over time.
 
@@ -39,20 +47,11 @@ The subsequent sections are mainly split into the following features:
   - Individual portfolio returns
   - Equity curve/ portfolio growth over time
 
-
-LITERATURE REVIEW HERE
-
-
-
 ### 1.3 Charting and Technical Analysis
 
 In this module, users are able to visualize the chosen stock symbol using a candlestick chart. Open, High, Low, and Close prices for the selected period are shown on the chart.
 
-In addition, users are able to choose between 2 sets of technical indicators: Simple moving averages and Bollinger Bands.
-
-Users are able to see the chosen symbol on 1 chart, and the accompanying benchmark index chosen on another chart.
-
-Both charts are created in an interactive manner using the plotly package.
+In addition, users are able to choose between 2 sets of technical indicators: Simple moving averages and Bollinger Bands. Users are able to see the chosen symbol on 1 chart, and the accompanying benchmark index chosen on another chart. Both charts are created in an interactive manner using the plotly package.
 
 Finally, multiple features based on candlestick patterns are created and available through a table. Such candlestick patterns inform users of certain bullish or bearish price action patterns observed. This provides a different perspectives to users incline towards technical analysis.
 
@@ -124,6 +123,8 @@ to_date <- "2019-12-31"
 period_type <- "days"
 # "days"/ "weeks"/ "months"/ "years"
 ```
+
+*The application will use open source and live data obtained through the [**tidyquant**](https://cran.r-project.org/web/packages/tidyquant/index.html) package.* 
 
 Users are able to select the individual stock symbol and benchmark index of their choice. The following code chunk utilizes the tidyquant package to extract stock data from Yahoo Finance. Depending on the period_type specified by users before, the periodicity can be changed.
 
