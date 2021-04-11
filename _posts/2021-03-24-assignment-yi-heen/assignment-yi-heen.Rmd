@@ -1,11 +1,7 @@
 ---
-title: "Investing 101: A visual and predictive guide for the rookie investor - Yi Heen"
+title: "Investing 101: Time Series Forecasting of Stock Prices"
 description: |
-  Existing financial data websites such as Yahoo Finance do a good job in providing historical price data and technical indicators, but the beginner investor lacks the knowledge to properly utilise and benefit from these. In addition, we have also identified several gaps in such websites.
-  
-  For one, these websites do not provide tools to allow the user to compare stocks meaningfully or zoom in to the statistical properties of financial returns. For example, a user is unable to conduct correlation analysis or visualize the distribution of returns. Secondly, these websites also do not provide any form of forecasting to aid in investors’ decisions.
-    
-  This project aims to improve on the current offering of financial data websites through, Exploratory Data Analysis, Time-Series Forecasting and also Time-Series Clustering.
+  This sub-module aims to improve on the current offering of financial data websites through Time-Series Forecasting.
 preview: final.png  
 author:
   - name: Yi Heen, Boey
@@ -138,7 +134,7 @@ ticker_daily_adjclose <- subset(ticker_data_daily, select = -c(3,4,5,6,7))
 
 We can now plot a timeseries chart for a visual analysis of the data. The chart below shows the trend of stock prices for the years 2018-2020. The slider below it also allows users to zoom in on a data range to have a closer look at the data on a day to day basis. In the Shiny application where users can select the date-range of the data to import, the slider will come in handy when selected date ranges are big. 
 
-```{r,layout='l-page', echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Time Series Plot for AAPL Stock Adjusted Closing Prices."}
+```{r,layout='l-page', fig.align="center", echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Time Series Plot for AAPL Stock Adjusted Closing Prices."}
 
 ticker_daily_adjclose %>%
     plot_time_series(date, adjusted, 
@@ -298,7 +294,8 @@ ticker_models
 
 Next we calibrate the model using the test data that we obtained by splitting the full time series dataset into training and testing sets. Using the codechunk below, we also plot the forecasts of all 5 models against that of the actual test data. This will give us a rough idea of the accuracy of model.
 
-```{r,echo=TRUE, eval=TRUE, fig.align="center",layout='l-page'}
+```{r,layout='l-page', fig.align="center", echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Forecasted results of individual models"}
+
 
 calibration_table <- ticker_models %>%
   modeltime_calibrate(testing(splits))
@@ -313,13 +310,18 @@ calibration_table %>%
 
 Of course, it is obvious that not all models worked out. From the previous chart, we can tell that the Random Forest model and the GLMNet Model are producing results way off from the test data set. This means that we should consider dropping those models while building the final application. We then build a modeltime_accuracy table to determine which models to drop quantitatively. Using MAPE as a measure, we will select only the top 3 models in building the ensemble model, which means that in this scenario, we will drop the Random Forest and GLMNet Models. Depending on their preferences, users will be able to select which accuracy measure is used to filter away inaccurate models.
 
-```{r, fig.align="center",layout='l-page'}
+```{r, ,echo=TRUE, eval=TRUE, fig.align="center",layout='l-page'}
 
 accuracies <- calibration_table %>%
                 modeltime_accuracy()
 
 table_modeltime_accuracy(accuracies)
 
+```
+
+The next code chunk identifies the top 3 models based on MAPE as a measure in order to retain them. This indexes of the model to retain are then fed into the ensemble model that is used to generate the final forecast.
+
+```{r, ,echo=TRUE, eval=TRUE, fig.align="center",layout='l-page'}
 
 retain_models <- accuracies %>%
                     top_n(-3,mape)
@@ -332,10 +334,9 @@ retain_indexes <- list(retain_models$.model_id)
 
 When we present the time series forecasting results, we will only present a unified/aggregated set of forecasts from the ensemble model to avoid confusing the user. In our application, the ensemble model uses the mean of the forecast of the models with the top 3 MAPE measures. The mean of the forecasts will then be shown in the chart as the expected future share price of the stock that the users will use for decision making. The ensemble model approach is used to combine the strengths and eliminate the weaknesses of each model by getting the mean the 3 remaining models.  
 
-```{r}
+```{r,echo=TRUE, eval=TRUE}
 
 ensemble_fit <- ticker_models %>%
-    # Remove Random Forest and GLMNET due to low accuracy - CHANGE TO INTERACTIVE
     subset(.model_id %in% retain_indexes[[1]]) %>%
     ensemble_average(type = "mean")
 
@@ -345,7 +346,8 @@ ensemble_fit
 
 Next we plot the ensemble model results against the test data. From the plot, we can see that the trend of the forecast is largely similar to that of the test data.
 
-```{r, fig.align="center",layout='l-page'}
+```{r,layout='l-page', fig.align="center", echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Ensemble model results VS Test Data"}
+
 
 calibration_tbl <- modeltime_table(ensemble_fit) %>%
     modeltime_calibrate(testing(splits))
@@ -363,7 +365,8 @@ calibration_tbl %>%
 
 Finally, we refit the ensemble model results against the full dataset in order to forecast forward, this is done using the model_refit function. We can also see the confidence intervals of the future prices. The larger the confidence interval is will indicate a more volatile stock price. This is also the final visual that users will interact with when using the shiny application. The steps taken to get to this point are largely transparent to the user and will not be shown. 
 
-```{r, fig.align="center",layout='l-page'}
+```{r,layout='l-page', fig.align="center", echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Forecasting forward with the ensemble model."}
+
 
 refit_tbl <- calibration_tbl %>%
     modeltime_refit(ticker_daily_adjclose)
@@ -405,9 +408,9 @@ table_modeltime_accuracy(accuracies)
 
 ```
 
-## 4. Proposed Visualization
+## 5. Proposed Visualization
 
-### 4.1 Suggested Interactivity in the Proposed Visualization
+### 5.1 Suggested Interactivity in the Proposed Visualization
 
 1. Input ticker of stock to be forecasting
 
@@ -417,7 +420,7 @@ table_modeltime_accuracy(accuracies)
 
 4. Forecasting Period (between 1 month and 12 months)
 
-### 4.2 Sketch of Proposed Visualization
+### 5.2 Sketch of Proposed Visualization
 
 The proposed design is as follows.
 
@@ -426,19 +429,22 @@ knitr::include_graphics("sketch.png")
 ```
 
 
-## 5. References
+## 6. References
 
-https://blogs.oracle.com/ai-and-datascience/post/performing-a-time-series-analysis-on-the-sampp-500-stock-index#:~:text=Time%2Dseries%20analysis%20is%20a,to%20predict%20future%20stock%20values 
+[Yin, Y. (2017) *Time Series Analysis on Stock Returns*, Columbia Univerisity](https://yiqiaoyin.files.wordpress.com/2017/05/time-series-analysis-on-stock-returns.pdf)
+
+[Berdiell, A.G. (2015), *ANALYSIS OF FINANCIAL MARKETS: TECHNICAL ANALYSIS AGAINST TIME SERIES*,University of Barcelona](https://core.ac.uk/download/pdf/43552332.pdf)
+
+[Wang et. al (2012) *Stock index forecasting based on a hybrid model*, Omega, Volume 40, Issue 6, December 2012, Pages 758-766](https://www.sciencedirect.com/science/article/abs/pii/S0305048311001435?via%3Dihub)
+
+[Dey et.al (2016) *Forecasting to Classification: Predicting the direction of stock market price using Xtreme Gradient Boosting*, DOI:10.13140/RG.2.2.15294.48968](https://www.researchgate.net/publication/309492895_Forecasting_to_Classification_Predicting_the_direction_of_stock_market_price_using_Xtreme_Gradient_Boosting?channel=doi&linkId=581384c008aedc7d8961e371&showFulltext=true)
+
+
+https://blogs.oracle.com/ai-and-datascience/post/performing-a-time-series-analysis-on-the-sampp-500-stock-index#
 
 https://machinelearningmastery.com/time-series-forecasting-performance-measures-with-python/
 
-
-https://yiqiaoyin.files.wordpress.com/2017/05/time-series-analysis-on-stock-returns.pdf
-
 https://cran.r-project.org/web/packages/modeltime.ensemble/vignettes/getting-started-with-modeltime-ensemble.html
 
-https://core.ac.uk/download/pdf/43552332.pdf
 
-https://www.sciencedirect.com/science/article/abs/pii/S0305048311001435?via%3Dihub
 
-https://www.researchgate.net/publication/309492895_Forecasting_to_Classification_Predicting_the_direction_of_stock_market_price_using_Xtreme_Gradient_Boosting?channel=doi&linkId=581384c008aedc7d8961e371&showFulltext=true
