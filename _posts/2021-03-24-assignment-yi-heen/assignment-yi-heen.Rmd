@@ -310,13 +310,18 @@ calibration_table %>%
 
 Of course, it is obvious that not all models worked out. From the previous chart, we can tell that the Random Forest model and the GLMNet Model are producing results way off from the test data set. This means that we should consider dropping those models while building the final application. We then build a modeltime_accuracy table to determine which models to drop quantitatively. Using MAPE as a measure, we will select only the top 3 models in building the ensemble model, which means that in this scenario, we will drop the Random Forest and GLMNet Models. Depending on their preferences, users will be able to select which accuracy measure is used to filter away inaccurate models.
 
-```{r, fig.align="center",layout='l-page'}
+```{r, ,echo=TRUE, eval=TRUE, fig.align="center",layout='l-page'}
 
 accuracies <- calibration_table %>%
                 modeltime_accuracy()
 
 table_modeltime_accuracy(accuracies)
 
+```
+
+The next code chunk identifies the top 3 models based on MAPE as a measure in order to retain them. This indexes of the model to retain are then fed into the ensemble model that is used to generate the final forecast.
+
+```{r, ,echo=TRUE, eval=TRUE, fig.align="center",layout='l-page'}
 
 retain_models <- accuracies %>%
                     top_n(-3,mape)
@@ -329,10 +334,9 @@ retain_indexes <- list(retain_models$.model_id)
 
 When we present the time series forecasting results, we will only present a unified/aggregated set of forecasts from the ensemble model to avoid confusing the user. In our application, the ensemble model uses the mean of the forecast of the models with the top 3 MAPE measures. The mean of the forecasts will then be shown in the chart as the expected future share price of the stock that the users will use for decision making. The ensemble model approach is used to combine the strengths and eliminate the weaknesses of each model by getting the mean the 3 remaining models.  
 
-```{r}
+```{r,echo=TRUE, eval=TRUE}
 
 ensemble_fit <- ticker_models %>%
-    # Remove Random Forest and GLMNET due to low accuracy - CHANGE TO INTERACTIVE
     subset(.model_id %in% retain_indexes[[1]]) %>%
     ensemble_average(type = "mean")
 
