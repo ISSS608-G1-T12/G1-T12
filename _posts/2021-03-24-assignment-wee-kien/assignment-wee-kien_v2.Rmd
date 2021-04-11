@@ -1,12 +1,9 @@
 ---
-title: "Investing 101: A visual and predictive guide for the rookie investor - Wee Kien"
+title: "Investing 101 - Sub-modules: Charting and Technical Analysis, Correlation Analysis, Portfolio Analysis"
 description: |
-  Existing financial data websites such as Yahoo Finance do a good job in providing historical price data and technical indicators, but the beginner investor lacks the knowledge to properly utilise and benefit from these. In addition, we have also identified several gaps in such websites.
+  This sub-module aims to provide capabilities for technical analysis, and provide further analysis and overview at a portfolio level.
   
-  For one, these websites do not provide tools to allow the user to compare stocks meaningfully or zoom in to the statistical properties of financial returns. For example, a user is unable to conduct correlation analysis or visualize the distribution of returns. Secondly, these websites also do not provide any form of forecasting to aid in investors’ decisions.
-    
-  This project aims to improve on the current offering of financial data websites through, Exploratory Data Analysis, Time-Series Forecasting and also Time-Series Clustering.
-  
+preview: final_all_charts.jpg
 author:
   - name: Wee Kien, Ng (Vincent)
     url: https://www.linkedin.com/in/ngweekiensg/
@@ -74,22 +71,9 @@ In this module, users are able to:
 - Visualize an equity curve of the 3 portfolios, where users are able to choose the starting equity amount
 
 
-## 2. Proposed Visualization
+## 2. Building the Visualization
 
-### 2.1 Sketch of Proposed Visualization
-
-TO INSERT SKETCH HERE, can be multiple pictures.
-Can take from powerpoint slide.
-
-
-### 2.2 Suggested Interactivity in the Proposed Visualization
-
-TO DESCRIBE in words, the various portions of the interactivity.
-
-
-## 3. Building the Visualization
-
-### 3.1 Setting up the environment/ packages
+### 2.1 Setting up the environment/ packages
 
 First, we run this first line of code to clear the environment and remove existing R objects (if any)
 
@@ -113,7 +97,7 @@ for (p in packages) {
 
 ```
 
-### 3.2 Charting and Technical Analysis
+### 2.2 Charting and Technical Analysis
 
 Users will be able to specify the start and end dates for the period under analysis. In addition, they are able to specify the periodicity (e.g. days, weeks, months, years).
 
@@ -179,7 +163,7 @@ benchmark_data_daily_xts %>%
 
 The following code chunk creates a similar candlestick chart, this time with the simple moving averages technical indicator.
 
-```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Candlestick graphs with simple moving average indicators"}
+```{r, layout = 'l-body-outset',echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Candlestick graphs with simple moving average indicators"}
 # 20-day SMA
 sma_fast <- SMA(ticker_data_daily_xts$close, n=20)
 # 40-day SMA
@@ -228,7 +212,7 @@ chart_sma_bm %>%
 
 The following code chunk creates a similar candlestick chart, this time with the Bollinger Bands technical indicator.
 
-```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Candlestick graphs with bollinger bands indicators"}
+```{r, layout = 'l-page',echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Candlestick graphs with bollinger bands indicators"}
 bb20 <- BBands(ticker_data_daily_xts$close, sd=2.0, n=14, maType=EMA)
 
 ticker_data_daily_xts_bb <- data.frame(ticker_data_daily_xts, bb20)
@@ -336,7 +320,7 @@ head(price, 10)
 ```
 
 
-### 3.3 Correlation Analysis
+### 2.3 Correlation Analysis
 
 Similar to the previous module, users will be able to specify the start and end dates for the period under analysis. In addition, they are able to specify the periodicity (e.g. days, weeks, months, years).
 
@@ -367,7 +351,7 @@ head(PORT_mth)
 
 In the following code chunk, users are able to visualize the monthly stock prices for the 4 chosen stocks in a facet wrap for convenience. The plots are made interactive using the plotly package.
 
-```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Visualizing monthly stock prices for the portfolio of stocks"}
+```{r, layout = 'l-page', echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Visualizing monthly stock prices for the portfolio of stocks"}
 
 port_mth_plotly <- PORT_mth %>%
         ggplot(aes(x = date, y = adjusted, color = symbol)) +
@@ -448,7 +432,7 @@ tail(PORT_rolling_corr)
 
 In the following code chunk, the rolling correlations previously calculated are now visualized using plotly.
 
-```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Rolling correlations are visualized"}
+```{r, layout = 'l-page', echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Rolling correlations are visualized"}
 
 port_rolling_corr_plotly <- PORT_rolling_corr %>%
         ggplot(aes(x = date, y = rolling.corr.6, color = symbol)) +
@@ -465,7 +449,7 @@ port_rolling_corr_plotly <- ggplotly(port_rolling_corr_plotly) %>%
 port_rolling_corr_plotly
 ```
 
-### 3.4 Portfolio Analysis
+### 2.4 Portfolio Analysis
 
 Similar to the previous module, users will be able to specify the start and end dates for the period under analysis. In addition, they specify which the stock symbols for 4 stocks + 1 benchmark index. These stocks symbols will be used to form the portfolio for further analysis.
 
@@ -496,7 +480,7 @@ In the following code chunk, we specify the weights of portfolio 1, and visualiz
 
 We further add a smoothing line (in blue) as an additional layer onto our graph. This allows us to quickly see a general trend of the portfolio across the period. 
 
-```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Visualization the monthly returns of Portfolio 1"}
+```{r, layout = 'l-page', echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Visualization the monthly returns of Portfolio 1"}
 wts_1 <- c(0.25, 0.25, 0.25, 0.25, 0.00)
 portfolio_returns_monthly_1 <- stock_returns_monthly %>%
     tq_portfolio(assets_col  = symbol, 
@@ -527,7 +511,7 @@ Similarly, we specify weights for the 2nd portfolio and do create a visualizatio
 
 Weights used are as follows: "wts_2 <- c(0.40, 0.30, 0.20, 0.10, 0.00)".
 
-```{r, echo=FALSE, eval=TRUE, out.width="100%", fig.cap="Visualization the monthly returns of Portfolio 2"}
+```{r, layout = 'l-page', echo=FALSE, eval=TRUE, out.width="100%", fig.cap="Visualization the monthly returns of Portfolio 2"}
 wts_2 <- c(0.40, 0.30, 0.20, 0.10, 0.00)
 portfolio_returns_monthly_2 <- stock_returns_monthly %>%
     tq_portfolio(assets_col  = symbol, 
@@ -555,7 +539,7 @@ Similarly, we specify weights for the 3rd portfolio and do create a visualizatio
 
 Weights used are as follows: "wts_3 <- c(0.20, 0.20, 0.20, 0.20, 0.20)".
 
-```{r, echo=FALSE, eval=TRUE, out.width="100%", fig.cap="Visualization the monthly returns of Portfolio 3"}
+```{r, layout = 'l-page', echo=FALSE, eval=TRUE, out.width="100%", fig.cap="Visualization the monthly returns of Portfolio 3"}
 wts_3 <- c(0.20, 0.20, 0.20, 0.20, 0.20)
 portfolio_returns_monthly_3 <- stock_returns_monthly %>%
     tq_portfolio(assets_col  = symbol, 
@@ -621,7 +605,7 @@ head(portfolio_growth_monthly_multi)
 
 In the following code chunk, we create an equity curve comparing the performance of the 3 portfolios created.
 
-```{r, echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Creating an equity curve comparing the performance of the 3 portfolios"}
+```{r, layout = 'l-page', echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Creating an equity curve comparing the performance of the 3 portfolios"}
 portfolio_plotly <- portfolio_growth_monthly_multi %>%
     ggplot(aes(x = date, y = investment.growth, color = factor(portfolio))) +
     geom_line(size = 1.5) + geom_point() +
@@ -638,13 +622,34 @@ portfolio_plotly <- ggplotly(portfolio_plotly)
 portfolio_plotly
 ```
 
+## 3. Proposed Visualization
+
+### 3.1 Sketch of Proposed Visualization
+
+TO INSERT SKETCH HERE, can be multiple pictures.
+Can take from powerpoint slide.
 
 
+### 3.2 Suggested Interactivity in the Proposed Visualization
 
-## 4. Conclusions and Insights
+TO DESCRIBE in words, the various portions of the interactivity.
 
 
+## 4. Insights
 
+**Insight 1**
+
+Explanation of functionality 1
+
+
+**Insight 2**
+
+Explanation of functionality 2
+
+
+**Insight 3**
+
+Explanation of functionality 3
 
 
 ## 5. References
