@@ -427,17 +427,20 @@ knitr::include_graphics("sketch.png")
 
 ## 6. References
 
-https://blogs.oracle.com/ai-and-datascience/post/performing-a-time-series-analysis-on-the-sampp-500-stock-index#:~:text=Time%2Dseries%20analysis%20is%20a,to%20predict%20future%20stock%20values 
+[Yin, Y. (2017) *Time Series Analysis on Stock Returns*, Columbia Univerisity](https://yiqiaoyin.files.wordpress.com/2017/05/time-series-analysis-on-stock-returns.pdf)
+
+[Berdiell, A.G. (2015), *ANALYSIS OF FINANCIAL MARKETS: TECHNICAL ANALYSIS AGAINST TIME SERIES*,University of Barcelona](https://core.ac.uk/download/pdf/43552332.pdf)
+
+[Wang et. al (2012) *Stock index forecasting based on a hybrid model*, Omega, Volume 40, Issue 6, December 2012, Pages 758-766](https://www.sciencedirect.com/science/article/abs/pii/S0305048311001435?via%3Dihub)
+
+[Dey et.al (2016) *Forecasting to Classification: Predicting the direction of stock market price using Xtreme Gradient Boosting*, DOI:10.13140/RG.2.2.15294.48968](https://www.researchgate.net/publication/309492895_Forecasting_to_Classification_Predicting_the_direction_of_stock_market_price_using_Xtreme_Gradient_Boosting?channel=doi&linkId=581384c008aedc7d8961e371&showFulltext=true)
+
+
+https://blogs.oracle.com/ai-and-datascience/post/performing-a-time-series-analysis-on-the-sampp-500-stock-index#
 
 https://machinelearningmastery.com/time-series-forecasting-performance-measures-with-python/
 
-
-https://yiqiaoyin.files.wordpress.com/2017/05/time-series-analysis-on-stock-returns.pdf
-
 https://cran.r-project.org/web/packages/modeltime.ensemble/vignettes/getting-started-with-modeltime-ensemble.html
 
-https://core.ac.uk/download/pdf/43552332.pdf
 
-https://www.sciencedirect.com/science/article/abs/pii/S0305048311001435?via%3Dihub
 
-https://www.researchgate.net/publication/309492895_Forecasting_to_Classification_Predicting_the_direction_of_stock_market_price_using_Xtreme_Gradient_Boosting?channel=doi&linkId=581384c008aedc7d8961e371&showFulltext=true
