@@ -668,13 +668,15 @@ TO DESCRIBE in words, the various portions of the interactivity.
 
 ## 4. Insights
 
+**The various functionalities designed allow for a user to explore, choose, and optimize for a portfolio of stocks suited to their preferences.**
+
 **Insight 1**
 
 ```{r, fig.align="center",echo=FALSE, out.width="100%", fig.cap="Example of Technical Analysis using Simple Moving Averages"}
 knitr::include_graphics("insight1_TA_SMA.png")
 ```
 
-Simple Moving Averages are a common but effective technical indicator used by many people. These moving averages essentially defer from each other based on the number of periods of lookback.
+**Simple Moving Averages are a common but effective technical indicator used by many people.** These moving averages essentially defer from each other based on the number of periods of lookback.
 
 A short term moving average is typically interpreted as short term price trends largely influenced by activities of traders.
 
@@ -684,8 +686,11 @@ In general, when the moving average lines are sloping up, it denotes a bullish t
 
 In addition, the combination of multiple Simple Moving Averages provides users with another way to identify specify entry or exit points.
 
+Looking at the AAPL candlestick chart for period (1), we see that in mid-Oct 2018 before the large market selldown, the short term moving average line (fast line) had **crossed below** the medium term moving average line. This indicates a potential bearish trend. Prices continued to fall all the way to a low in Jan 2019.
 
+On the other hand, looking at the AAPL candlestick chart for period (2), we see that as prices started to pick up, the resumption of a bullish trend was picked up by the fast moving average **crossing back above** the medium moving average. Prices continued to rise further after that period.
 
+*The inclusion of Simple Moving Averages as a technical indicator on candlestick charts can be a useful addition to users performing technical analysis on stocks.*
 
 **Insight 2**
 
@@ -693,9 +698,11 @@ In addition, the combination of multiple Simple Moving Averages provides users w
 knitr::include_graphics("insight2_CA_anomaly.png")
 ```
 
-Explanation of functionality 2
+The inclusion of a chart visualizing anomaly diagnostics available from the timetk package easily provides visual cues to users on unusual points (anomalies) on time series data. Such anomalous points may be indicative of a potential turning point in the trend of the stock price.
 
+As shown in both (1) and (2) on the chart, such points may inform a user that the bullish trend has come to an end, and a reversal is taking place.
 
+Users may take note of such an indicator (along with considering many other factors) in assessing whether to exit a position, continue to do nothing and observe, or to even short-sell the stock.
 
 **Insight 3**
 
@@ -703,7 +710,13 @@ Explanation of functionality 2
 knitr::include_graphics("insight2_CA_rolling_corr.png")
 ```
 
-Explanation of functionality 3
+Correlation analysis between chosen stocks and an underlying index may help to guide a user's choices in selecting either a concentrated or diversified portfolio (depending on their investing preference).
+
+In this example, when looking at the broader market pullback in end of 2018, we see in (1), that AAPL stock was still quite highly correlated with the technology sector ETF (*XLK*). This is to be expected as AAPL is considered as a technology stock.
+
+On the other hand, during the same period seen in (2), we see that Tesla had a negative correlation with XLK. This indicates that prices move in different directions from the underlying benchmark index.
+
+Investors can utilize such insights to choose and update their portfolio of stocks to either be largely concentrated in that sector (look for stocks that are consistently highly correlated with the sector), or to be more diversified (look for stocks that consistently have low correlation with the sector).
 
 
 **Insight 4**
@@ -712,7 +725,11 @@ Explanation of functionality 3
 knitr::include_graphics("insight3_port_analysis.png")
 ```
 
-Explanation of functionality 4
+Portfolio analysis allows users to compare the performance of various portfolios (*constructed using different weights*) across time.
+
+Users are able to specify a starting equity amount, and visualize the equity curve over time.
+
+Users can tweak the weightage of the various stocks in the portfolio to achieve an equity curve that exhibits strong growth, but yet tolerable periods of drawdown (periods when the portfolio performance exhibits a downwards trend from most recent highs).
 
 
 ## 5. References
