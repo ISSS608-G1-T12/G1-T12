@@ -49,8 +49,20 @@ There has been huge investor interest in technology stocks following their outpe
 
 This sub-module aims to aid rookie investors in picking technology-centric stocks for their portfolios through a method that is seldom made available to retail investors - clustering.
 
+### 1.3. Literature Review
 
-### 1.3. Hierarchical Clustering
+Studies using cluster analysis to aid stock selection strategies have been done in the past. Da Silva, Cunha, and da Costa (2005) carried out hierarchical clustering on 816 stocks listed in North and South America from 1997-1999 on the following variables: return, risk, earnings-price ratio, book value-price ratio, sales-price ratio, sales-number of stocks ratio and dividend yield. 
+
+However, there is lack of interactivity options for would-be users to choose the time period and the combination of variables they wish to carry out the clustering on. In addition, the study has no visual aid for users to visualise the differing characteristics across clusters. It is difficult to visualise cluster characteristics using the table output below from their study.
+
+![](silva_table.png)
+Marvin (2015) conducted k-means clustering on 668 stocks traded on the NYSE and NASDAQ from 2000 to 2015, on a weighted average of two ratios: revenue/assets and net income/assets. A diversified portfolio was then constructed by taking the stock with highest Sharpe ratio from each cluster and contrasting the performance versus S&P 500 as shown below:
+
+![](compare.PNG)
+
+While the visual comparison of performance against S&P 500 is useful, the study does not provide visual representation of the individual clusters. As a result, readers are unaware what the portfolio even consists of. Secondly, clustering purely on profitability metrics may be restrictive as it only covers one aspect of financial performance. Thirdly, there is no interactivity option to select the time period for clustering and performance evaluation. This feature would be useful since users might be interested to assess performance across different time periods.
+
+### 1.4. Hierarchical Clustering
 
 Cluster Analysis is an unsupervised learning technique for separating subjects into clusters, based on combinations of input variables, so that each subject is more similar to other subjects in its cluster than to subjects outside the cluster. Each cluster thus describes, in terms of the data collected, the class to which its members belong.
 
@@ -78,15 +90,15 @@ kable(df, col.names = c("Financial Ratio", "Definition", "Financial Aspect"), es
   row_spec(0, align = "c", background = "gray")
 ```
 
+###
+
 ## 2. Proposed visualization
 
 ### 2.1. Sketch of Proposed Visualization
 
 ## 3. Building the Visualization
 
-### 3.1 Required Libraries
-
-### 3.2 Data Preparation
+### 3.1 Data Preparation
 
 The features of the data used in this sub-module is as follows:
 
@@ -145,7 +157,7 @@ paged_table(bloomberg_data)
 
 We use tidyquant package solely to pull historical prices of the stocks, which we then convert to yearly returns. The reason we use tidyquant rather than using Bloomberg is because tidyquant package has functions which can help us automatically calculate returns for different periodicities, such as annual or monthly. In this context, we look at yearly returns from 2015-2020 for the stocks in our stock universe.
 
-```{r eval=TRUE, echo=FALSE, fig.cap = "Use tidyquant to pull stock prices for NASDAQ-100 Index Constituents from 2015"}
+```{r eval=TRUE, echo=TRUE, fig.cap = "Use tidyquant to pull stock prices for NASDAQ-100 Index Constituents from 2015"}
  #Get Stock Prices from 2015
 Stocks <- 
   tq_get(c("AAPL",  "ADBE",  "ADI"  , "ADP" ,  "ADSK" , "ALGN" , "ALXN",  "AMAT",  "AMD" ,  "AMGN" , "AMZN",  "ANSS" , "ATVI" , "AVGO"  ,"BIDU" , "BIIB",  "BKNG" , "CDNS" , "CDW" ,  "CERN" , "CHKP",  "CHTR",  "CMCSA","COST" , "CPRT" , "CSCO" , "CSX" ,  "CTAS" , "CTSH",  "DLTR", "DXCM" , "EA",    "EBAY" , "EXC" ,  "FAST","FB",  "FISV" , "FOXA",  "GILD",  "GOOGL", "IDXX" , "ILMN", "INCY" , "INTC" , "INTU",  "ISRG" , "JD" ,   "KHC" , "KLAC" ,"LRCX" , "LULU",  "MAR" ,  "MCHP",  "MDLZ",  "MELI" , "MNST"  ,"MRVL"  ,"MSFT" , "MU"  ,  "MXIM" , "NFLX" , "NTES",  "NVDA" , "NXPI" , "ORLY" , "PAYX" , "PCAR" , "PEP" ,  "PYPL"  ,"QCOM",  "REGN" , "ROST" , "SBUX" , "SGEN",  "SIRI" , "SNPS" , "SWKS" , "TCOM",  "TEAM" , "TMUS" , "TSLA" , "TXN"  , "VRSK", "VRSN",
@@ -176,7 +188,7 @@ After pulling the required data from Bloomberg and tidyquant, we end up with 2 t
 
 In this example, we do the clustering on the year 2017, on the 5 variables '1-Year Return','1-Year Volatility','Average Dividend Yield','Return on Assets' and 'Total Debt to Total Assets'. The following table shows all the stocks' values for the variables in 2017:
 
-```{r echo=FALSE}
+```{r echo=TRUE}
 combine <- dplyr::inner_join(bloomberg_data, returns_yearly_final, by =c("Ticker"="Ticker","Year"="Year"))
 
 #Select the year and the variables columns for the final dataframe to undergo clustering
@@ -196,7 +208,7 @@ select_yearfilter <- select_yearfilter %>%
   column_to_rownames('Ticker') #make the Ticker column become rownames 
 
 ```
-### 3.3 Visualisation of Results
+### 3.2 Visualisation of Results
 
 Once we have selected the year and the variables, we proceed with the actual hierarchical clustering. 
 
@@ -281,7 +293,7 @@ final_cluster_breakdown$`Returns to Volatility` = final_cluster_breakdown$`1-Yea
 
 final_cluster_breakdown_ordered <- final_cluster_breakdown %>%
   arrange(desc(`Returns to Volatility`)) %>%
-  select('Cluster','Returns to Volatility','1-Year Return','1-Year Volatility') %>%
+  select('Cluster','Returns to Volatility','1-Year Return','1-Year Volatility','Average Dividend Yield','Return on Assets','Total Debt to Total Assets') %>%
   mutate(across(where(is.numeric), round, 2))
 paged_table(final_cluster_breakdown_ordered)
 
@@ -381,9 +393,9 @@ The illustration so far is of a static nature. In the eventual final product, th
 df <- data.frame(datasource = c("Year","Variables", "Distance Method","Linkage Method","Number of Clusters"), 
                  Elaboration = c("User will be able to select any one year from 2015-2020 to conduct the clustering on",
                  "The default 5 variables are '1-Year Return','1-Year Volatility','Average Dividend Yield','Return on Assets' and 'Total Debt to Total Assets'. User will be able to deselect any variables which may not be of interest.",
-                 "User can specify the distance measure used to compute the distance matrix for the clustering.",
-                 "User can specify the type of agglomeration method to be used for the hierarchical clustering algorithm.",
-                 "User can choose how many clusters to cut the dendrogram into."))
+                 "User can specify any 1 of the following distance measures to compute the distance matrix for the clustering: Euclidean, Maximum, Manhattan, Canberra, Binary, Minkowski",
+                 "User can specify any 1 of the following agglomeration methods to be used for the hierarchical clustering algorithm: Ward D2, Ward, Single, Complete, Average, Centroid.",
+                 "User can choose how many clusters between 5-20 to cut the dendrogram into."))
 
 kable(df, col.names = c("Interactivity", "Elaboration"), escape = F) %>%
   kable_styling(latex_options = "hold_position") %>%
@@ -393,7 +405,12 @@ kable(df, col.names = c("Interactivity", "Elaboration"), escape = F) %>%
   row_spec(0, align = "c", background = "gray")
 ```
 
-## 6. Conclusion and Insights
+
+## 6. Storyboard Design
+
+
+
+## 7. Conclusion and Insights
 
 The example of investing in Cluster 4 stocks is an example of momentum investing by betting that Cluster 4's Returns/Volatility outperformance in 2017 would carry on in 2018. This is just one way of how we can use clustering analysis to enhance portfolio selection decisions. 
 
@@ -402,6 +419,10 @@ Another useful use case for clustering analysis is portfolio diversification. Fo
 Clustering analysis can provide rookie investors with an alternative perspective of portfolio construction. Combined with other forms of analysis, it could prove to be a useful tool in enhancing returns.
 
 ## 7. References
+
+[Da Silva, Sergio & Cunha, Jefferson & da Costa Jr, Newton. (2005). Stock selection based on cluster analysis. Economics Bulletin. 13. 1-9.](https://www.researchgate.net/profile/Sergio-Da-Silva-2/publication/4885243_Stock_selection_based_on_cluster_analysis/links/54f08b0d0cf24eb87940d1fa/Stock-selection-based-on-cluster-analysis.pdf)
+
+Marvin, K. (2015). Creating Diversified Portfolios using Cluster Analysis. https://www.cs.princeton.edu/sites/default/files/uploads/karina_marvin.pdf 
 
 https://www.investopedia.com/terms/n/nasdaq100.asp
 
