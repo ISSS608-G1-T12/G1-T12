@@ -6,7 +6,7 @@ description: |
   For one, these websites do not provide tools to allow the user to compare stocks meaningfully or zoom in to the statistical properties of financial returns. For example, a user is unable to conduct correlation analysis or visualize the distribution of returns. Secondly, these websites also do not provide any form of forecasting to aid in investors’ decisions.
     
   This project aims to improve on the current offering of financial data websites through, Exploratory Data Analysis, Time-Series Forecasting and also Time-Series Clustering.
-  
+preview: final.png  
 author:
   - name: Yi Heen, Boey
     url: https://www.linkedin.com/in/yiheen-boey/
@@ -44,12 +44,21 @@ Time series analysis allows users to uncover meaningful information and trends i
 
 As a demonstration of the time series analysis and the forecasting capabilities of the proposed Shiny Application: The company ***APPLE***  will be used as an example for this report. 
 
-For the purposes of this assignment, we will use the time series data from one single company - *Apple (Ticker: AAPL)*, as an example to illustrate the capabilities and functions of the application. There is no methodical reason to explain why Apple is used for the example other than the fact that it is one of the most recognisable companies in the market. The final product will be scaled up considerably to include more stocks that the users can choose to perform time series analysis and forecasts on. 
+For the purposes of this assignment, we will use the time series data from one single company - *Apple (Ticker: AAPL)*, as an example to illustrate the capabilities and functions of the application. There is no methodical reason to explain why Apple is used for the example other than the fact that it is one of the most recognisable companies in the market. The final product will be scaled up considerably to include more stocks that the users can choose from in order to perform time series forecasts on. 
 
+## 2. Literature Review
 
-## 2. Building the Visualization
+In the literature review conducted, there are two key methods for forecasting future stock prices. Firstly - fundamental analysis, which uses the information provided in a company’s financial statement and annual reports, and secondly technical analysis, which uses past trends in the stock market. 
 
-### 2.1 Setting up the enviroment/libraries
+In this report, historical prices are sole data points used to predict the movement in stock prices. While similar to technical analysis in using past data, time series forecasting is not the same as technical analysis and can be seen as a natural extension/logical next step after conducting technical analysis. The main difference is that time series forecasting gives you an exact forecasted price, while technical analysis only predicts the future movement (up/down) of the price (Berdiell, 2015).
+
+The fundamental idea of this method is to seek out patterns in the historical stock prices with a hybrid approach. A hybrid approach combine multiple different models to forecast stock prices. For example, the papers of Markowska-Kaczmar and Dziedzic (2008) and Wang et al (2015) both proposed tackling stock price forecasting with an amalgamation of multiple models instead of just relying on one form of forecasting. This has been shown to result in superior forecasting accuracy and performance as compared to using a dedicated forecasting method. The researches of Dey et al. (2016) has also shown similar results albeit with some overfitting issues and a limited testing scenario. 
+
+With the literature review conducted in mind, the application that we built will draw on the researches conducted by the others beforehand to build a more robust hybrid forecasting model. The modification that is made with regards to the existing hybrid techniques is that the application will do a forecast based on 5 different model then present the mean of the 3 best performing ones. This means that not all models will make the cut in the final forecast presented to the users. 
+
+## 3. Building the Visualization
+
+### 3.1 Setting up the enviroment/libraries
 
 First, we run this first line of code to clear the environment and remove existing R objects (if any)
 
@@ -59,7 +68,7 @@ rm(list=ls())
 
 ```
 
-This code chunk checks if required packages are installed. If they are not installed, the next line of code will install them. The following line is then use to import the library into the current working environment.
+The next code chunk checks if required packages are installed. If they are not installed, the next line of code will install them. The following line is then used to import the libraries into the current working environment and ready for use. 
 
 ```{r, echo=TRUE, eval=TRUE, fig.cap="Installing and importing libraries"}
 
@@ -79,7 +88,7 @@ for (p in packages) {
 
 ```
 
-### 2.2 Data Preparation
+### 3.2 Data Preparation
 
 *The application will use open source and live data obtained through the [**tidyquant**](https://cran.r-project.org/web/packages/tidyquant/index.html) package.* 
 
@@ -125,7 +134,7 @@ ticker_daily_adjclose <- subset(ticker_data_daily, select = -c(3,4,5,6,7))
 
 ```
 
-### 2.3 Data Visualization - Time Series
+### 3.3 Data Visualization - Time Series
 
 We can now plot a timeseries chart for a visual analysis of the data. The chart below shows the trend of stock prices for the years 2018-2020. The slider below it also allows users to zoom in on a data range to have a closer look at the data on a day to day basis. In the Shiny application where users can select the date-range of the data to import, the slider will come in handy when selected date ranges are big. 
 
@@ -140,7 +149,7 @@ ticker_daily_adjclose %>%
 
 
 ```
-### 2.4 Time Series Forecasting
+### 3.4 Time Series Forecasting
 
 
 #### Step 1 - Data prep
@@ -166,7 +175,7 @@ ticker_daily_adjclose <- subset(ticker_data_daily, select = -c(3,4,5,6,7))
 
 Before we go into time series forecasting proper. We will need to further breakdown the data into a training dataset to build the model and a testing dataset which will be used to determine the efficacy of the model. For the purposes of this paper, we will use 3 months worth of data for the testing dataset but this can be changed. This can be changed by the user but this in turn will affect the model outputs in terms of accuracy and amount of data available for training the models.
 
-The following code chunk is then used to create the training and testing sets. 
+The following code chunk is then used to split the data into training and testing sets. 
 
 
 ```{r,fig.align="center",layout='l-page',echo=TRUE, eval=TRUE, out.width="100%", fig.cap="Splitting the time series dataset"}
@@ -183,7 +192,7 @@ splits %>%
 
 #### Step 2 - Modeling
 
-Next we create a Feature Engineering Recipe that can be applied to the data in order to create features that machine learning models can utilize. 
+As some of the models that we are using are specifically machine learning models, we create a Feature Engineering Recipe that can be applied to the data in order to create features that machine learning models can utilize. 
 
 ```{r,echo=TRUE, eval=TRUE, layout='l-page'}
 
@@ -287,7 +296,7 @@ ticker_models
 ##### Step 3 - Calibration and Testing
 
 
-Next we calibrate the model using the test data that we obtain by splitting the full time series dataset into training and testing sets. Using the codechunk below, we also plot the forecasts of all 5 models against that of the actual test data. This will give us a rough idea of the accuracy of model.
+Next we calibrate the model using the test data that we obtained by splitting the full time series dataset into training and testing sets. Using the codechunk below, we also plot the forecasts of all 5 models against that of the actual test data. This will give us a rough idea of the accuracy of model.
 
 ```{r,echo=TRUE, eval=TRUE, fig.align="center",layout='l-page'}
 
@@ -302,30 +311,27 @@ calibration_table %>%
 
 ```
 
-Of course, it is obvious that not all models workout. From the previous chart, we can tell that the Random Forest model and the GLMNet Model are producing results way off from the test data set. This means that we should consider dropping those models while building the final application. We then build a modeltime_accuracy table to determine which models to drop quantitatively. Using MAPE as a measure, we will select only the top 3 models in building the ensemble model, which means that in this scenario, we will drop the Random Forest and GLMNet Models.
+Of course, it is obvious that not all models worked out. From the previous chart, we can tell that the Random Forest model and the GLMNet Model are producing results way off from the test data set. This means that we should consider dropping those models while building the final application. We then build a modeltime_accuracy table to determine which models to drop quantitatively. Using MAPE as a measure, we will select only the top 3 models in building the ensemble model, which means that in this scenario, we will drop the Random Forest and GLMNet Models. Depending on their preferences, users will be able to select which accuracy measure is used to filter away inaccurate models.
 
 ```{r, fig.align="center",layout='l-page'}
 
 accuracies <- calibration_table %>%
                 modeltime_accuracy()
-                #table_modeltime_accuracy()
 
-```
+table_modeltime_accuracy(accuracies)
 
-##### Step 4 - Building the Ensemble model
-
-When we present the time series forecasting results, we will only present a unified/aggregated set of forecasts from the ensemble model to avoid confusing the user. In our application, the ensemble model uses the mean of the forecast of the models with the top 3 MAPE measures. The mean of the forecasts will then be shown in the chart as the expected future share price of the stock that the users will use for decision making. The ensemble model approach is used to combine the strengths and eliminate the weaknenss of each model.
-
-```{r}
 
 retain_models <- accuracies %>%
                     top_n(-3,mape)
 
 retain_indexes <- list(retain_models$.model_id)
 
-retain_indexes
-
 ```
+
+##### Step 4 - Building the Ensemble model
+
+When we present the time series forecasting results, we will only present a unified/aggregated set of forecasts from the ensemble model to avoid confusing the user. In our application, the ensemble model uses the mean of the forecast of the models with the top 3 MAPE measures. The mean of the forecasts will then be shown in the chart as the expected future share price of the stock that the users will use for decision making. The ensemble model approach is used to combine the strengths and eliminate the weaknesses of each model by getting the mean the 3 remaining models.  
+
 ```{r}
 
 ensemble_fit <- ticker_models %>%
@@ -350,7 +356,8 @@ calibration_tbl %>%
         new_data    = testing(splits),
         actual_data = ticker_daily_adjclose
     ) %>%
-    plot_modeltime_forecast(.interactive = TRUE)
+    plot_modeltime_forecast(.interactive = TRUE,
+                            .plotly_slider = TRUE)
 
 ```
 
@@ -371,14 +378,53 @@ refit_tbl %>%
 
 ```
 
-## 3. Conclusions and Insights
+## 4. Insights
 
+##### Insight 1
+
+As we first started out building and conceptualising the Shiny application. One of the key ideas of interactivity within the shiny application was to allow the users to choose their choice of model for forecasting. This would not have worked very well because clearly some models worked better and are more accurate than the others. 
+
+Thus we decided to remove that optionality and put in an ensemble model instead. From the screenshots below, we can see that the ensemble model works well to reduce the confidence interval, giving the user more certainty in price movements. The results of the ensemble model also trend very closely with the test data which will gives us confidence that it is working well.
+
+```{r, fig.align="center",echo=FALSE, out.width="100%", fig.cap="Comparison of having individual models VS an ensemble model"}
+knitr::include_graphics("comparison.png")
+```
+
+##### Insight 2
+
+Including a table for model accuracy and all the different accuracy measures will also help the user choose a better forecasting model. While the current report chooses MAPE as its accuracy measure, other investors might prefer different accuracy measures that can result in different forecasts. A short explanation will be included to describe each accuracy measure and how they differ from each other. 
+
+The number of models included in the ensemble model will remain at 3 in order to prevent the forecast from being distorted by unreliable models. 
+
+
+```{r, fig.align="center",layout='l-page'}
+
+
+table_modeltime_accuracy(accuracies)
+
+
+```
 
 ## 4. Proposed Visualization
 
-### 4.1 Sketch of Proposed Visualization
+### 4.1 Suggested Interactivity in the Proposed Visualization
 
-### 4.2 Suggested Interactivity in the Proposed Visualization
+1. Input ticker of stock to be forecasting
+
+2. Time period of time series data ingesting for forecasting
+
+3. Accuracy Measure of Forecasted Models (e.g. MAE/MAPE/MASE/SMAPE/RMSE/RSQ)
+
+4. Forecasting Period (between 1 month and 12 months)
+
+### 4.2 Sketch of Proposed Visualization
+
+The proposed design is as follows.
+
+```{r, fig.align="center",echo=FALSE, out.width="100%", fig.cap="Handdrawn sketch of the Shiny Application sub-module."}
+knitr::include_graphics("sketch.png")
+```
+
 
 ## 5. References
 
@@ -391,3 +437,8 @@ https://yiqiaoyin.files.wordpress.com/2017/05/time-series-analysis-on-stock-retu
 
 https://cran.r-project.org/web/packages/modeltime.ensemble/vignettes/getting-started-with-modeltime-ensemble.html
 
+https://core.ac.uk/download/pdf/43552332.pdf
+
+https://www.sciencedirect.com/science/article/abs/pii/S0305048311001435?via%3Dihub
+
+https://www.researchgate.net/publication/309492895_Forecasting_to_Classification_Predicting_the_direction_of_stock_market_price_using_Xtreme_Gradient_Boosting?channel=doi&linkId=581384c008aedc7d8961e371&showFulltext=true
