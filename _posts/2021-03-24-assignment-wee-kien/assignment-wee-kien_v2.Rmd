@@ -44,6 +44,10 @@ The subsequent sections are mainly split into the following features:
   - Individual portfolio returns
   - Equity curve/ portfolio growth over time
 
+
+**Jump straight to the proposed visualizations and layout: [3. Proposed Visualization](#anchor)**
+
+
 ### 1.3 Charting and Technical Analysis
 
 In this module, users are able to visualize the chosen stock symbol using a candlestick chart. Open, High, Low, and Close prices for the selected period are shown on the chart.
@@ -355,13 +359,11 @@ paged_table(price)
 
 ### 2.3 Correlation Analysis
 
-Similar to the previous module, users will be able to specify the start and end dates for the period under analysis. In addition, they are able to specify the periodicity (e.g. days, weeks, months, years).
+Similar to the previous module, users will be able to specify the start and end dates for the period under analysis.
 
 ```{r, echo=TRUE, eval=TRUE, fig.cap="Setting the start and end dates of the period under analysis"}
 from_date <- "2016-01-01"
 to_date <- "2019-12-31"
-period_type <- "days"
-# "days"/ "weeks"/ "months"/ "years"
 ```
 
 In the following code chunk, users select 4 stock symbols to form a portfolio, and an accompanying underlying benchmark index symbol. Data extracted is based on adjusted prices. For the purposes of measuring returns, a monthly periodicity is selected to avoid noise in the short term (e.g. daily).
@@ -522,7 +524,7 @@ portfolio_returns_monthly_1 <- stock_returns_monthly %>%
                  col_rename  = "Ra") %>% 
     mutate(gain_loss = if_else(Ra > 0, "gain", "loss"))
 
-# portfolio_returns_monthly_1
+paged_table(portfolio_returns_monthly_1)
 
 port_returns_1_plotly <- portfolio_returns_monthly_1 %>%
     ggplot(aes(x = date, y = Ra)) +
@@ -653,18 +655,46 @@ portfolio_plotly <- ggplotly(portfolio_plotly)
 portfolio_plotly
 ```
 
-## 3. Proposed Visualization
+## 3. Proposed Visualization {#anchor}
 
-### 3.1 Sketch of Proposed Visualization
+There are 3 main tabs:
 
-TO INSERT SKETCH HERE, can be multiple pictures.
-Can take from powerpoint slide.
+1. Charting and Technical Analysis
+2. Correlation Analysis
+3. Portfolio Analysis
 
+```{r, layout = 'l-page', fig.align="center",echo=FALSE, out.width="100%", fig.cap="Sketch of Tab 1 - Charting and Technical Analysis"}
+knitr::include_graphics("ppt_sketch_1_technical_analysis.png")
+```
 
-### 3.2 Suggested Interactivity in the Proposed Visualization
+Under the **Technical Analysis tab**, users are able to:
 
-TO DESCRIBE in words, the various portions of the interactivity.
+* View and interact with candlestick charts (both charts are grouped and affect each other in real time)
+* Choose between Simple Moving Average or Bollinger Bands indicators overlay
+* Select the primary and benchmark stock symbol
+* Select the time period for analysis
+* View the raw data in a table, along with other candlestick pattern features created
 
+```{r, layout = 'l-page', fig.align="center",echo=FALSE, out.width="100%", fig.cap="Sketch of Tab 2 - Correlation Analysis"}
+knitr::include_graphics("ppt_sketch_2_corr_analysis.png")
+```
+
+Under the **Correlation Analysis tab**, users are able to:
+
+* View and interact with candlestick charts
+* Select the time period for analysis
+* Select 4 stocks, and 1 benchmark stock symbol
+
+```{r, layout = 'l-page', fig.align="center",echo=FALSE, out.width="100%", fig.cap="Sketch of Tab 3 * Portfolio Analysis"}
+knitr::include_graphics("ppt_sketch_3_port_analysis.png")
+```
+
+Under the **Portfolio Analysis tab**, users are able to:
+
+* View and interact with candlestick charts
+* Select the time period for analysis
+* Select 4 stocks, and 1 benchmark stock symbol
+* Select a starting equity amount
 
 ## 4. Insights
 
@@ -694,7 +724,7 @@ On the other hand, looking at the AAPL candlestick chart for period (2), we see 
 
 **Insight 2**
 
-```{r, fig.align="center",echo=FALSE, out.width="100%", fig.cap="Example of using Anomaly Detection to recognize potential turning points in a securities' time series behaviour "}
+```{r, layout = 'l-page', fig.align="center",echo=FALSE, out.width="100%", fig.cap="Example of using Anomaly Detection to recognize potential turning points in a securities' time series behaviour "}
 knitr::include_graphics("insight2_CA_anomaly.png")
 ```
 
@@ -706,7 +736,7 @@ Users may take note of such an indicator (along with considering many other fact
 
 **Insight 3**
 
-```{r, fig.align="center",echo=FALSE, out.width="100%", fig.cap="6 month rolling correlation between chosen stocks and underlying benchmark index"}
+```{r, layout = 'l-page',fig.align="center",echo=FALSE, out.width="100%", fig.cap="6 month rolling correlation between chosen stocks and underlying benchmark index"}
 knitr::include_graphics("insight2_CA_rolling_corr.png")
 ```
 
@@ -721,7 +751,7 @@ Investors can utilize such insights to choose and update their portfolio of stoc
 
 **Insight 4**
 
-```{r, fig.align="center",echo=FALSE, out.width="100%", fig.cap="Analysing the Equity Curves/ Performance of multiple portfolios"}
+```{r, layout = 'l-page', fig.align="center",echo=FALSE, out.width="100%", fig.cap="Analysing the Equity Curves/ Performance of multiple portfolios"}
 knitr::include_graphics("insight3_port_analysis.png")
 ```
 
@@ -736,19 +766,8 @@ Users can tweak the weightage of the various stocks in the portfolio to achieve 
 
 * https://business-science.github.io/tidyquant/
 * https://www.business-science.io/code-tools/2020/09/02/five-minute-time-series-anomaly-detection.html
-
-
-
-
-
-
-
-
-
-
-
-
-
+* https://business-science.github.io/timetk/articles/TK00_Time_Series_Coercion.html
+* https://bookdown.org/kochiuyu/Technical-Analysis-with-R/
 
 
 
