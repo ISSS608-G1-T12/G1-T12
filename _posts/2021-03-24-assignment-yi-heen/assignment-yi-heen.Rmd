@@ -311,7 +311,7 @@ calibration_table %>%
 
 ```
 
-Of course, it is obvious that not all models workout. From the previous chart, we can tell that the Random Forest model and the GLMNet Model are producing results way off from the test data set. This means that we should consider dropping those models while building the final application. We then build a modeltime_accuracy table to determine which models to drop quantitatively. Using MAPE as a measure, we will select only the top 3 models in building the ensemble model, which means that in this scenario, we will drop the Random Forest and GLMNet Models. Depending on their preferences, users will be able to select which accuracy measure is used to filter away inaccurate models.
+Of course, it is obvious that not all models worked out. From the previous chart, we can tell that the Random Forest model and the GLMNet Model are producing results way off from the test data set. This means that we should consider dropping those models while building the final application. We then build a modeltime_accuracy table to determine which models to drop quantitatively. Using MAPE as a measure, we will select only the top 3 models in building the ensemble model, which means that in this scenario, we will drop the Random Forest and GLMNet Models. Depending on their preferences, users will be able to select which accuracy measure is used to filter away inaccurate models.
 
 ```{r, fig.align="center",layout='l-page'}
 
@@ -417,7 +417,7 @@ table_modeltime_accuracy(accuracies)
 
 4. Forecasting Period (between 1 month and 12 months)
 
-## 4.2 Sketch of Proposed Visualization
+### 4.2 Sketch of Proposed Visualization
 
 The proposed design is as follows.
 
