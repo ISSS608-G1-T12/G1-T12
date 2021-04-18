@@ -34,6 +34,20 @@ Lorem ipsum dolor sit[@meier2012] amet, consectetur adipiscing[@fenner2012a] eli
 
 Donec massa justo, ultricies quis facilisis sed, tristique nec metus. Vestibulum id condimentum diam. Integer semper augue id porttitor ultrices. Cras vulputate felis eu diam porttitor, ac pulvinar nisi imperdiet. Donec eros felis, imperdiet vel malesuada at, varius et quam. Phasellus facilisis non risus eu placerat. Sed ac mollis lorem.
 
+# Literature Review
+
+-Weekien lit review
+
+-Yiheen lit review
+
+Da Silva, Cunha, and da Costa (2005) [@sergio] carried out hierarchical clustering on 816 stocks listed in North and South America from 1997-1999 on the following variables: return, risk, earnings-price ratio, book value-price ratio, sales-price ratio, sales-number of stocks ratio and dividend yield. Their research showed that clusters with the best risk-return profile from the time window where clustering was conducted continued to be so in a second time window from 2000-2001. However, their research did not comprise visualisations of the cluster characteristics. In addition, their research only showed results for one fixed combination of variables. Lastly, there was no insight as to how the winning clusters performed against a benchmark index, which is potentially of interest.
+
+This research provides opportunities to address the limitations of existing literature as described above. The team looks to incorporate interactivity features and appropriate visualisations into our dashboard as part of improving on existing work.
+
+# Charting
+
+# ARIMA
+
 # Clustering
 
 The next sub-module of the dashboard is a tool to carry out hierarchical clustering on stocks. For this sub-module, clustering analysis will be carried out on 89 current component stocks of the NASDAQ-100 Index. The Nasdaq-100 Index is a basket of the 100 largest non-financial companies listed on the Nasdaq Exchange in the US. Companies listed in the Nasdaq-100 Index largely belong to the technology sector, and some household names include Apple, Google, Tesla and Facebook. COVID-19 accelerated the rise of the digital economy and drove digital transformation initiatives in companies around the world; it also proved to be a boon for technology industries such as cloud computing, videoconferencing and cybersecurity. There has been huge investor interest in technology stocks following their outperformance in 2020 and the ongoing hype of digitisation. Many rookie investors have also entered the fray, hoping to be involved in these companies’ growth. We choose to focus on stocks in the NASDAQ-100 Index for this sub-module to provide users with a tool to aid their decisions in investing in the biggest US-listed technology stocks.
@@ -62,7 +76,7 @@ On the side panel of the dashboard, interactivity features are available to allo
 
 
 
-```{r, out.width = "240px", out.height = "240px"}
+```{r echo=FALSE, out.width = "240px", out.height = "240px"}
 knitr::include_graphics("images/sidepanel.PNG")
 ```
 
@@ -97,6 +111,7 @@ Using the sub-module (Weekien), we construct a portfolio consisting of......comp
 Duis nec purus sed neque porttitor tincidunt vitae quis augue. Donec porttitor aliquam ante, nec convallis nisl ornare eu. Morbi ut purus et justo commodo dignissim et nec nisl. Donec imperdiet tellus dolor, vel dignissim risus venenatis eu. Aliquam tempor imperdiet massa, nec fermentum tellus sollicitudin vulputate. Integer posuere porttitor pharetra. Praesent vehicula elementum diam a suscipit. Morbi viverra velit eget placerat pellentesque. Nunc congue augue non nisi ultrices tempor.
 
 
+\newpage
 
 # Tables
 
@@ -109,7 +124,8 @@ df <- data.frame(financial_ratio = c("1-Year Return","1-Year Volatility","Divide
                                  "A type of return on investment (ROI) metric that measures the profitability of a business in relation to its total assets. The higher the return, the more productive and efficient management is in utilizing economic resources",
                  "A leverage ratio that indicates the percentage of assets that are being financed with debt. The higher the ratio, the greater the degree of leverage and financial risk")), 
     Financial_Aspect = (c("Financial Return","Market Volatility","Payout to Shareholders" ,"Profitability","Leverage")))
-kbl(df , col.names = c("Financial Ratio", "Definition", "Financial Aspect"), escape = F,booktabs = T , "latex", table.env ='table*') %>%
+
+kbl(df , col.names = c("Financial Ratio", "Definition", "Financial Aspect"), escape = F,booktabs = T , "latex") %>%
   
   column_spec(2, width = "10cm")
 ```
@@ -118,18 +134,10 @@ kbl(df , col.names = c("Financial Ratio", "Definition", "Financial Aspect"), esc
 
 # References
 
+
 ---
 references:
-- id: meier2012
-  title: Professinal Android 4 Application Development
-  author: 
-  - family: Meier
-    given: Reto
-  type: book
-  publisher: John Wiley & Sons, Inc.
-  issued:
-    year: 2012
-    month: 5
+
 - id: fenner2012a
   title: One-click science marketing
   author:
@@ -146,6 +154,10 @@ references:
   issued:
     year: 2012
     month: 3
+
+  
+
+  
 ...
 
 
