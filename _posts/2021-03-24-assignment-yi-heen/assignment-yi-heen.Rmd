@@ -178,11 +178,11 @@ The following code chunk is then used to split the data into training and testin
 
 splits <- time_series_split(ticker_daily_adjclose, assess = "3 months", cumulative = TRUE)
 
-splits %>%
-    tk_time_series_cv_plan() %>%
-    plot_time_series_cv_plan(date, adjusted,
-                             .title = "Time Series Cross Validation Plan",
-                             .interactive = TRUE)
+# splits %>%
+#     tk_time_series_cv_plan() %>%
+#     plot_time_series_cv_plan(date, adjusted,
+#                              .title = "Time Series Cross Validation Plan",
+#                              .interactive = TRUE)
 
 ```
 

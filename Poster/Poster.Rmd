@@ -1,0 +1,88 @@
+---
+title: Investing101 - Bringing financial literacy to the masses
+author:
+  - name: Andre Lee
+    affil: 1
+  - name: Boey Yi Heen
+    affil: 2
+  - name: Ng Wee Kien
+    affil: 3
+affiliation:
+  - num: 1
+    address: Singapore Management University
+  - num: 2
+    address: Singapore Management University
+  - num: 3
+    address: Singapore Management University
+column_numbers: 3
+logoright_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png
+logoleft_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png
+output: 
+  posterdown::posterdown_html:
+    self_contained: false
+bibliography: packages.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Introduction
+
+In 2020, the combination of unprecedented stock market volatility and COVID-19 lockdowns attracted herds of retail investors into the stock market. Major online brokers witnessed spikes in new account openings, showing that many new investors saw the market plunge as an opportune time to start investing.
+  
+  Most retail investors rely on traditional financial data websites such as Yahoo Finance to retrieve relevant financial data to aid in their investing decisions. However, these sites' offerings tend to be homogeneous and comprise usual information such as price quotes, market commentary and corporate actions. Investors are left on their own to make sense of these information, without tools to further perform actions such as price forecasting or segmenting stocks into groups. These tools could possibly enhance their investing decisions.
+  
+  Having identified this gap, we developed Investing101, an interactive visual analytics application to allow investors to not only retrieve basic price information of stocks, but also apply machine learning models such as ARIMA forecasting and hierarchical clustering. 
+  
+## Main Components
+
+1. Technical Indicators
+2. Stock clustering
+3. Stock price forecasting
+
+# Methods
+
+This package uses the same workflow approach as the R Markdown you know and love. Basically it goes from RMarkdown > Knitr > Markdown > Pandoc > HTML/CSS > PDF. You can even use the bibliography the same way [@R-posterdown].
+
+# Results
+
+Usually you want to have a nice table displaying some important results that you have calculated. In `posterdown` this is as easy as using the `kable` table formatting you are probably use to as per typical R Markdown formatting.
+
+You can reference tables like so: Table \@ref(tab:mytable). Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam placerat augue at velit tincidunt semper. Donec elementum porta posuere. Nullam interdum, odio at tincidunt feugiat, turpis nisi blandit eros, eu posuere risus felis non quam. Nam eget lorem odio. Duis et aliquet orci. Phasellus nec viverra est.
+
+```{r mytable, out.width='80%'}
+knitr::kable(iris[1:10, 1:4], caption = 'Table caption.',align = 'c',"html")
+```
+
+Or with figures: Figure \@ref(fig:standard-plot), or Figure \@ref(fig:morefigs).
+
+```{r standard-plot, out.width='80%', fig.align='center', fig.cap='Great figure!', fig.height=5}
+plot(mtcars[1:2])
+```
+
+```{r morefigs, out.width='80%', echo=TRUE, fig.cap='Amazing, right?!', fig.height=5}
+data <- iris
+
+plot(x = data$Sepal.Length, 
+     y = data$Sepal.Width, 
+     col = data$Species,
+     pch = 19, 
+     xlab = "Sepal Length (cm)",
+     ylab = "Sepal Width (cm)")
+
+```
+
+# Next Steps
+
+Aliquam sed faucibus risus, quis efficitur erat. Vestibulum semper mauris quis tempus eleifend. Aliquam sagittis dictum ipsum, quis viverra ligula eleifend ut. Curabitur sagittis vitae arcu eget faucibus. In non elementum felis. Duis et aliquam nunc. Nunc pulvinar sapien nunc, vel pretium nisi efficitur in. Fusce fringilla maximus leo et maximus. Fusce at ligula laoreet, iaculis mi at, auctor odio. Praesent sed elementum justo. Aenean consectetur risus rhoncus tincidunt efficitur. Praesent dictum mauris at diam maximus maximus [@R-posterdown].
+
+# Conclusion
+
+Try `posterdown` out! Hopefully you like it!
+
+```{r, include=FALSE}
+knitr::write_bib(c('knitr','rmarkdown','posterdown','pagedown'), 'packages.bib')
+```
+
+# References
