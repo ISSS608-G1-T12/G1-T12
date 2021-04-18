@@ -30,7 +30,7 @@ library(kableExtra)
 ```
 
 # Introduction 
-Lorem ipsum dolor sit[@meier2012] amet, consectetur adipiscing[@fenner2012a] elit. Pellentesque rhoncus ut tellus eu tristique. Duis pharetra velit vitae viverra elementum. Nulla metus dui, pulvinar id enim at, pellentesque semper ipsum. Phasellus cursus dignissim ipsum, sed congue orci pretium quis. Maecenas rhoncus leo a cursus euismod. Fusce a erat eu ipsum tristique tempus at sed tortor. Aliquam erat volutpat. Donec at pretium lorem. Donec pretium nunc id nunc bibendum convallis. Phasellus quis enim id massa feugiat egestas hendrerit sollicitudin nibh. Sed blandit eros id tellus porta, eget ullamcorper urna posuere. Pellentesque laoreet lacus nibh, a mattis libero viverra sit amet. Sed vitae diam interdum, pharetra neque sit amet, dictum lectus.
+Lorem ipsum dolor sit amet, consectetur adipiscing[@fenner2012a] elit. Pellentesque rhoncus ut tellus eu tristique. Duis pharetra velit vitae viverra elementum. Nulla metus dui, pulvinar id enim at, pellentesque semper ipsum. Phasellus cursus dignissim ipsum, sed congue orci pretium quis. Maecenas rhoncus leo a cursus euismod. Fusce a erat eu ipsum tristique tempus at sed tortor. Aliquam erat volutpat. Donec at pretium lorem. Donec pretium nunc id nunc bibendum convallis. Phasellus quis enim id massa feugiat egestas hendrerit sollicitudin nibh. Sed blandit eros id tellus porta, eget ullamcorper urna posuere. Pellentesque laoreet lacus nibh, a mattis libero viverra sit amet. Sed vitae diam interdum, pharetra neque sit amet, dictum lectus.
 
 Donec massa justo, ultricies quis facilisis sed, tristique nec metus. Vestibulum id condimentum diam. Integer semper augue id porttitor ultrices. Cras vulputate felis eu diam porttitor, ac pulvinar nisi imperdiet. Donec eros felis, imperdiet vel malesuada at, varius et quam. Phasellus facilisis non risus eu placerat. Sed ac mollis lorem.
 
@@ -38,7 +38,7 @@ Donec massa justo, ultricies quis facilisis sed, tristique nec metus. Vestibulum
 
 -Weekien lit review
 
--Yiheen lit review
+Time series forecasting is not the same as technical analysis and can be seen as a natural extension/logical next step after conducting technical analysis. The main difference is that time series forecasting gives you an exact forecasted price, while technical analysis only predicts the future movement (up/down) of the price (Berdiell, 2015). The fundamental idea of this method is to seek out patterns in the historical stock prices with a hybrid approach. A hybrid approach combine multiple different models to forecast stock prices. For example, the papers of Markowska-Kaczmar and Dziedzic (2008) and Wang et al (2015) both proposed tackling stock price forecasting with an amalgamation of multiple models instead of just relying on one form of forecasting. This has been shown to result in superior forecasting accuracy and performance as compared to using a dedicated forecasting method. The researches of Dey et al. (2016) has also shown similar results albeit with some overfitting issues and a limited testing scenario.
 
 Da Silva, Cunha, and da Costa (2005) [@sergio] carried out hierarchical clustering on 816 stocks listed in North and South America from 1997-1999 on the following variables: return, risk, earnings-price ratio, book value-price ratio, sales-price ratio, sales-number of stocks ratio and dividend yield. Their research showed that clusters with the best risk-return profile from the time window where clustering was conducted continued to be so in a second time window from 2000-2001. However, their research did not comprise visualisations of the cluster characteristics. In addition, their research only showed results for one fixed combination of variables. Lastly, there was no insight as to how the winning clusters performed against a benchmark index, which is potentially of interest.
 
@@ -46,7 +46,20 @@ This research provides opportunities to address the limitations of existing lite
 
 # Charting
 
-# ARIMA
+# Time Series Forecasting
+
+This sub-module of the dashboard is a tool to carry out time series forecasting on a stock. For this sub-module, forecasting will be carried out on a chosen ticker. The intent for this sub-module is to allow the user to identify future trends of a stock and entry/exit opportunities. The example given will be based on the technology company *APPLE (AAPL)*.
+
+## Data Preparation
+
+The sole data source for this sub-module is the tidyquant package on R.
+
+We use the tidyquant package to pull historical prices of the stocks. The extracted data is then broken down into training and testing sets to build the forecasting model. The dashboard is reactive and will be able to pull any amount of data chosen by the user as long as it is available on Yahoo finance. 
+
+## Model building
+
+## Case Study
+
 
 # Clustering
 
