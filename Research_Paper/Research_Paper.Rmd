@@ -13,31 +13,108 @@ author:
     email: weekien.ng.2020@mitb.smu.edu.sg
     affiliation: Singapore Management University
 abstract: |
-  In 2020, the combination of unprecedented stock market volatility and COVID-19 lockdowns attracted herds of retail investors into the stock market. Major online brokers witnessed spikes in new account openings, showing that many new investors saw the market plunge as an opportune time to start investing.
-  
   Most retail investors rely on traditional financial data websites such as Yahoo Finance to retrieve relevant financial data to aid in their investing decisions. However, these sites' offerings tend to be homogeneous and comprise usual information such as price quotes, market commentary and corporate actions. Investors are left on their own to make sense of these information, without tools to further perform actions such as price forecasting or segmenting stocks into groups. These tools could possibly enhance their investing decisions.
   
-  Having identified this gap, we developed Investing101, an interactive visual analytics dashboard to allow investors to not only retrieve basic price information of stocks, but also apply machine learning models such as ARIMA forecasting and hierarchical clustering. 
+  Having identified this gap, we developed Investing101, an interactive visual analytics dashboard to allow investors to not only retrieve basic price information of stocks, but also apply machine learning models such as ARIMA forecasting and hierarchical clustering. The dashboard will also allow users to construct bespoke portfolios and see their historical performances. On top of this, the dashboard also provides users with a tool that readily aggregates and interprets candlestick patterns for the user. All these different tools come together to deliver a product that adds value to investors, on top of what traditional finance data websites can provide.
   
 bibliography: sigproc.bib
 csl: acm-sig-proceedings.csl
 output: rticles::acm_article
 ---
 
-
+```{r echo=FALSE, include=FALSE}
+library(magrittr)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+```
 
 # Introduction 
 Lorem ipsum dolor sit[@meier2012] amet, consectetur adipiscing[@fenner2012a] elit. Pellentesque rhoncus ut tellus eu tristique. Duis pharetra velit vitae viverra elementum. Nulla metus dui, pulvinar id enim at, pellentesque semper ipsum. Phasellus cursus dignissim ipsum, sed congue orci pretium quis. Maecenas rhoncus leo a cursus euismod. Fusce a erat eu ipsum tristique tempus at sed tortor. Aliquam erat volutpat. Donec at pretium lorem. Donec pretium nunc id nunc bibendum convallis. Phasellus quis enim id massa feugiat egestas hendrerit sollicitudin nibh. Sed blandit eros id tellus porta, eget ullamcorper urna posuere. Pellentesque laoreet lacus nibh, a mattis libero viverra sit amet. Sed vitae diam interdum, pharetra neque sit amet, dictum lectus.
 
 Donec massa justo, ultricies quis facilisis sed, tristique nec metus. Vestibulum id condimentum diam. Integer semper augue id porttitor ultrices. Cras vulputate felis eu diam porttitor, ac pulvinar nisi imperdiet. Donec eros felis, imperdiet vel malesuada at, varius et quam. Phasellus facilisis non risus eu placerat. Sed ac mollis lorem.
 
-# Evaluation
-Nullam semper imperdiet orci, at lacinia est aliquet et. Sed justo nibh, aliquet et velit at, pharetra consequat velit. Nullam nec ligula sagittis, adipiscing nisl sed, varius massa. Mauris quam ante, aliquet a nunc et, faucibus imperdiet libero. Suspendisse odio tortor, bibendum vel semper sit amet, euismod ac ante. Nunc nec dignissim turpis, ac blandit massa. Donec auctor massa ac vestibulum aliquam. Fusce auctor dictum lobortis. Vivamus tortor augue, convallis quis augue sit amet, laoreet tristique quam. Donec id volutpat orci. Suspendisse at mi vel elit accumsan porta ac ut diam. Nulla ut dapibus quam.
+# Clustering
 
-Sed est odio, ornare in rutrum et, dapibus in urna. Suspendisse varius massa in ipsum placerat, quis tristique magna consequat. Suspendisse non convallis augue. Quisque fermentum justo et lorem volutpat euismod. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi sagittis interdum justo, eu consequat nisi convallis in. Sed tincidunt risus id lacinia ultrices. Phasellus ac ligula sed mi mattis lacinia ac non felis. Etiam at dui tellus.
+The next sub-module of the dashboard is a tool to carry out hierarchical clustering on stocks. For this sub-module, clustering analysis will be carried out on 89 current component stocks of the NASDAQ-100 Index. The Nasdaq-100 Index is a basket of the 100 largest non-financial companies listed on the Nasdaq Exchange in the US. Companies listed in the Nasdaq-100 Index largely belong to the technology sector, and some household names include Apple, Google, Tesla and Facebook. COVID-19 accelerated the rise of the digital economy and drove digital transformation initiatives in companies around the world; it also proved to be a boon for technology industries such as cloud computing, videoconferencing and cybersecurity. There has been huge investor interest in technology stocks following their outperformance in 2020 and the ongoing hype of digitisation. Many rookie investors have also entered the fray, hoping to be involved in these companies’ growth. We choose to focus on stocks in the NASDAQ-100 Index for this sub-module to provide users with a tool to aid their decisions in investing in the biggest US-listed technology stocks.
+
+## Clustering variables
+
+For this sub-module, hierarchical clustering will be carried out on 5 variables which have been selected to cover a holistic range of financial indicators of a company. The time horizon for a clustering is one year. The 5 variables are as follows: "1-Year Return","1-Year Volatility","Dividend Yield","Return on Assets","Total Debt to Total Assets".
+
+
+
+## Data Preparation
+
+There are 2 main data sources for this sub-module: 1) Bloomberg Terminal 2) tidyquant package on R
+
+The Bloomberg Terminal is used to pull the historical yearly financial ratios and volatility for the stocks. Bloomberg nicely stores these data points which can be easily pulled into csv format. For each stock in our stock universe, yearly historical values from 2015-2020 are pulled for the variables as mentioned above.
+
+We use tidyquant package solely to pull historical prices of the stocks, which we then convert to yearly returns. The reason we use tidyquant rather than using Bloomberg is because tidyquant package has functions which can help us automatically calculate returns for different periodicities, such as annual or monthly. In this context, we look at yearly returns from 2015-2020 for the stocks in our stock universe.
+
+## Case Study
+
+We demonstrate how to use the Clustering Analysis sub-module of our dashboard by carrying out a round of clustering analysis on a combination of selectable variables.
+
+
+
+On the side panel of the dashboard, interactivity features are available to allow the user to select the following: "Year", "Variables to cluster by:", "Distance Method", "Linkage Method" and "Number of Clusters".
+
+
+
+```{r, out.width = "240px", out.height = "240px"}
+knitr::include_graphics("images/sidepanel.PNG")
+```
+
+For this case study, we carry out clustering in 2017 on all 5 variables. We select Euclidean to be the distance measure to compute the distance matrix, and Ward D2 as the agglomeration method for the hierarchical clustering algorithm. The resulting dendrogram is cut into 20 clusters.
+
+## Clustering Results
+
+The main panel of the dashboard has 4 main outputs. At the top of the panel is the dendrogram showing how the stocks have been cut into clusters, in this case 20 clusters.
+
+![](images/dendrogram.PNG)
+
+Below the dendrogram is a line graph showing the combination of variable values for each cluster. For each cluster, the value seen on the line graph for each variable is the average value of that variable for all the stocks in the cluster. For example, if Cluster 19 has a value of -6% for 1-Year Return, it means that the average 1-Year Return for all the stocks in Cluster 19 is -6%. There is an interactivity option to isolate the view for a single cluster to strip out the noise from the other clusters.
+
+![](images/linegraph.PNG)
+
+Next, the user will be able to see the breakdown of each cluster's constituent stocks in a table. For example, we see from the table below for our case study that Cluster 4 consists of the stocks ADP, ANSS, CTSH, GOOGL, ISRG, PAYX, PYPL and SNPS.
+
+![](images/cluster_breakdown.PNG)
+
+
+The final output on the main panel is each individual cluster's return and volatility profile. An additional panel calculating the Returns to Volatility ratio is included, arranged in descending order. This way, users can see instantly which cluster performed the best in terms of risk-adjusted returns for that year. We see that Cluster 4 performed the best in 2017.
+
+![](images/cluster_return.PNG)
+
+## Clustering Results - Backtesting
+
+We then explore a use case as to how to use the clustering results to aid in investing decisions. Following from the finding that Cluster 4 stocks performed the best in 2017, the user may want to use this to explore if outperformance of a cluster continues into the next year 2018. This is an example of momentum investing, a strategy that aims to capitalize on the continuance of existing trends.
+
+Using the sub-module (Weekien), we construct a portfolio consisting of......compare against XLK benchmark....outperform!
 
 # Conclusion
 Duis nec purus sed neque porttitor tincidunt vitae quis augue. Donec porttitor aliquam ante, nec convallis nisl ornare eu. Morbi ut purus et justo commodo dignissim et nec nisl. Donec imperdiet tellus dolor, vel dignissim risus venenatis eu. Aliquam tempor imperdiet massa, nec fermentum tellus sollicitudin vulputate. Integer posuere porttitor pharetra. Praesent vehicula elementum diam a suscipit. Morbi viverra velit eget placerat pellentesque. Nunc congue augue non nisi ultrices tempor.
+
+
+
+# Tables
+
+```{r echo=FALSE}
+
+df <- data.frame(financial_ratio = c("1-Year Return","1-Year Volatility","Dividend Yield","Return on Assets","Total Debt to Total Assets"), 
+                 definition = (c("Return on an investment generated over a year and calculated as a percentage of the initial amount of investment.", 
+                                 "Statistical measure of the rate of fluctuations in the price of a security over 1 year. Volatility is also known as standard deviation.",
+                                 "Shows how much a company pays out in dividends each year relative to its stock price, expressed as a percentage.",
+                                 "A type of return on investment (ROI) metric that measures the profitability of a business in relation to its total assets. The higher the return, the more productive and efficient management is in utilizing economic resources",
+                 "A leverage ratio that indicates the percentage of assets that are being financed with debt. The higher the ratio, the greater the degree of leverage and financial risk")), 
+    Financial_Aspect = (c("Financial Return","Market Volatility","Payout to Shareholders" ,"Profitability","Leverage")))
+kbl(df , col.names = c("Financial Ratio", "Definition", "Financial Aspect"), escape = F,booktabs = T , "latex", table.env ='table*') %>%
+  
+  column_spec(2, width = "10cm")
+```
+
+
 
 # References
 
@@ -70,4 +147,6 @@ references:
     year: 2012
     month: 3
 ...
+
+
 
