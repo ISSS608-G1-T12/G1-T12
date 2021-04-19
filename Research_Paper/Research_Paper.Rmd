@@ -36,13 +36,23 @@ Donec massa justo, ultricies quis facilisis sed, tristique nec metus. Vestibulum
 
 # Literature Review
 
--Weekien lit review
+## Technical Indicators
+
+In the literature review conducted, it was found that there have been various attempts by users to provide tools for analysing stock price action. Existing charting or dashboarding tools often focus on only simple charting or technical indicator functionalities. Most open source/ free tools only offer the various functionalities in isolation, and users are unable to have a holistic view uniting technical analysis, portfolio analysis, and the other components to allow for complete decision making when making buying and selling decisions.
+
+In this sub-module, the team will put together various sub-modules spanning across: Charting, Technical Analysis, Correlation Analysis, Clustering, Forecasting, Portfolio Analysis.
+
+## Forecasting
 
 Time series forecasting is not the same as technical analysis and can be seen as a natural extension/logical next step after conducting technical analysis. The main difference is that time series forecasting gives you an exact forecasted price, while technical analysis only predicts the future movement (up/down) of the price (Berdiell, 2015). The fundamental idea of this method is to seek out patterns in the historical stock prices with a hybrid approach. A hybrid approach combine multiple different models to forecast stock prices. For example, the papers of Markowska-Kaczmar and Dziedzic (2008) and Wang et al (2015) both proposed tackling stock price forecasting with an amalgamation of multiple models instead of just relying on one form of forecasting. This has been shown to result in superior forecasting accuracy and performance as compared to using a dedicated forecasting method. The researches of Dey et al. (2016) has also shown similar results albeit with some overfitting issues and a limited testing scenario.
 
+The modification made in building the sub-module to the existing hybrid techniques is that the application will do a forecast based on 5 different models then present the mean of the 3 best performing ones. 
+
+## Clustering
+
 Da Silva, Cunha, and da Costa (2005) [@sergio] carried out hierarchical clustering on 816 stocks listed in North and South America from 1997-1999 on the following variables: return, risk, earnings-price ratio, book value-price ratio, sales-price ratio, sales-number of stocks ratio and dividend yield. Their research showed that clusters with the best risk-return profile from the time window where clustering was conducted continued to be so in a second time window from 2000-2001. However, their research did not comprise visualisations of the cluster characteristics. In addition, their research only showed results for one fixed combination of variables. Lastly, there was no insight as to how the winning clusters performed against a benchmark index, which is potentially of interest.
 
-This research provides opportunities to address the limitations of existing literature as described above. The team looks to incorporate interactivity features and appropriate visualisations into our dashboard as part of improving on existing work.
+This research provides opportunities to address the limitations of existing literature as described above. The team looks to incorporate interactivity features and appropriate visualisations into the sub-module as part of improving on existing work.
 
 # Charting
 
