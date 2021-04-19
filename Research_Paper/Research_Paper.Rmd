@@ -56,6 +56,27 @@ This research provides opportunities to address the limitations of existing lite
 
 # Charting
 
+## Charting and Technical Analysis
+
+In this module, users are able to visualize the chosen stock symbol using a candlestick chart. Open, High, Low, and Close prices for the selected period are shown on the chart.
+
+In addition, users are able to choose between 2 sets of technical indicators: Simple moving averages and Bollinger Bands. Users are able to see the chosen symbol on 1 chart, and the accompanying benchmark index chosen on another chart. Both charts are created in an interactive manner using the plotly package.
+
+Finally, multiple features based on candlestick patterns are created and available through a table. Such candlestick patterns inform users of certain bullish or bearish price action patterns observed. This provides a different perspectives to users incline towards technical analysis.
+
+## Correlation Analysis
+In this sub section, users are able to:
+- Choose 4 stock symbols and visualize their monthly adjusted prices
+  Visualize any anomalous points for these 4 stock symbols using an interactive chart
+- Visualize the 6 month rolling correlation between the 4 stock symbols, and the accompanying benchmark index
+
+
+## Portfolio Analysis
+In this sub section, users are able to:
+- Create 3 portfolios with different weightages for the 4 chosen stock symbols plus the accompanying benchmark index
+- Visualize the monthly returns (in %) for the 3 different portfolios on an interactive plot
+- Visualize an equity curve of the 3 portfolios, where users are able to choose the starting equity amount
+
 # Time Series Forecasting
 
 This sub-module of the dashboard is a tool to carry out time series forecasting on a stock. For this sub-module, forecasting will be carried out on a chosen ticker. The intent for this sub-module is to allow the user to identify future trends of a stock and entry/exit opportunities. The example given will be based on the technology company *APPLE (AAPL)*.
