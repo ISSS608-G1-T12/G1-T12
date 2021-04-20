@@ -108,12 +108,11 @@ height: 38in;
 padding: 0cm;
 }
 .title_container {
-width: 100%;
-height: 15%;
+width: 45in;
+height: calc(38in * 0.15);
 overflow: hidden;
 background-color: #0b4545;
-border: 0 solid #0b4545
-;
+border: 0 solid #0b4545;
 }
 .logo_left {
 float: left;
@@ -149,28 +148,24 @@ font-family: Palatino;
 }
 /* unvisited link */
 a:link {
-color: #008080;
-text-decoration: none;
+color: #cc0000;
 }
 .mybreak {
   break-before: column;
 }
 /* visited link */
 a:visited {
-color: #008080;
-text-decoration: none;
+color: #cc0000;
 }
 
 /* mouse over link */
 a:hover {
-color: #008080;
-text-decoration: none;
+color: #cc0000;
 }
 
 /* selected link */
 a:active {
-color: #008080;
-text-decoration: none;
+color: #cc0000;
 }
 .poster_body {
 -webkit-column-count: 3; /* Chrome, Safari, Opera */
@@ -202,9 +197,9 @@ border: 0;
 font-weight: normal;
 }
 .poster_body_wrap{
-width: 45in;
-height: calc(100% - 17%);
-padding-top: calc(38in * 0.01);
+width: calc(45in + 0 + 0);
+height: calc(38in * 0.83);
+padding-top: calc(38in * 0.005);
 padding-bottom: calc(38in * 0.01);
 background-color: #ffffff;
 }
@@ -227,7 +222,7 @@ border: 0;
 font-weight: normal;
 }
 img {
-margin-top: 0;
+margin-top: 2cm;
 margin-bottom: 0;
 }
 .section {
@@ -265,41 +260,25 @@ margin-bottom: 2cm;
 position: sticky;
 width: 100%;
 }
-pre.sourceCode.r, pre.sourceCode.python {
-background-color: #ffffff20;
-border: solid #008080 1mm;
-border-radius: 0.5em;
+pre.sourceCode.r {
+background-color: #dddddd40;
+border-radius: 4mm;
 padding: 4mm;
-margin: auto;
-margin-top: 1em;
-margin-bottom: 1em;
+width: 75%;
 /* align-items: center; */
+margin: auto;
+padding-left: 2cm;
 }
-div.sourceCode {
-background-color: transparent;
-width: 85%;
-margin-left: auto;
-margin-right: auto;
-}
-code.sourceCode.r, code.sourceCode.python {
+code.sourceCode.r{
 background-color: transparent;
 font-size: 20pt;
-border-radius: 2mm;
-}
-code {
-font-size: 25pt;
-font-family: monospace;
-background-color: #00808024;
-color: #008080;
-padding: 1.2mm;
-line-height: 1;
 border-radius: 2mm;
 }
 .caption {
-font-size: 20pt;
+font-size: 25pt;
 }
 .table caption {
-font-size: 20pt;
+font-size: 25pt;
 padding-bottom: 3mm;
 
 }
@@ -337,7 +316,6 @@ margin-right: 4mm;
 margin-left: 4mm;
 margin-top: 6mm;
 margin-bottom: 10mm;
-color: #000000
 }
 .poster_body ol {
 margin-right: 4mm;
@@ -362,13 +340,13 @@ font-size: 20pt;
 <div class="title_container">
 <!-- Left Logo  -->
 <div class="logo_left">
-<img src=https://raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png style="width: 80%">
+<img src= 'https://raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png' style="width: 80%">
 </div>
 <!-- Poster Title -->
 <div class= "poster_title">
 <h1 id="title">Investing101 - Bringing financial literacy to the masses</h1>
-<h3 id="author">Andre Lee<sup>1</sup>, Boey Yi Heen<sup>2</sup>, Ng Wee Kien<sup>3</sup></h3>
-<h5 id="affiliation"><sup>1</sup> Singapore Management University; <sup>2</sup> Singapore Management University; <sup>3</sup> Singapore Management University</h5>
+<h3 id="author">Andre Lee<sup>1</sup>, Boey Yi Heen<sup>2</sup>, Ng Wee Kien<sup>3</sup></h3><br>
+<h5 id="affiliation"><sup>1</sup> Singapore Management University<br> <sup>2</sup> Singapore Management University<br> <sup>3</sup> Singapore Management University</h5>
 </div>
 <!-- Right Logo  -->
 <div class="logo_right">
@@ -394,7 +372,7 @@ font-size: 20pt;
 </div>
 <div id="methods" class="section level1">
 <h1>Methods</h1>
-<p>This package uses the same workflow approach as the R Markdown you know and love. Basically it goes from RMarkdown &gt; Knitr &gt; Markdown &gt; Pandoc &gt; HTML/CSS &gt; PDF. You can even use the bibliography the same way <span class="citation">(Thorne 2021)</span>.</p>
+<p>This package uses the same workflow approach as the R Markdown you know and love. Basically it goes from RMarkdown &gt; Knitr &gt; Markdown &gt; Pandoc &gt; HTML/CSS &gt; PDF. You can even use the bibliography the same way <span class="citation">(Thorne 2019)</span>.</p>
 </div>
 <div id="results" class="section level1">
 <h1>Results</h1>
@@ -587,7 +565,7 @@ Figure 2: Amazing, right?!
 </div>
 <div id="next-steps" class="section level1">
 <h1>Next Steps</h1>
-<p>Aliquam sed faucibus risus, quis efficitur erat. Vestibulum semper mauris quis tempus eleifend. Aliquam sagittis dictum ipsum, quis viverra ligula eleifend ut. Curabitur sagittis vitae arcu eget faucibus. In non elementum felis. Duis et aliquam nunc. Nunc pulvinar sapien nunc, vel pretium nisi efficitur in. Fusce fringilla maximus leo et maximus. Fusce at ligula laoreet, iaculis mi at, auctor odio. Praesent sed elementum justo. Aenean consectetur risus rhoncus tincidunt efficitur. Praesent dictum mauris at diam maximus maximus <span class="citation">(Thorne 2021)</span>.</p>
+<p>Aliquam sed faucibus risus, quis efficitur erat. Vestibulum semper mauris quis tempus eleifend. Aliquam sagittis dictum ipsum, quis viverra ligula eleifend ut. Curabitur sagittis vitae arcu eget faucibus. In non elementum felis. Duis et aliquam nunc. Nunc pulvinar sapien nunc, vel pretium nisi efficitur in. Fusce fringilla maximus leo et maximus. Fusce at ligula laoreet, iaculis mi at, auctor odio. Praesent sed elementum justo. Aenean consectetur risus rhoncus tincidunt efficitur. Praesent dictum mauris at diam maximus maximus <span class="citation">(Thorne 2019)</span>.</p>
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
@@ -597,7 +575,7 @@ Figure 2: Amazing, right?!
 <h1>References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-R-posterdown" class="csl-entry">
-Thorne, Brent. 2021. <em>Posterdown: Generate PDF Conference Posters Using r Markdown</em>. <a href="https://github.com/brentthorne/posterdown">https://github.com/brentthorne/posterdown</a>.
+Thorne, Brent. 2019. <em>Posterdown: Generate PDF Conference Posters Using r Markdown</em>. <a href="https://github.com/brentthorne/posterdown">https://github.com/brentthorne/posterdown</a>.
 </div>
 </div>
 </div>
