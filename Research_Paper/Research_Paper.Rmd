@@ -34,6 +34,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing[@fenner2012a] elit. Pellentes
 
 Donec massa justo, ultricies quis facilisis sed, tristique nec metus. Vestibulum id condimentum diam. Integer semper augue id porttitor ultrices. Cras vulputate felis eu diam porttitor, ac pulvinar nisi imperdiet. Donec eros felis, imperdiet vel malesuada at, varius et quam. Phasellus facilisis non risus eu placerat. Sed ac mollis lorem.
 
+# Motivation & Objectives
+
 # Literature Review
 
 ## Technical Indicators
@@ -54,9 +56,36 @@ Da Silva, Cunha, and da Costa (2005) [@sergio] carried out hierarchical clusteri
 
 This research provides opportunities to address the limitations of existing literature as described above. The team looks to incorporate interactivity features and appropriate visualisations into the sub-module as part of improving on existing work.
 
-# Charting
 
-## Charting and Technical Analysis
+
+
+# The Application
+
+## System Design & Architecture
+
+After careful consideration and specially taking into account the need to bring financial literacy to the masses we have decided to design and develop Investing101 based on R Shiny. [Shiny](https://shiny.rstudio.com/articles/shiny-server.html) is an open source R package that provides an elegant and powerful web framework for building web applications using R. Shiny helps you turn your analyses into interactive web applications without requiring HTML, CSS, or JavaScript knowledge.
+
+The design of the Shiny server allows us to make the application available across the Internet (i.e. to the masses). The Shiny Server will host each app at its own web address and automatically start the app when a user visits the address. When the user leaves, Shiny Server will automatically stop the app. This reduces the need for maintenance and infrastructure costs, thus allowing us to provide our application to a wider audience for FREE.
+
+## Visualizations
+
+The data visualisations within the application are built using a host of open source R packages. They are 'tmap', 'tidyverse', 'forecast', 'tseries', 'readxl', 'tidyquant', 'dygraphs', 'TSstudio', 'plotly', 'tsibble', 'ggplot2', 'tidymodels', 'modeltime', modeltime.ensemble', 'timetk', 'glmnet', 'randomForest', 'shiny', 'readr', 'DT', 'shinydashboard', 'CandleStickPattern', 'ggpubr', 'dplyr','cluster', 'formattable', 'reshape2', 'zoo', 'tibble', 'ggdendro', 'knitr','kableExtra', 'dendextend', 'scales', 'data.table'. 
+
+The following packages are discussed in detail as they are integral to the workings and logic of the application.
+
+The **Tidyquant** package integrates the most useful functions from the xts, zoo, quantmod, TTR, and PerformanceAnalytics packages. It is also one of the key sources of data for our application.
+
+The **timetk** package is part of the modeltime ecosystem for time series analysis and forecasting. The forecasting system is extensive and includes many ready made algorithms, allowing for ensembling and resampling, Machine Learning and Deep Learning. It is mainly used to calculate and analysis financial ratios and also the plotting of time series/financial data.
+
+The **dygraphs** package is able to handle huge data sets.It also creates interactive plots out of the box, allowing the user to use our app more interactively. dygraphs is also Highly customizable and works in most browsers and mobile devices which once again allows us to deliver our app to the masses. **plotly** is another package that we use for creating interactive web graphics via the open source JavaScript graphing library plotly.js which allows use to create customizable intractive plots used for visualization in our application.
+
+**Modeltime** unlocks time series models and machine learning in one framework meaning that is no need to switch back and forth between various frameworks. Modeltime incorporates a streamlined workflow for using best practices to forecast. Its many different algorithm and models means that the application can be easily scaled up to include more forecasting models with little effort. 
+
+
+
+## Charting
+
+### Charting and Technical Analysis
 
 In this module, users are able to visualize the chosen stock symbol using a candlestick chart. Open, High, Low, and Close prices for the selected period are shown on the chart.
 
@@ -64,45 +93,46 @@ In addition, users are able to choose between 2 sets of technical indicators: Si
 
 Finally, multiple features based on candlestick patterns are created and available through a table. Such candlestick patterns inform users of certain bullish or bearish price action patterns observed. This provides a different perspectives to users incline towards technical analysis.
 
-## Correlation Analysis
+### Correlation Analysis
 In this sub section, users are able to:
 - Choose 4 stock symbols and visualize their monthly adjusted prices
   Visualize any anomalous points for these 4 stock symbols using an interactive chart
 - Visualize the 6 month rolling correlation between the 4 stock symbols, and the accompanying benchmark index
 
 
-## Portfolio Analysis
+### Portfolio Analysis
 In this sub section, users are able to:
 - Create 3 portfolios with different weightages for the 4 chosen stock symbols plus the accompanying benchmark index
 - Visualize the monthly returns (in %) for the 3 different portfolios on an interactive plot
 - Visualize an equity curve of the 3 portfolios, where users are able to choose the starting equity amount
 
-# Time Series Forecasting
+## Time Series Forecasting
 
 This sub-module of the dashboard is a tool to carry out time series forecasting on a stock. For this sub-module, forecasting will be carried out on a chosen ticker. The intent for this sub-module is to allow the user to identify future trends of a stock and entry/exit opportunities. The example given will be based on the technology company *APPLE (AAPL)*.
 
-## Data Preparation
+
+### Data Preparation
 
 The sole data source for this sub-module is the tidyquant package on R.
 
 We use the tidyquant package to pull historical prices of the stocks. The extracted data is then broken down into training and testing sets to build the forecasting model. The dashboard is reactive and will be able to pull any amount of data chosen by the user as long as it is available on Yahoo finance. 
 
-## Model building
+### Model building
 
-## Case Study
+### Case Study
 
 
-# Clustering
+## Clustering
 
 The next sub-module of the dashboard is a tool to carry out hierarchical clustering on stocks. For this sub-module, clustering analysis will be carried out on 89 current component stocks of the NASDAQ-100 Index. The Nasdaq-100 Index is a basket of the 100 largest non-financial companies listed on the Nasdaq Exchange in the US. Companies listed in the Nasdaq-100 Index largely belong to the technology sector, and some household names include Apple, Google, Tesla and Facebook. COVID-19 accelerated the rise of the digital economy and drove digital transformation initiatives in companies around the world; it also proved to be a boon for technology industries such as cloud computing, videoconferencing and cybersecurity. There has been huge investor interest in technology stocks following their outperformance in 2020 and the ongoing hype of digitisation. Many rookie investors have also entered the fray, hoping to be involved in these companies’ growth. We choose to focus on stocks in the NASDAQ-100 Index for this sub-module to provide users with a tool to aid their decisions in investing in the biggest US-listed technology stocks.
 
-## Clustering variables
+### Clustering variables
 
 For this sub-module, hierarchical clustering will be carried out on 5 variables which have been selected to cover a holistic range of financial indicators of a company. The time horizon for a clustering is one year. The 5 variables are as follows: "1-Year Return","1-Year Volatility","Dividend Yield","Return on Assets","Total Debt to Total Assets".
 
 
 
-## Data Preparation
+### Data Preparation
 
 There are 2 main data sources for this sub-module: 1) Bloomberg Terminal 2) tidyquant package on R
 
@@ -110,7 +140,7 @@ The Bloomberg Terminal is used to pull the historical yearly financial ratios an
 
 We use tidyquant package solely to pull historical prices of the stocks, which we then convert to yearly returns. The reason we use tidyquant rather than using Bloomberg is because tidyquant package has functions which can help us automatically calculate returns for different periodicities, such as annual or monthly. In this context, we look at yearly returns from 2015-2020 for the stocks in our stock universe.
 
-## Case Study
+### Case Study
 
 We demonstrate how to use the Clustering Analysis sub-module of our dashboard by carrying out a round of clustering analysis on a combination of selectable variables.
 
@@ -126,7 +156,7 @@ knitr::include_graphics("images/sidepanel.PNG")
 
 For this case study, we carry out clustering in 2017 on all 5 variables. We select Euclidean to be the distance measure to compute the distance matrix, and Ward D2 as the agglomeration method for the hierarchical clustering algorithm. The resulting dendrogram is cut into 20 clusters.
 
-## Clustering Results
+### Clustering Results
 
 The main panel of the dashboard has 4 main outputs. At the top of the panel is the dendrogram showing how the stocks have been cut into clusters, in this case 20 clusters.
 
@@ -145,11 +175,14 @@ The final output on the main panel is each individual cluster's return and volat
 
 ![](images/cluster_return.PNG)
 
-## Clustering Results - Backtesting
+### Clustering Results - Backtesting
 
 We then explore a use case as to how to use the clustering results to aid in investing decisions. Following from the finding that Cluster 4 stocks performed the best in 2017, the user may want to use this to explore if outperformance of a cluster continues into the next year 2018. This is an example of momentum investing, a strategy that aims to capitalize on the continuance of existing trends.
 
 Using the sub-module (Weekien), we construct a portfolio consisting of......compare against XLK benchmark....outperform!
+
+# Case Study
+
 
 # Conclusion
 Duis nec purus sed neque porttitor tincidunt vitae quis augue. Donec porttitor aliquam ante, nec convallis nisl ornare eu. Morbi ut purus et justo commodo dignissim et nec nisl. Donec imperdiet tellus dolor, vel dignissim risus venenatis eu. Aliquam tempor imperdiet massa, nec fermentum tellus sollicitudin vulputate. Integer posuere porttitor pharetra. Praesent vehicula elementum diam a suscipit. Morbi viverra velit eget placerat pellentesque. Nunc congue augue non nisi ultrices tempor.
