@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r}
 #Load packages
-packages = c("tidyquant","tidyverse","ggpubr","ggplot2","dplyr","cluster","formattable","reshape2","zoo","tibble","ggdendro","knitr","kableExtra","dendextend","plotly","scales","data.table")
+packages = c("tidyquant","tidyverse","ggpubr","ggplot2","dplyr","cluster","formattable","reshape2","zoo","tibble","ggdendro","knitr","kableExtra","dendextend","plotly","scales","data.table","corrplot")
 for (p in packages){
   if(!require(p,character.only = T)){
     install.packages(p)
@@ -218,6 +218,16 @@ select_yearfilter <- select_yearfilter %>%
   column_to_rownames('Ticker') #make the Ticker column become rownames 
 
 ```
+
+
+```{r}
+# select_yearfilter
+M <- cor(select_yearfilter)
+corrplot(M, method ="number", type = "upper")
+```
+
+
+
 ### 3.3. Visualisation of Results
 
 Once we have selected the year and the variables, we proceed with the actual hierarchical clustering. 

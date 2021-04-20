@@ -13,9 +13,10 @@ author:
     email: weekien.ng.2020@mitb.smu.edu.sg
     affiliation: Singapore Management University
 abstract: |
-  Most retail investors rely on traditional financial data websites such as Yahoo Finance to retrieve relevant financial data to aid in their investing decisions. However, these sites' offerings tend to be homogeneous and comprise usual information such as price quotes, market commentary and corporate actions. Investors are left on their own to make sense of these information, without tools to further perform actions such as price forecasting or segmenting stocks into groups. These tools could possibly enhance their investing decisions.
+
+  In making investing decisions, it is always helpful to have seamless tools at investors' disposal to generate insights out of the deluge of financial data available out there. In this project, we developed an R Shiny application using a range of data visualisation techniques to provide some useful tools to investors to aid them in their investing decisions. These tools are not available in traditional sources which retail investors tend to use. The embedded models, visualisation tools and application design of the application are discussed.
   
-  Having identified this gap, we developed Investing101, an interactive visual analytics dashboard to allow investors to not only retrieve basic price information of stocks, but also apply machine learning models such as ARIMA forecasting and hierarchical clustering. The dashboard will also allow users to construct bespoke portfolios and see their historical performances. On top of this, the dashboard also provides users with a tool that readily aggregates and interprets candlestick patterns for the user. All these different tools come together to deliver a product that adds value to investors, on top of what traditional finance data websites can provide.
+
   
 bibliography: sigproc.bib
 csl: acm-sig-proceedings.csl
@@ -30,9 +31,9 @@ library(kableExtra)
 ```
 
 # Introduction 
-Lorem ipsum dolor sit amet, consectetur adipiscing[@fenner2012a] elit. Pellentesque rhoncus ut tellus eu tristique. Duis pharetra velit vitae viverra elementum. Nulla metus dui, pulvinar id enim at, pellentesque semper ipsum. Phasellus cursus dignissim ipsum, sed congue orci pretium quis. Maecenas rhoncus leo a cursus euismod. Fusce a erat eu ipsum tristique tempus at sed tortor. Aliquam erat volutpat. Donec at pretium lorem. Donec pretium nunc id nunc bibendum convallis. Phasellus quis enim id massa feugiat egestas hendrerit sollicitudin nibh. Sed blandit eros id tellus porta, eget ullamcorper urna posuere. Pellentesque laoreet lacus nibh, a mattis libero viverra sit amet. Sed vitae diam interdum, pharetra neque sit amet, dictum lectus.
-
-Donec massa justo, ultricies quis facilisis sed, tristique nec metus. Vestibulum id condimentum diam. Integer semper augue id porttitor ultrices. Cras vulputate felis eu diam porttitor, ac pulvinar nisi imperdiet. Donec eros felis, imperdiet vel malesuada at, varius et quam. Phasellus facilisis non risus eu placerat. Sed ac mollis lorem.
+Most retail investors rely on traditional financial data websites such as Yahoo Finance to retrieve relevant financial data to aid in their investing decisions. However, these sites' offerings tend to be homogeneous and comprise usual information such as price quotes, market commentary and corporate actions. Investors are left on their own to make sense of these information, without tools to further perform actions such as price forecasting or segmenting stocks into groups. These tools could possibly enhance their investing decisions.
+  
+Having identified this gap, we developed Investing101, an interactive visual analytics dashboard to allow investors to not only retrieve basic price information of stocks, but also apply machine learning models such as ARIMA forecasting and hierarchical clustering. The dashboard will also allow users to construct bespoke portfolios and see their historical performances. On top of this, the dashboard also provides users with a tool that readily aggregates and interprets candlestick patterns for the user. All these different tools come together to deliver a product that adds value to investors, on top of what traditional finance data websites can provide.
 
 # Motivation & Objectives
 
@@ -46,7 +47,7 @@ In this sub-module, the team will put together various sub-modules spanning acro
 
 ## Forecasting
 
-Time series forecasting is not the same as technical analysis and can be seen as a natural extension/logical next step after conducting technical analysis. The main difference is that time series forecasting gives you an exact forecasted price, while technical analysis only predicts the future movement (up/down) of the price (Berdiell, 2015). The fundamental idea of this method is to seek out patterns in the historical stock prices with a hybrid approach. A hybrid approach combine multiple different models to forecast stock prices. For example, the papers of Markowska-Kaczmar and Dziedzic (2008) and Wang et al (2015) both proposed tackling stock price forecasting with an amalgamation of multiple models instead of just relying on one form of forecasting. This has been shown to result in superior forecasting accuracy and performance as compared to using a dedicated forecasting method. The researches of Dey et al. (2016) has also shown similar results albeit with some overfitting issues and a limited testing scenario.
+Time series forecasting is not the same as technical analysis and can be seen as a natural extension/logical next step after conducting technical analysis. The main difference is that time series forecasting gives you an exact forecasted price, while technical analysis only predicts the future movement (up/down) of the price (Berdiell, 2015) [@berdiell]. The fundamental idea of this method is to seek out patterns in the historical stock prices with a hybrid approach. A hybrid approach combine multiple different models to forecast stock prices. For example, the papers of Markowska-Kaczmar and Dziedzic (2008) [@dzied]  and Wang et al (2015) [@wang] both proposed tackling stock price forecasting with an amalgamation of multiple models instead of just relying on one form of forecasting. This has been shown to result in superior forecasting accuracy and performance as compared to using a dedicated forecasting method. The researches of Dey et al. (2016) [@dey] has also shown similar results albeit with some overfitting issues and a limited testing scenario.
 
 The modification made in building the sub-module to the existing hybrid techniques is that the application will do a forecast based on 5 different models then present the mean of the 3 best performing ones. 
 
@@ -69,7 +70,7 @@ The design of the Shiny server allows us to make the application available acros
 
 ## Visualizations
 
-The data visualisations within the application are built using a host of open source R packages. They are 'tmap', 'tidyverse', 'forecast', 'tseries', 'readxl', 'tidyquant', 'dygraphs', 'TSstudio', 'plotly', 'tsibble', 'ggplot2', 'tidymodels', 'modeltime', modeltime.ensemble', 'timetk', 'glmnet', 'randomForest', 'shiny', 'readr', 'DT', 'shinydashboard', 'CandleStickPattern', 'ggpubr', 'dplyr','cluster', 'formattable', 'reshape2', 'zoo', 'tibble', 'ggdendro', 'knitr','kableExtra', 'dendextend', 'scales', 'data.table'. 
+The data visualisations within the application are built using a host of open source R packages. They are 'tmap', 'tidyverse', 'forecast', 'tseries', 'readxl', 'tidyquant', 'dygraphs', 'TSstudio', 'plotly', 'tsibble', 'ggplot2', 'tidymodels', 'modeltime', modeltime.ensemble', 'timetk', 'glmnet', 'randomForest', 'shiny', 'readr', 'DT', 'shinydashboard', 'CandleStickPattern', 'ggpubr', 'dplyr','cluster', 'formattable', 'reshape2', 'zoo', 'tibble', 'ggdendro', 'knitr','kableExtra', 'dendextend', 'scales', 'data.table','corrplot', 'factoextra'. 
 
 The following packages are discussed in detail as they are integral to the workings and logic of the application.
 
@@ -81,6 +82,7 @@ The **dygraphs** package is able to handle huge data sets.It also creates intera
 
 **Modeltime** unlocks time series models and machine learning in one framework meaning that is no need to switch back and forth between various frameworks. Modeltime incorporates a streamlined workflow for using best practices to forecast. Its many different algorithm and models means that the application can be easily scaled up to include more forecasting models with little effort. 
 
+**dendextend** package allows many functions for manipulating and visualizing dendrograms. In the case of hierarchical clustering, it allows for visualizing and comparing trees and adjusting a tree's graphical parameters, such as colour, size, type etc of its branches.
 
 
 ## Charting
@@ -169,10 +171,7 @@ We use tidyquant package solely to pull historical prices of the stocks, which w
 
 We demonstrate how to use the Clustering Analysis sub-module of our dashboard by carrying out a round of clustering analysis on a combination of selectable variables.
 
-
-
 On the side panel of the dashboard, interactivity features are available to allow the user to select the following: "Year", "Variables to cluster by:", "Distance Method", "Linkage Method" and "Number of Clusters".
-
 
 
 ```{r echo=FALSE, out.width = "240px", out.height = "240px"}
@@ -180,6 +179,18 @@ knitr::include_graphics("images/sidepanel.PNG")
 ```
 
 For this case study, we carry out clustering in 2017 on all 5 variables. We select Euclidean to be the distance measure to compute the distance matrix, and Ward D2 as the agglomeration method for the hierarchical clustering algorithm. The resulting dendrogram is cut into 20 clusters.
+
+
+### Pre-Clustering: Univariate and Correlation Analysis
+
+Users will be able to visualise the distribution of the clustering variables they selected for the selected year.
+
+![](images/distri.PNG)
+
+Before clustering, it is essential to check for multicollinearity. If there is a high degree of collinearity between variables, they will not be sufficiently unique to identify distinct clusters. In addition, if highly correlated variables are used for cluster analysis, the aspects covered by these variables will be given excess weightage in the clustering output. We see from the following correlation plot that multicollinearity is not an issue.
+
+![](images/corrplot.PNG)
+
 
 ### Clustering Results
 
@@ -209,9 +220,20 @@ Using the sub-module (Weekien), we construct a portfolio consisting of......comp
 ## Forecasting
 
 
-# Conclusion
-Duis nec purus sed neque porttitor tincidunt vitae quis augue. Donec porttitor aliquam ante, nec convallis nisl ornare eu. Morbi ut purus et justo commodo dignissim et nec nisl. Donec imperdiet tellus dolor, vel dignissim risus venenatis eu. Aliquam tempor imperdiet massa, nec fermentum tellus sollicitudin vulputate. Integer posuere porttitor pharetra. Praesent vehicula elementum diam a suscipit. Morbi viverra velit eget placerat pellentesque. Nunc congue augue non nisi ultrices tempor.
+# Conclusion and Future Work
 
+This paper set out the development of a web application targeted at investors to provide useful tools to aid them in their investing process that traditional sources do not provide. This was motivated by the heightened interest in investing following the market volatility which was brought about by COVID-19. 
+
+The application was developed using the Shiny architecture on R, with an emphasis on the usage of interactivity features and data visualisations to allow users to derive insights from financial data. Going forward, we have the following ideas to further improve and expand the scope of the application:
+
+1. For the Charting sub-module, we can include a wider range of technical indicators for the investor to overlay on the candlestick charts. A backtesting module can also be incorporated to simulate trading performance based on technical analysis.
+
+2. For the Time Series Forecasting sub-module, we can potentially include more choices of forecasting models which the investor may wish to explore. This will also allow for comparison of forecasts across models.
+
+3. For the clustering sub-module, explore incorporating a wider range of financial variables to cluster upon. The financial variables data used in this sub-module was manually pulled from Bloomberg as there is no current R package that allows for the pulling of historical financial variables. Work can be done to pull data from a wider range of both financial variables as well as stocks, so that investors can do cluster analysis on more classes of stocks other than technology stocks, and also on more financial variables than is currently available on our application.
+ 
+
+\newpage
 
 \newpage
 
@@ -237,30 +259,6 @@ kbl(df , col.names = c("Financial Ratio", "Definition", "Financial Aspect"), esc
 # References
 
 
----
-references:
-
-- id: fenner2012a
-  title: One-click science marketing
-  author:
-  - family: Fenner
-    given: Martin
-  container-title: Nature Materials
-  volume: 11
-  URL: 'https://doi.org/10.1038/nmat3283'
-  DOI: 10.1038/nmat3283
-  issue: 4
-  publisher: Nature Publishing Group
-  page: 261-263
-  type: article-journal
-  issued:
-    year: 2012
-    month: 3
-
-  
-
-  
-...
 
 
 
