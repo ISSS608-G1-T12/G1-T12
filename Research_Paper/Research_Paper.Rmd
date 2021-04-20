@@ -37,6 +37,14 @@ Having identified this gap, we developed Investing101, an interactive visual ana
 
 # Motivation & Objectives
 
+Our research was motivated by the lack of effective and easy to use web-enabled analytics tools for investment planning. We aim to provide investors with an analytical tool for visually understanding technical indicators of stocks - Specifically, it attempts to support the following analysis requirements:
+
+1) To be able to conduct portfolio analysis and correlation analysis amongst multiple stocks.
+
+2) To create a clustering visualization of related stocks so users can diversify their holdings.
+
+3) To provide a forecast of future stock prices for users to identify suitable entry/exit points.
+
 # Literature Review
 
 ## Technical Indicators
@@ -123,11 +131,11 @@ We use the tidyquant package to pull historical prices of the stocks. The extrac
 
 A few models are used and built in this edition of the application. 
 
-1. ARIMA
+1. Auto-ARIMA
 
 ARIMA, short for ‘Auto Regressive Integrated Moving Average’ is a model that describes a given time series based on its own past values with its own lags and the lagged forecast errors, so that those lags and delay correlations can be plugged into the ARIMA equation to forecast future values.
 
-An ARIMA model is characterized by 3 terms: p, d, q
+An ARIMA model is characterized by 3 terms: p, d, q. Which are automatically optimised in the auto-ARIMA model
 
 where,
 
@@ -139,12 +147,31 @@ d is the number of differencing required to make the time series stationary
 
 2. Prophet
 
-3. GLMNet
+
+Prophet is an open source library published by Facebook that is based on decomposable (trend+seasonality+holidays) models. It gives us the ability to make accurate time series predictions using simple and intuitive parameters and is able to factor in the impact of custom seasonality and holiday. Prophet holds up well against missing data and shifts in the trend, and typically handles outliers well.
+
+$$
+y(t) = g(t) + s(t) + h(t) + et
+$$
+
+g(t): piecewise linear or logistic growth curve for modelling non-periodic changes in time series
+s(t): periodic changes (e.g. weekly/yearly seasonality)
+h(t): effects of holidays (user provided) with irregular schedules
+et: error term accounts for any unusual changes not accommodated by the model
+
+3. Elastic Net (GLMNET)
+
+Elastic Net is a combination of the Ridge and Lasso methods. Its name comes from the notion that it is similar in structure to a stretchable fishing net that retains all the big fish (variables) while expanding to let the smaller unimportant fish go away. This model predicts fitted values, logits, coefficients and more from a fitted "glmnet" object - in this case the time series dataset.
+
 
 4. Random Forest
 
+The Random Forest method is a popular and effective algorithm. Random Forest can used for time series forecasting,  by transforming the time series dataset into a supervised learning problem first. This is expedited using the modeltime package and its readymade functions.
+
+
 5. Prophet XG Boost
 
+A modified version of the Prophet method from Facebook. The prophet XGBoost algorithms builds on the base prophet and uses xgboost to improve performance on detecting seasonality. XGBoost stands for eXtreme Gradient Boosting and it is used for developing fast and high performance gradient boosting tree models. This algorithm is provided in the base modeltime package.
 
 ## Clustering
 
