@@ -115,11 +115,33 @@ This sub-module of the dashboard is a tool to carry out time series forecasting 
 
 The sole data source for this sub-module is the tidyquant package on R.
 
-We use the tidyquant package to pull historical prices of the stocks. The extracted data is then broken down into training and testing sets to build the forecasting model. The dashboard is reactive and will be able to pull any amount of data chosen by the user as long as it is available on Yahoo finance. 
+We use the tidyquant package to pull historical prices of the stocks. The extracted data is then broken down into training and testing sets to build the forecasting model. The dashboard is reactive and will be able to pull any stock ticker chosen by the user as long as it is available through Tidyquant. 
 
 ### Model building
 
-### Case Study
+A few models are used and built in this edition of the application. 
+
+1. ARIMA
+
+ARIMA, short for ‘Auto Regressive Integrated Moving Average’ is a model that describes a given time series based on its own past values with its own lags and the lagged forecast errors, so that those lags and delay correlations can be plugged into the ARIMA equation to forecast future values.
+
+An ARIMA model is characterized by 3 terms: p, d, q
+
+where,
+
+p is the order of the AR term - We can determine the required number of AR terms by inspecting the Partial Autocorrelation (PACF) plots. PACF can be described as the correlation between the series and its lag, after excluding the contributions from the intermediate lags.
+
+q is the order of the MA term - The ACF tells how many MA terms are required to remove any autocorrelation in the stationarized series.
+
+d is the number of differencing required to make the time series stationary
+
+2. Prophet
+
+3. GLMNet
+
+4. Random Forest
+
+5. Prophet XG Boost
 
 
 ## Clustering
@@ -140,7 +162,10 @@ The Bloomberg Terminal is used to pull the historical yearly financial ratios an
 
 We use tidyquant package solely to pull historical prices of the stocks, which we then convert to yearly returns. The reason we use tidyquant rather than using Bloomberg is because tidyquant package has functions which can help us automatically calculate returns for different periodicities, such as annual or monthly. In this context, we look at yearly returns from 2015-2020 for the stocks in our stock universe.
 
-### Case Study
+
+# Case Study
+## Technical Indicators
+## Clustering
 
 We demonstrate how to use the Clustering Analysis sub-module of our dashboard by carrying out a round of clustering analysis on a combination of selectable variables.
 
@@ -181,7 +206,7 @@ We then explore a use case as to how to use the clustering results to aid in inv
 
 Using the sub-module (Weekien), we construct a portfolio consisting of......compare against XLK benchmark....outperform!
 
-# Case Study
+## Forecasting
 
 
 # Conclusion
