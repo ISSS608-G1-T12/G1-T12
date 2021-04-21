@@ -39,9 +39,6 @@ Having identified this gap, we developed Investing101, an interactive visual ana
 
 Our research was motivated by the lack of effective and easy to use web-enabled analytics tools for investment planning. We aim to provide investors with an analytical tool for visually understanding technical indicators of stocks - Specifically, it attempts to support the following analysis requirements:
 
-
-
-
 1) To be able to conduct portfolio analysis and correlation analysis amongst multiple stocks.
 
 2) To create a clustering visualization of related stocks so users can diversify their holdings.
@@ -93,7 +90,7 @@ The **dygraphs** package is able to handle huge data sets.It also creates intera
 
 **Modeltime** unlocks time series models and machine learning in one framework meaning that is no need to switch back and forth between various frameworks. Modeltime incorporates a streamlined workflow for using best practices to forecast. Its many different algorithm and models means that the application can be easily scaled up to include more forecasting models with little effort. 
 
-**dendextend** package allows many functions for manipulating and visualizing dendrograms. In the case of hierarchical clustering, it allows for visualizing and comparing trees and adjusting a tree's graphical parameters, such as colour, size, type etc of its branches.
+The **dendextend** package allows many functions for manipulating and visualizing dendrograms. In the case of hierarchical clustering, it allows for visualizing and comparing trees and adjusting a tree's graphical parameters, such as colour, size, type etc of its branches.
 
 
 ## Charting
@@ -178,13 +175,23 @@ A modified version of the Prophet method from Facebook. The prophet XGBoost algo
 
 ## Clustering
 
-The next sub-module of the dashboard is a tool to carry out hierarchical clustering on stocks. For this sub-module, clustering analysis will be carried out on 89 current component stocks of the NASDAQ-100 Index. The Nasdaq-100 Index is a basket of the 100 largest non-financial companies listed on the Nasdaq Exchange in the US. Companies listed in the Nasdaq-100 Index largely belong to the technology sector, and some household names include Apple, Google, Tesla and Facebook. COVID-19 accelerated the rise of the digital economy and drove digital transformation initiatives in companies around the world; it also proved to be a boon for technology industries such as cloud computing, videoconferencing and cybersecurity. There has been huge investor interest in technology stocks following their outperformance in 2020 and the ongoing hype of digitisation. Many rookie investors have also entered the fray, hoping to be involved in these companies’ growth. We choose to focus on stocks in the NASDAQ-100 Index for this sub-module to provide users with a tool to aid their decisions in investing in the biggest US-listed technology stocks.
+The next sub-module of the dashboard is a tool to carry out hierarchical clustering on stocks. For this sub-module, clustering analysis will be carried out on 89 current component stocks of the NASDAQ-100 Index. The Nasdaq-100 Index is a basket of the 100 largest non-financial companies listed on the Nasdaq Exchange in the US. Companies listed in the Nasdaq-100 Index largely belong to the technology sector, and some household names include Apple, Google, Tesla and Facebook. There has been huge investor interest in technology stocks following their outperformance in 2020 and the ongoing hype of digitisation. We choose to focus on stocks in the NASDAQ-100 Index for this sub-module to provide users with a tool to aid their decisions in investing in the biggest US-listed technology stocks.
+
+### Hierarchical Clustering
+
+Clustering is an unsupervised machine learning technique which finds patterns in unlabelled data, grouping objects in clusters based on their similarity. Cluster analysis can be broadly separated into hierarchical and non-hierarchical methods. For our clustering sub-module, we choose agglomerative hierarchical clustering as the mode of clustering.
+
+In agglomerative hierarchical clustering, each item begins in its own cluster and a distance matrix is computed based on a chosen distance metric. The two closest clusters are merged, and the distance matrix is updated. The process repeats until a single cluster remains. 
+
+In our sub-module, since the clustering variables are in continuous form, we use Euclidean distance for computing proximity as a default option.
+$$
+D_{euclidean} (p1,p2) = \sqrt{(x_{p1} - x_{p2})^2 + (y_{p1} - y_{p2})^2}
+$$
+We apply the Ward algorithm as the default option to merge the individual clusters into higher order clusters. Ward's minimum variance criterion minimizes the total within-cluster variance [@wiki]. At each step, the two clusters which lead to the smallest increase in total within-cluster variance after merging are merged.
 
 ### Clustering variables
 
 For this sub-module, hierarchical clustering will be carried out on 5 variables which have been selected to cover a holistic range of financial indicators of a company. The time horizon for a clustering is one year. The 5 variables are as follows: "1-Year Return","1-Year Volatility","Dividend Yield","Return on Assets","Total Debt to Total Assets".
-
-
 
 ### Data Preparation
 
@@ -193,7 +200,6 @@ There are 2 main data sources for this sub-module: 1) Bloomberg Terminal 2) tidy
 The Bloomberg Terminal is used to pull the historical yearly financial ratios and volatility for the stocks. Bloomberg nicely stores these data points which can be easily pulled into csv format. For each stock in our stock universe, yearly historical values from 2015-2020 are pulled for the variables as mentioned above.
 
 We use tidyquant package solely to pull historical prices of the stocks, which we then convert to yearly returns. The reason we use tidyquant rather than using Bloomberg is because tidyquant package has functions which can help us automatically calculate returns for different periodicities, such as annual or monthly. In this context, we look at yearly returns from 2015-2020 for the stocks in our stock universe.
-
 
 # Case Study
 ## Technical Indicators
@@ -209,7 +215,6 @@ knitr::include_graphics("images/sidepanel.PNG")
 ```
 
 For this case study, we carry out clustering in 2017 on all 5 variables. We select Euclidean to be the distance measure to compute the distance matrix, and Ward D2 as the agglomeration method for the hierarchical clustering algorithm. The resulting dendrogram is cut into 20 clusters.
-
 
 ### Pre-Clustering: Univariate and Correlation Analysis
 
