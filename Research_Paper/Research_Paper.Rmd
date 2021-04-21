@@ -39,6 +39,9 @@ Having identified this gap, we developed Investing101, an interactive visual ana
 
 Our research was motivated by the lack of effective and easy to use web-enabled analytics tools for investment planning. We aim to provide investors with an analytical tool for visually understanding technical indicators of stocks - Specifically, it attempts to support the following analysis requirements:
 
+
+
+
 1) To be able to conduct portfolio analysis and correlation analysis amongst multiple stocks.
 
 2) To create a clustering visualization of related stocks so users can diversify their holdings.
