@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r}
 #Load packages
-packages = c("tidyquant","tidyverse","ggpubr","ggplot2","dplyr","cluster","formattable","reshape2","zoo","tibble","ggdendro","knitr","kableExtra","dendextend","plotly","scales","data.table","corrplot")
+packages = c("tidyquant","tidyverse","ggpubr","ggplot2","dplyr","cluster","formattable","reshape2","zoo","tibble","ggdendro","knitr","kableExtra","dendextend","plotly","scales","data.table","corrplot","factoextra", "heatmaply")
 for (p in packages){
   if(!require(p,character.only = T)){
     install.packages(p)
@@ -220,10 +220,23 @@ select_yearfilter <- select_yearfilter %>%
 ```
 
 
+Before clustering, we do correlation analysis to check for multicollinearity. We see that this will not be a problem here.
+
 ```{r}
 # select_yearfilter
 M <- cor(select_yearfilter)
 corrplot(M, method ="number", type = "upper")
+```
+We then conduct univariate analysis to visualise the distributions of the clustering variables.
+
+```{r}
+# select_yearfilter %>% gather() 
+
+histos <- ggplot(gather(select_yearfilter), aes(value)) + 
+    geom_histogram() + 
+    facet_wrap(~key, scales = 'free_x') + xlab("Value (%)") + ylab("Count")
+fig <- ggplotly(histos)
+fig
 ```
 
 
@@ -241,11 +254,28 @@ clust_dist <- dist(select_yearfilter,method = "euclidean")
 clust <- hclust(clust_dist , method = "ward.D2")
 ```
 
+```{r}
+fviz_dend(clust)
+```
+
 We then plot the dendrogram, with the user able to choose how many clusters to cut the dendrogram into, with the clusters being clearly outlined in red dotted lines. In this case, user specifies to cut into k=20 clusters.
 
 ```{r eval=FALSE, fig.height=20}
-plot(clust)
-rect.hclust(clust, k=20, border = "cadetblue") #choose to cut into 20 clusters
+# plot(clust)
+# rect.hclust(clust, k=20, border = "red") #choose to cut into 20 clusters
+
+dendclust <- clust %>% as.dendrogram
+dendclust %>% color_branches(k=5) %>% color_labels(k=5) %>% plot
+dendclust %>% rect.dendrogram(k=5)
+
+# dend %>% color_branches(k=3) %>% color_labels(k=3) %>% plot
+# dend %>% rect.dendrogram(k=3)
+# 
+# dend %>% color_branches(k=3) %>% color_labels(k=3) %>% plot
+# dend %>% rect.dendrogram(k=3)
+
+# clust %>% as.dendrogram(clust) %>% rect.dendrogram(k=20) %>% color_branches(k=20)
+#rect.dendrogram(as.dendrogram(clust), k=20, border = "red")
 # groups<- cutree(clust,k=20)
 # abline(h=3, col = 'red')
 
