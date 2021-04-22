@@ -12,11 +12,10 @@ author:
   - name: Ng Wee Kien
     email: weekien.ng.2020@mitb.smu.edu.sg
     affiliation: Singapore Management University
+
 abstract: |
 
   In making investing decisions, it is always helpful to have seamless tools at investors' disposal to generate insights out of the deluge of financial data available out there. In this project, we developed an R Shiny application using a range of data visualisation techniques to provide some useful tools to investors to aid them in their investing decisions. These tools are not available in traditional sources which retail investors tend to use. The embedded models, visualisation tools and application design of the application are discussed.
-  
-
   
 bibliography: sigproc.bib
 csl: acm-sig-proceedings.csl
@@ -31,19 +30,18 @@ library(kableExtra)
 ```
 
 # Introduction 
-Most retail investors rely on traditional financial data websites such as Yahoo Finance to retrieve relevant financial data to aid in their investing decisions. However, these sites' offerings tend to be homogeneous and comprise usual information such as price quotes, market commentary and corporate actions. Investors are left on their own to make sense of these information, without tools to further perform actions such as price forecasting or segmenting stocks into groups. These tools could possibly enhance their investing decisions.
-  
-Having identified this gap, we developed Investing101, an interactive visual analytics dashboard to allow investors to not only retrieve basic price information of stocks, but also apply machine learning models such as ARIMA forecasting and hierarchical clustering. The dashboard will also allow users to construct bespoke portfolios and see their historical performances. On top of this, the dashboard also provides users with a tool that readily aggregates and interprets candlestick patterns for the user. All these different tools come together to deliver a product that adds value to investors, on top of what traditional finance data websites can provide.
+Most retail investors rely on traditional financial data websites such as Yahoo Finance to retrieve relevant financial data to aid in their investing decisions. However, these sites' offerings tend to be homogeneous and comprise usual information such as price quotes, market commentary and corporate actions. Investors are left on their own to make sense of these information, without tools to further perform actions such as price forecasting or segmenting stocks into groups.
+
+Having identified this gap, we developed Investing101, an interactive visual analytics dashboard to allow investors to not only retrieve basic price information of stocks, but also apply models such as ARIMA forecasting and hierarchical clustering.  The application will also allow users to construct bespoke portfolios and see their historical performances. On top of this, the dashboard also provides users with a tool that readily aggregates and interprets candlestick patterns for the user. All these different tools come together to deliver a product that adds value that far exceeds what traditional finance data websites can provide.
+
 
 # Motivation & Objectives
+Our research was motivated by the lack of effective and easy to use web-enabled analytics tools for investment planning. We aim to provide investors with an analytical tool for visually understanding technical indicators of stocks - Specifically, it attempts to support the following analysis requirements: 
 
-Our research was motivated by the lack of effective and easy to use web-enabled analytics tools for investment planning. We aim to provide investors with an analytical tool for visually understanding technical indicators of stocks - Specifically, it attempts to support the following analysis requirements:
+1. To be able to conduct technical, portfolio analysis and correlation analysis amongst multiple stocks; 
+2. To create a clustering visualization of related stocks so users can diversify their holdings; 
+3. To provide a forecast of future stock prices for users to identify suitable entry/exit points.
 
-1) To be able to conduct portfolio analysis and correlation analysis amongst multiple stocks.
-
-2) To create a clustering visualization of related stocks so users can diversify their holdings.
-
-3) To provide a forecast of future stock prices for users to identify suitable entry/exit points.
 
 # Literature Review
 
@@ -92,6 +90,7 @@ The **dygraphs** package is able to handle huge data sets.It also creates intera
 
 The **dendextend** package allows many functions for manipulating and visualizing dendrograms. In the case of hierarchical clustering, it allows for visualizing and comparing trees and adjusting a tree's graphical parameters, such as colour, size, type etc of its branches.
 
+## Application optimisation
 
 ## Charting
 
@@ -250,11 +249,10 @@ The final output on the main panel is each individual cluster's return and volat
 
 We then explore a use case as to how to use the clustering results to aid in investing decisions. Following from the finding that Cluster 4 stocks performed the best in 2017, the user may want to use this to explore if outperformance of a cluster continues into the next year 2018. This is an example of momentum investing, a strategy that aims to capitalize on the continuance of existing trends.
 
-Using the sub-module (Weekien), we construct a portfolio consisting of......compare against XLK benchmark....outperform!
 
 ## Forecasting
 
-After all the work done in the previous 2 sub-modules. Users would have identified a few candidate stocks that he or she would want to invest in, and so this brings up the questions such as "When do I invest? Is now a good time?". It also leads us into our last and final sub-module which is time series forecasting on a stock pick. 
+Before using the forecasting module, users would have identified a few candidate stocks that he or she would want to invest in, and so this brings up the questions such as "When do I invest? Is now a good time?". It also leads us into our last and final sub-module which is time series forecasting on a stock pick. 
 
 Users will input the selected stock ticker into the side panel. Here users will also need to select a few other things, namely:
 
@@ -265,7 +263,7 @@ Users will input the selected stock ticker into the side panel. Here users will 
 In this case we will use the following inputs:
 
 - AAPL
-- 1st Jan 2021
+- 1st Oct 2020
 - MAPE
 - 1 week
 
@@ -273,7 +271,9 @@ After the forecasting model is run in the server, two outputs will be created.
 
 ### Accuracy Table
 
-The accuracy table shows the performance breakdown of each one of the 5 forecasting models by different accuracy measures. This gives a brief overview of how each model fared compared to the others and which 3 of the models were actually retained. In the test case below, you can see that based on the selection of MAPE. The ARIMA/Prophet/Prophet with XG Boost models had the superior performances. This means that those 3 models were eventually taken in to form the ensemble model while the other 2 (GLMNet/Random Forest) were dropped. Of course, the user can change this by simply changing the input "Accuracy Measure". 
+The accuracy table shows the performance breakdown of each one of the 5 forecasting models by different accuracy measures. This gives a brief overview of how each model fared compared to the others and which 3 of the models were actually retained. In the test case below, you can see that based on the selection of MAPE. The ARIMA/ Prophet/ Prophet with XG Boost models had the superior performances. This means that those 3 models were eventually taken in to form the ensemble model while the other 2 (GLMNet/Random Forest) were dropped. Of course, the user can change this by simply changing the input "Accuracy Measure". 
+
+![](images/accuracy_table.PNG)
 
 ### Forecasting plot
 
@@ -281,7 +281,9 @@ After understanding what goes into the ensemble model. The user can then see wha
 
 While it is transparent to the user, under the surface, all the testing and training of the models are still done and evaluated by the accuracy measure defined by the user. The models are also calibrated and refitted on the actual data before being presented to users as the final ensemble forecast. 
 
-Looking at the forecast for AAPL over the next week. The prices are expected to go up and hence it might be good for the users to take up a position sooner rather than later. 
+Looking at the forecast for AAPL over the next week. The prices are expected to remain stable and hence it might be good for the users to wait before taking up a position. 
+
+![](images/forecast.PNG)
 
 # Conclusion and Future Work
 
