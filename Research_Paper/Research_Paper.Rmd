@@ -254,6 +254,34 @@ Using the sub-module (Weekien), we construct a portfolio consisting of......comp
 
 ## Forecasting
 
+After all the work done in the previous 2 sub-modules. Users would have identified a few candidate stocks that he or she would want to invest in, and so this brings up the questions such as "When do I invest? Is now a good time?". It also leads us into our last and final sub-module which is time series forecasting on a stock pick. 
+
+Users will input the selected stock ticker into the side panel. Here users will also need to select a few other things, namely:
+
+1. Data start date (which determines the amount of data ingested for the forecasting model) 
+2. Accuracy measure (which will determine which forecasting model results to retain based on how users like to quantify accuracy)
+3. Forecasting period (the period ahead in which users would like to forecast between 1 - 4 weeks.) 
+
+In this case we will use the following inputs:
+
+- AAPL
+- 1st Jan 2021
+- MAPE
+- 1 week
+
+After the forecasting model is run in the server, two outputs will be created.
+
+### Accuracy Table
+
+The accuracy table shows the performance breakdown of each one of the 5 forecasting models by different accuracy measures. This gives a brief overview of how each model fared compared to the others and which 3 of the models were actually retained. In the test case below, you can see that based on the selection of MAPE. The ARIMA/Prophet/Prophet with XG Boost models had the superior performances. This means that those 3 models were eventually taken in to form the ensemble model while the other 2 (GLMNet/Random Forest) were dropped. Of course, the user can change this by simply changing the input "Accuracy Measure". 
+
+### Forecasting plot
+
+After understanding what goes into the ensemble model. The user can then see what the ensemble model gives as an output in the final plot of the application. As seen in the chart below, the redline represents the forecasted data. The ensemble forecast takes in the results of the 3 top performing models and calculates the mean, which is then presented as the forecast of the ensemble model. 
+
+While it is transparent to the user, under the surface, all the testing and training of the models are still done and evaluated by the accuracy measure defined by the user. The models are also calibrated and refitted on the actual data before being presented to users as the final ensemble forecast. 
+
+Looking at the forecast for AAPL over the next week. The prices are expected to go up and hence it might be good for the users to take up a position sooner rather than later. 
 
 # Conclusion and Future Work
 
