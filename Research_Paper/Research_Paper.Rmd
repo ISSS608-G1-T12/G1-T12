@@ -1,7 +1,7 @@
 
 
 ---
-title: Investing101
+title: inVIZments
 author:
   - name: Andre Lee
     email: andre.lee.2019@mitb.smu.edu.sg
@@ -47,7 +47,7 @@ Our research was motivated by the lack of effective and easy to use web-enabled 
 
 ## Technical Indicators
 
-In the literature review conducted, it was found that there have been various attempts by users to provide tools for analysing stock price action. Existing charting or dashboarding tools often focus on only simple charting or technical indicator functionalities. Most open source/ free tools only offer the various functionalities in isolation, and users are unable to have a holistic view uniting technical analysis, portfolio analysis, and the other components to allow for complete decision making when making buying and selling decisions.
+In the literature review conducted, it was found that there have been various attempts by users to provide tools for analysing stock price action. Existing charting or dashboarding tools often focus on only simple charting or technical indicator functionalities. Most open source/ free tools only offer the various functionalities in isolation, and users are unable to have a holistic view uniting technical analysis, portfolio analysis, and the other components to allow for complete decision making when making buying and selling decisions.Candlestick patterns may help users in technical analysis[@candle].
 
 In this sub-module, the team will put together various sub-modules spanning across: Charting, Technical Analysis, Correlation Analysis, Clustering, Forecasting, Portfolio Analysis.
 
@@ -55,15 +55,13 @@ In this sub-module, the team will put together various sub-modules spanning acro
 
 Time series forecasting is not the same as technical analysis and can be seen as a natural extension/logical next step after conducting technical analysis. The main difference is that time series forecasting gives you an exact forecasted price, while technical analysis only predicts the future movement (up/down) of the price (Berdiell, 2015) [@berdiell]. The fundamental idea of this method is to seek out patterns in the historical stock prices with a hybrid approach. A hybrid approach combine multiple different models to forecast stock prices. For example, the papers of Markowska-Kaczmar and Dziedzic (2008) [@dzied]  and Wang et al (2015) [@wang] both proposed tackling stock price forecasting with an amalgamation of multiple models instead of just relying on one form of forecasting. This has been shown to result in superior forecasting accuracy and performance as compared to using a dedicated forecasting method. The researches of Dey et al. (2016) [@dey] has also shown similar results albeit with some overfitting issues and a limited testing scenario.
 
-The modification made in building the sub-module to the existing hybrid techniques is that the application will do a forecast based on 5 different models then present the mean of the 3 best performing ones. 
+The modification made in building the sub-module to the existing hybrid techniques is that the application will do a forecast based on 5 different models then present the mean of the 3 best performing ones.
 
 ## Clustering
 
 Da Silva, Cunha, and da Costa (2005) [@sergio] carried out hierarchical clustering on 816 stocks listed in North and South America from 1997-1999 on the following variables: return, risk, earnings-price ratio, book value-price ratio, sales-price ratio, sales-number of stocks ratio and dividend yield. Their research showed that clusters with the best risk-return profile from the time window where clustering was conducted continued to be so in a second time window from 2000-2001. However, their research did not comprise visualisations of the cluster characteristics. In addition, their research only showed results for one fixed combination of variables. Lastly, there was no insight as to how the winning clusters performed against a benchmark index, which is potentially of interest.
 
 This research provides opportunities to address the limitations of existing literature as described above. The team looks to incorporate interactivity features and appropriate visualisations into the sub-module as part of improving on existing work.
-
-
 
 
 # The Application
@@ -76,21 +74,28 @@ The design of the Shiny server allows us to make the application available acros
 
 ## Visualizations
 
-The data visualisations within the application are built using a host of open source R packages. They are 'tmap', 'tidyverse', 'forecast', 'tseries', 'readxl', 'tidyquant', 'dygraphs', 'TSstudio', 'plotly', 'tsibble', 'ggplot2', 'tidymodels', 'modeltime', modeltime.ensemble', 'timetk', 'glmnet', 'randomForest', 'shiny', 'readr', 'DT', 'shinydashboard', 'CandleStickPattern', 'ggpubr', 'dplyr','cluster', 'formattable', 'reshape2', 'zoo', 'tibble', 'ggdendro', 'knitr','kableExtra', 'dendextend', 'scales', 'data.table','corrplot', 'factoextra'. 
+The data visualisations within the application are built using a host of open source R packages. The following packages are discussed in detail as they are integral to the workings and logic of the application.
 
-The following packages are discussed in detail as they are integral to the workings and logic of the application.
 
-The **Tidyquant** package integrates the most useful functions from the xts, zoo, quantmod, TTR, and PerformanceAnalytics packages. It is also one of the key sources of data for our application.
+The **Tidyquant** package integrates the most useful functions from the xts, zoo, quantmod, TTR, and PerformanceAnalytics packages. It is also one of the key sources of data for our application. The reason we use tidyquant is because it has functions which can help us automatically calculate returns for different periodicities, such as annual or monthly.
 
-The **timetk** package is part of the modeltime ecosystem for time series analysis and forecasting. The forecasting system is extensive and includes many ready made algorithms, allowing for ensembling and resampling, Machine Learning and Deep Learning. It is mainly used to calculate and analysis financial ratios and also the plotting of time series/financial data.
 
-The **dygraphs** package is able to handle huge data sets.It also creates interactive plots out of the box, allowing the user to use our app more interactively. dygraphs is also Highly customizable and works in most browsers and mobile devices which once again allows us to deliver our app to the masses. **plotly** is another package that we use for creating interactive web graphics via the open source JavaScript graphing library plotly.js which allows use to create customizable intractive plots used for visualization in our application.
+The **timetk** package is part of the modeltime ecosystem for time series analysis and forecasting. The forecasting system is extensive and includes many ready made algorithms, allowing for ensembling and resampling, Machine Learning and Deep Learning. It is mainly used to calculate and analysis financial ratios and also the plotting of time series/financial data. **Modeltime** unlocks time series models and machine learning in one framework meaning that is no need to switch back and forth between various frameworks. Modeltime incorporates a streamlined workflow for using best practices to forecast. Its many different algorithm and models means that the application can be easily scaled up to include more forecasting models with little effort. 
 
-**Modeltime** unlocks time series models and machine learning in one framework meaning that is no need to switch back and forth between various frameworks. Modeltime incorporates a streamlined workflow for using best practices to forecast. Its many different algorithm and models means that the application can be easily scaled up to include more forecasting models with little effort. 
+
+The **dygraphs** package is able to handle huge data sets.It also creates interactive plots out of the box, allowing the user to use our app more interactively. dygraphs is also Highly customizable and works in most browsers and mobile devices which once again allows us to deliver our app to the masses.
+
 
 The **dendextend** package allows many functions for manipulating and visualizing dendrograms. In the case of hierarchical clustering, it allows for visualizing and comparing trees and adjusting a tree's graphical parameters, such as colour, size, type etc of its branches.
 
-## Application optimisation
+## Application optimisation and UX Choices
+
+3 main considerations guided the design process in the creation of the final app. They were functionality, user experience, and aesthetics. 
+For functionality, the team was ambitious in packing in many features to allow a variety of users to fulfil different investment objectives, be it a short-term trader, a long term investor, a user looking to compare portfolios, and more. In addition, a few other key design choices include: a) opting for interactive charts such as plotly and dygraphs, b) allowing users to download data tables (both current and all pages), c) taking a screenshot, etc.
+
+For user experience, we consistently tried to imagine what a first time user would consider and be familiar with. Some key considerations include: a) Sequencing of sub-modules in the tabs, b) Using tabbed box for logically grouped objects, while reducing clutter, c) Relevant user feedback such as shinycssloader package (loading animation), shinydisconnect package (useful information in case of server disconnect), d) Adding a “getting started” landing page to allow users to quickly get familiarized, e) Compartmentalizing code into modules, allowing future users to better make sense of the inner makings of this complex app (code base in main app.R reduced from 1.8k lines to around 1k), f) Using reactivity for certain calculations, improving responsiveness and efficiency, etc.
+
+Lastly for aesthetics, we aimed for beauty while considering practicality. Some key considerations include: a) Using a dashboard layout, utilizing boxes and tabbed boxes to position objects logically, b) Updating the look and feel by changing the default dashboard theme, c) Adding various icons, and many other small quality of life tweaks around the app through experimentation and multiple iterations, etc.
 
 ## Charting
 
@@ -98,7 +103,7 @@ The **dendextend** package allows many functions for manipulating and visualizin
 
 In this module, users are able to visualize the chosen stock symbol using a candlestick chart. Open, High, Low, and Close prices for the selected period are shown on the chart.
 
-In addition, users are able to choose between 2 sets of technical indicators: Simple moving averages and Bollinger Bands. Users are able to see the chosen symbol on 1 chart, and the accompanying benchmark index chosen on another chart. Both charts are created in an interactive manner using the plotly package.
+In addition, users are able to choose between 2 sets of technical indicators: Simple moving averages and Bollinger Bands. Users are able to see the chosen symbol on 1 chart, and the accompanying benchmark index chosen on another chart. Both charts are created in an interactive manner using the dygraphs package.
 
 Finally, multiple features based on candlestick patterns are created and available through a table. Such candlestick patterns inform users of certain bullish or bearish price action patterns observed. This provides a different perspectives to users incline towards technical analysis.
 
@@ -117,58 +122,34 @@ In this sub section, users are able to:
 
 ## Time Series Forecasting
 
-This sub-module of the dashboard is a tool to carry out time series forecasting on a stock. For this sub-module, forecasting will be carried out on a chosen ticker. The intent for this sub-module is to allow the user to identify future trends of a stock and entry/exit opportunities. The example given will be based on the technology company *APPLE (AAPL)*.
+This sub-module of the dashboard is a tool to carry out time series forecasting on a stock. For this sub-module, forecasting will be carried out on a chosen ticker. The intent for this sub-module is to allow the user to identify future trends of a stock and entry/exit opportunities. A few models are used and built in this edition of the application, they are:
 
+### Auto-ARIMA
 
-### Data Preparation
+ARIMA, short for ‘Auto Regressive Integrated Moving Average’ is a model that describes a given time series based on its own past values with its own lags and the lagged forecast errors, so that those lags and delay correlations can be plugged into the ARIMA equation to forecast future values. An ARIMA model is characterized by 3 terms: p, d, q. Which are automatically optimised in the auto-ARIMA model where p is the order of the AR term, q is the order of the MA term and d is the number of differencing required to make the time series stationary.
 
-The sole data source for this sub-module is the tidyquant package on R.
-
-We use the tidyquant package to pull historical prices of the stocks. The extracted data is then broken down into training and testing sets to build the forecasting model. The dashboard is reactive and will be able to pull any stock ticker chosen by the user as long as it is available through Tidyquant. 
-
-### Model building
-
-A few models are used and built in this edition of the application. 
-
-1. Auto-ARIMA
-
-ARIMA, short for ‘Auto Regressive Integrated Moving Average’ is a model that describes a given time series based on its own past values with its own lags and the lagged forecast errors, so that those lags and delay correlations can be plugged into the ARIMA equation to forecast future values.
-
-An ARIMA model is characterized by 3 terms: p, d, q. Which are automatically optimised in the auto-ARIMA model
-
-where,
-
-p is the order of the AR term - We can determine the required number of AR terms by inspecting the Partial Autocorrelation (PACF) plots. PACF can be described as the correlation between the series and its lag, after excluding the contributions from the intermediate lags.
-
-q is the order of the MA term - The ACF tells how many MA terms are required to remove any autocorrelation in the stationarized series.
-
-d is the number of differencing required to make the time series stationary
-
-2. Prophet
-
+### Prophet
 
 Prophet is an open source library published by Facebook that is based on decomposable (trend+seasonality+holidays) models. It gives us the ability to make accurate time series predictions using simple and intuitive parameters and is able to factor in the impact of custom seasonality and holiday. Prophet holds up well against missing data and shifts in the trend, and typically handles outliers well.
-
 $$
 y(t) = g(t) + s(t) + h(t) + et
 $$
-
 g(t): piecewise linear or logistic growth curve for modelling non-periodic changes in time series
 s(t): periodic changes (e.g. weekly/yearly seasonality)
 h(t): effects of holidays (user provided) with irregular schedules
 et: error term accounts for any unusual changes not accommodated by the model
 
-3. Elastic Net (GLMNET)
+### Elastic Net (GLMNET)
 
 Elastic Net is a combination of the Ridge and Lasso methods. Its name comes from the notion that it is similar in structure to a stretchable fishing net that retains all the big fish (variables) while expanding to let the smaller unimportant fish go away. This model predicts fitted values, logits, coefficients and more from a fitted "glmnet" object - in this case the time series dataset.
 
 
-4. Random Forest
+### Random Forest
 
 The Random Forest method is a popular and effective algorithm. Random Forest can used for time series forecasting,  by transforming the time series dataset into a supervised learning problem first. This is expedited using the modeltime package and its readymade functions.
 
 
-5. Prophet XG Boost
+### Prophet XG Boost
 
 A modified version of the Prophet method from Facebook. The prophet XGBoost algorithms builds on the base prophet and uses xgboost to improve performance on detecting seasonality. XGBoost stands for eXtreme Gradient Boosting and it is used for developing fast and high performance gradient boosting tree models. This algorithm is provided in the base modeltime package.
 
@@ -192,27 +173,41 @@ We apply the Ward algorithm as the default option to merge the individual cluste
 
 For this sub-module, hierarchical clustering will be carried out on 5 variables which have been selected to cover a holistic range of financial indicators of a company. The time horizon for a clustering is one year. The 5 variables are as follows: "1-Year Return","1-Year Volatility","Dividend Yield","Return on Assets","Total Debt to Total Assets".
 
-### Data Preparation
+## Data
+There are 2 main data sources for this sub-module. (1) Bloomberg Terminal - The Bloomberg Terminal is used to pull the historical yearly financial ratios and volatility for the stocks. Bloomberg nicely stores these data points which can be easily pulled into csv format. (2) tidyquant package on R - which is mainly used to pull historical prices of the stocks.
 
-There are 2 main data sources for this sub-module: 1) Bloomberg Terminal 2) tidyquant package on R
+# Use Cases
 
-The Bloomberg Terminal is used to pull the historical yearly financial ratios and volatility for the stocks. Bloomberg nicely stores these data points which can be easily pulled into csv format. For each stock in our stock universe, yearly historical values from 2015-2020 are pulled for the variables as mentioned above.
+## Charting and Technical Analysis
 
-We use tidyquant package solely to pull historical prices of the stocks, which we then convert to yearly returns. The reason we use tidyquant rather than using Bloomberg is because tidyquant package has functions which can help us automatically calculate returns for different periodicities, such as annual or monthly. In this context, we look at yearly returns from 2015-2020 for the stocks in our stock universe.
+Before going into the application, the user will select the primary and benchmark stock symbols and time period for analysis.
 
-# Case Study
-## Technical Indicators
+### Technical Indicators
+
+Under the Technical Analysis tab, users are able to View and interact with candlestick charts. Furthermore, users will be able to overlay indicators such as the Simple Moving Average or Bollinger Bands. The layout of the technical indicator tab features a top and bottom chart which are grouped and will cross filter on each other in real time which further promotes ease of use.
+
+![](images/tech_indics.PNG)
+
+### Correlation Analysis 
+
+In the correlation analysis tab, users are able to see the correlation between chosen stocks and an underlying index may help to guide their choices in selecting either a concentrated or diversified portfolio (depending on their investing preference).
+
+Investors can utilize such insights to choose and update their portfolio of stocks to either be largely concentrated in that sector (look for stocks that are consistently highly correlated with the sector), or to be more diversified (look for stocks that consistently have low correlation with the sector).
+
+### Portfolio Analysis
+
+Under the Portfolio Analysis tab, users are able to compare the performance of various portfolios (constructed using different weights) across time. Users are able to specify a starting equity amount, and visualize the equity curve over time.Users can tweak the weightage of the various stocks in the portfolio to achieve an equity curve that exhibits strong growth, but yet tolerable periods of drawdown(periods when the portfolio performance exhibits a downwards trend from most recent highs). Crucially, users will be able to construct up to 3 different portfolio weightages and compare their relative performances against each other. In the example below, portfolio 1 outperforms 2 and 3. 
+
+![](images/portfolio_analysis.PNG)
+
 ## Clustering
 
-We demonstrate how to use the Clustering Analysis sub-module of our dashboard by carrying out a round of clustering analysis on a combination of selectable variables.
+In this example, we demonstrate how to use the Clustering Analysis sub-module of our dashboard by carrying out a round of clustering analysis on a combination of selectable variables. For each stock in our stock universe, yearly historical values from 2015-2020 are pulled from Bloomberg as well as historical yearly returns from Tidyquant. 
 
 On the side panel of the dashboard, interactivity features are available to allow the user to select the following: "Year", "Variables to cluster by:", "Distance Method", "Linkage Method" and "Number of Clusters".
-
-
-```{r echo=FALSE, out.width = "240px", out.height = "240px"}
+```{r, fig.align="center", echo=FALSE,  out.width = "100px", out.height = "130px"}
 knitr::include_graphics("images/sidepanel.PNG")
 ```
-
 For this case study, we carry out clustering in 2017 on all 5 variables. We select Euclidean to be the distance measure to compute the distance matrix, and Ward D2 as the agglomeration method for the hierarchical clustering algorithm. The resulting dendrogram is cut into 20 clusters.
 
 ### Pre-Clustering: Univariate and Correlation Analysis
@@ -223,8 +218,9 @@ Users will be able to visualise the distribution of the clustering variables the
 
 Before clustering, it is essential to check for multicollinearity. If there is a high degree of collinearity between variables, they will not be sufficiently unique to identify distinct clusters. In addition, if highly correlated variables are used for cluster analysis, the aspects covered by these variables will be given excess weightage in the clustering output. We see from the following correlation plot that multicollinearity is not an issue.
 
-![](images/corrplot.PNG)
-
+```{r, fig.align="center", echo=FALSE, out.width = "100px", out.height = "130px"}
+knitr::include_graphics("images/corrplot.PNG")
+```
 
 ### Clustering Results
 
@@ -240,34 +236,22 @@ Next, the user will be able to see the breakdown of each cluster's constituent s
 
 ![](images/cluster_breakdown.PNG)
 
-
 The final output on the main panel is each individual cluster's return and volatility profile. An additional panel calculating the Returns to Volatility ratio is included, arranged in descending order. This way, users can see instantly which cluster performed the best in terms of risk-adjusted returns for that year. We see that Cluster 4 performed the best in 2017.
 
 ![](images/cluster_return.PNG)
 
-### Clustering Results - Backtesting
-
-We then explore a use case as to how to use the clustering results to aid in investing decisions. Following from the finding that Cluster 4 stocks performed the best in 2017, the user may want to use this to explore if outperformance of a cluster continues into the next year 2018. This is an example of momentum investing, a strategy that aims to capitalize on the continuance of existing trends.
-
-
 ## Forecasting
 
-Before using the forecasting module, users would have identified a few candidate stocks that he or she would want to invest in, and so this brings up the questions such as "When do I invest? Is now a good time?". It also leads us into our last and final sub-module which is time series forecasting on a stock pick. 
+If the users have identified a few candidate stocks that he or she would want to invest in, and so this brings up the questions such as "When do I invest? Is now a good time?". It also leads us into our last and final sub-module which is time series forecasting on a stock pick. 
 
-Users will input the selected stock ticker into the side panel. Here users will also need to select a few other things, namely:
+Before we start, users will also need to select a few inputs - namely:
 
-1. Data start date (which determines the amount of data ingested for the forecasting model) 
-2. Accuracy measure (which will determine which forecasting model results to retain based on how users like to quantify accuracy)
-3. Forecasting period (the period ahead in which users would like to forecast between 1 - 4 weeks.) 
+1. Stock Ticker - We will use AAPL in this case
+1. Data start date (which determines the amount of data ingested for the forecasting model) - 1st Oct 2020
+2. Accuracy measure (which will determine which forecasting model results to retain based on how users like to quantify accuracy) - MAPE is selected
+3. Forecasting period (the period ahead in which users would like to forecast between 1 - 4 weeks.) - 1 week
 
-In this case we will use the following inputs:
-
-- AAPL
-- 1st Oct 2020
-- MAPE
-- 1 week
-
-After the forecasting model is run in the server, two outputs will be created.
+After the forecasting model is run in the server with the inputs, two outputs will be created.
 
 ### Accuracy Table
 
@@ -302,7 +286,7 @@ The application was developed using the Shiny architecture on R, with an emphasi
 
 \newpage
 
-# Tables
+# DEFINITIONS
 
 ```{r echo=FALSE}
 
