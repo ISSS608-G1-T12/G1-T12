@@ -3,22 +3,18 @@ title: inVIZments - An RShiny Visual Application
 poster_height: "33.11in"
 poster_width: "23.39in"
 author:
-  - name: Andre Lee
+  - name: A.J. Lee,
+    affil: 
+  - name: Y.H. Boey,
+    affil: 
+  - name: W.K. Ng
     affil: 1
-  - name: Boey Yi Heen
-    affil: 2
-  - name: Ng Wee Kien
-    affil: 3
 affiliation:
   - num: 1
     address: MITB, Singapore Management University
-  - num: 2
-    address: MITB, Singapore Management University
-  - num: 3
-    address: MITB, Singapore Management University
 column_numbers: 3
 main_fontfamily: "rasa"
-main_findings: inVIZments is the helping hand you always need but never got when making investment decisions.
+main_findings: inVIZment - The helping hand you always needed but never got
 logoright_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png
 logoleft_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png
 main_textsize: "120px"
@@ -43,30 +39,20 @@ In 2020, the combination of unprecedented stock market volatility and COVID-19 l
   
   Most retail investors rely on traditional financial data websites such as Yahoo Finance to retrieve relevant financial data to aid in their investing decisions. However, these sites' offerings tend to be homogeneous and comprise usual information such as price quotes, market commentary and corporate actions. Investors are left on their own to make sense of these information, without tools to further perform actions such as price forecasting or segmenting stocks into groups. These tools could possibly enhance their investing decisions.
   
-  Having identified this gap, we developed Investing101, an interactive visual analytics application to allow investors to not only retrieve basic price information of stocks, but also apply machine learning models such as ARIMA forecasting and hierarchical clustering. 
+  Having identified this gap, we developed InVIZments, an interactive visual analytics application to allow investors to not only retrieve basic price information of stocks, but also apply machine learning models such as ARIMA forecasting and hierarchical clustering. 
   
 # Motivation & Objectives
 Our research was motivated by the lack of effective and easy to use web-enabled analytics tools for investment planning especially in heightened investment interest brought about by Covid-19. We aim to provide investors with an analytical tool that supports the following analysis requirements: 
 
 1. To be able to conduct technical, portfolio analysis and correlation analysis amongst multiple stocks; 
 2. To create a clustering visualization of related stocks so users can diversify their holdings; 
-3. To provide a forecast of future stock prices for users to identify suitable entry/exit points.
-
-1. To be able to conduct technical, portfolio analysis and correlation analysis amongst multiple stocks; 
-2. To create a clustering visualization of related stocks so users can diversify their holdings; 
 3. To provide a forecast of future stock prices for users to identify suitable entry/exit points.  
   
-The Main Components of the App will be:
-
-1. Charting and Technical Analysis
-2. Stock clustering
-3. Stock price forecasting
-
 # Methods 
 
 The whole application is built on R using a host of open source R packages. 
 
-In terms of architecture: we have decided to design and develop Investing101 based on **R Shiny**. [Shiny](https://shiny.rstudio.com/articles/shiny-server.html) is an open source R package that provides an elegant and powerful web framework for building web applications using R. Shiny helps you turn your analyses into interactive web applications without requiring HTML, CSS, or JavaScript knowledge.The design of the Shiny server allows us to make the application available across the Internet (i.e. to the masses). The Shiny Server will host each app at its own web address and automatically start the app when a user visits the address. When the user leaves, Shiny Server will automatically stop the app. This reduces the need for maintenance and infrastructure costs, thus allowing us to provide our application to a wider audience for FREE.
+In terms of architecture: we have decided to design and develop Investing101 based on **R Shiny**. [Shiny](https://shiny.rstudio.com/articles/shiny-server.html) is an open source R package that provides an elegant and powerful web framework for building web applications using R. Shiny helps you turn your analyses into interactive web applications without requiring HTML, CSS, or JavaScript knowledge.The design of the Shiny server allows us to make the application available across the Internet (i.e. to the masses). This reduces the need for maintenance and infrastructure costs, thus allowing us to provide our application to a wider audience for FREE.
 
 The other key packages used for modeling and visualizations are: **Tidyquant**, **timetk** , **Modeltime**, **dygraphs**, **dendextend**.
 
@@ -80,20 +66,32 @@ Some of the key features of the application were built with the following consid
 
 3. Aesthetics. Some key considerations include: a) Using a dashboard layout, utilizing boxes and tabbed boxes to position objects logically, b) Updating the look and feel by changing the default dashboard theme, c) Adding various icons, and many other small quality of life tweaks around the app through experimentation and multiple iterations, etc.
 
-# Results
+# Results / Key Functions
 
-Usually you want to have a nice table displaying some important results that you have calculated. In `posterdown` this is as easy as using the `kable` table formatting you are probably use to as per typical R Markdown formatting.
+One key feature from each sub-module of the application will be highlighted and due to space limitations.
 
-You can reference tables like so: Table \@ref(tab:mytable). Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam placerat augue at velit tincidunt semper. Donec elementum porta posuere. Nullam interdum, odio at tincidunt feugiat, turpis nisi blandit eros, eu posuere risus felis non quam. Nam eget lorem odio. Duis et aliquet orci. Phasellus nec viverra est.
+**Charting and Technical Analysis**
 
-```{r mytable, out.width='80%'}
-knitr::kable(iris[1:10, 1:4], caption = 'Table caption.',align = 'c',"html")
+Under the Portfolio Analysis tab, users are able to compare the performance of various portfolios (constructed using different weights) across time. Users are able to specify a starting equity amount, and visualize the equity curve over time.Users can tweak the weightage of the various stocks in the portfolio to achieve an equity curve that exhibits strong growth, but yet tolerable periods of drawdown(periods when the portfolio performance exhibits a downwards trend from most recent highs). Crucially, users will be able to construct up to 3 different portfolio weightages and compare their relative performances against each other. In the example below, portfolio 1 outperforms 2 and 3. 
+
+```{r, fig.align="center", echo=FALSE, out.height = "300px"}
+knitr::include_graphics("images/portfolio_analysis.PNG")
 ```
 
-Or with figures: Figure \@ref(fig:standard-plot), or Figure \@ref(fig:morefigs).
+**Clustering**
 
-```{r standard-plot, out.width='80%', fig.align='center', fig.cap='Great figure!', fig.height=5}
-plot(mtcars[1:2])
+In the clustering module, after the clustering process is completed. Users can view a line graph showing the characteristics of each cluster. For each cluster, the value seen on the line graph for each variable is the average value of that variable for all the stocks in the cluster. For example, if Cluster 19 has a value of -6% for 1-Year Return, it means that the average 1-Year Return for all the stocks in Cluster 19 is -6%. There is an interactivity option to isolate the view for a single cluster to strip out the noise from the other clusters. This allows users to pick clusters based on their preferences and to identify stocks that fits their risk profile.
+
+```{r, fig.align="center", echo=FALSE, out.width = "675px", out.height = "300px"}
+knitr::include_graphics("images/linegraph.PNG")
+```
+
+**Time Series Forecasting**
+
+Users can use our application to forecast stock prices from 1 - 4 weeks ahead of present day. Orr ensemble forecast method generates forecasts from 5 models and takes in the results of the 3 top performing models based on the selected accuracy measure and drops the other 2 . The ensemble model calculates the mean of 3 models which were retained, which is then presented as the forecast of the application. This gives users a good idea of what the future price movements will be and how to time their movements. For example: Looking at the forecast for AAPL over the next week. The prices are expected to remain stable and hence it might be good for the users to wait before taking up a position. 
+
+```{r, fig.align="center", echo=FALSE}
+knitr::include_graphics("images/forecast.PNG")
 ```
 
 # Next Steps
@@ -106,6 +104,4 @@ plot(mtcars[1:2])
 
 # Conclusion
 
-This application was targeted at investors to provide useful tools to aid them in their investing process that traditional sources do not provide. This motivation was brought about by the heightened interest in investing following the market volatility which was brought about by COVID-19. 
-
-# References
+This application was targeted at investors to provide useful tools to aid them in their investing process that traditional sources do not provide. While every possible care and effort has been taken to make the application as accurate as possible. The application is meant as decision support and users are advised to exercise due dilligence on their part when investing. InVIZments shall not in any event be liable for any damages or injury arising out of your access to, or inability to access, this site or from your reliance on any information provided here. 

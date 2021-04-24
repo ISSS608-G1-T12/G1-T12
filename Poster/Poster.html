@@ -371,14 +371,14 @@ span > #tab:mytable {
   </h3>
 
 <h5 id="author_extra", class="author_extra">
-Andre Lee<sup>1</sup>
- Boey Yi Heen<sup>2</sup>
- Ng Wee Kien<sup>3</sup>
+A.J. Lee,<sup></sup>
+ Y.H. Boey,<sup></sup>
+ W.K. Ng<sup>1</sup>
 </h5>
 
 
 <p id="affiliation" class="affiliation">
-<sup>1</sup> MITB, Singapore Management University<br> <sup>2</sup> MITB, Singapore Management University<br> <sup>3</sup> MITB, Singapore Management University
+<sup>1</sup> MITB, Singapore Management University
 </p>
 </div>
 
@@ -386,30 +386,21 @@ Andre Lee<sup>1</sup>
 <h1>Introduction</h1>
 <p>In 2020, the combination of unprecedented stock market volatility and COVID-19 lockdowns attracted herds of retail investors into the stock market. Major online brokers witnessed spikes in new account openings, showing that many new investors saw the market plunge as an opportune time to start investing.</p>
 <p>Most retail investors rely on traditional financial data websites such as Yahoo Finance to retrieve relevant financial data to aid in their investing decisions. However, these sites’ offerings tend to be homogeneous and comprise usual information such as price quotes, market commentary and corporate actions. Investors are left on their own to make sense of these information, without tools to further perform actions such as price forecasting or segmenting stocks into groups. These tools could possibly enhance their investing decisions.</p>
-<p>Having identified this gap, we developed Investing101, an interactive visual analytics application to allow investors to not only retrieve basic price information of stocks, but also apply machine learning models such as ARIMA forecasting and hierarchical clustering.</p>
+<p>Having identified this gap, we developed InVIZments, an interactive visual analytics application to allow investors to not only retrieve basic price information of stocks, but also apply machine learning models such as ARIMA forecasting and hierarchical clustering.</p>
 </div>
 <div id="motivation-objectives" class="section level1">
 <h1>Motivation &amp; Objectives</h1>
 <p>Our research was motivated by the lack of effective and easy to use web-enabled analytics tools for investment planning especially in heightened investment interest brought about by Covid-19. We aim to provide investors with an analytical tool that supports the following analysis requirements:</p>
 <ol style="list-style-type: decimal">
-<li><p>To be able to conduct technical, portfolio analysis and correlation analysis amongst multiple stocks;</p></li>
-<li><p>To create a clustering visualization of related stocks so users can diversify their holdings;</p></li>
-<li><p>To provide a forecast of future stock prices for users to identify suitable entry/exit points.</p></li>
-<li><p>To be able to conduct technical, portfolio analysis and correlation analysis amongst multiple stocks;</p></li>
-<li><p>To create a clustering visualization of related stocks so users can diversify their holdings;</p></li>
-<li><p>To provide a forecast of future stock prices for users to identify suitable entry/exit points.</p></li>
-</ol>
-<p>The Main Components of the App will be:</p>
-<ol style="list-style-type: decimal">
-<li>Charting and Technical Analysis</li>
-<li>Stock clustering</li>
-<li>Stock price forecasting</li>
+<li>To be able to conduct technical, portfolio analysis and correlation analysis amongst multiple stocks;</li>
+<li>To create a clustering visualization of related stocks so users can diversify their holdings;</li>
+<li>To provide a forecast of future stock prices for users to identify suitable entry/exit points.</li>
 </ol>
 </div>
 <div id="methods" class="section level1">
 <h1>Methods</h1>
 <p>The whole application is built on R using a host of open source R packages.</p>
-<p>In terms of architecture: we have decided to design and develop Investing101 based on <strong>R Shiny</strong>. <a href="https://shiny.rstudio.com/articles/shiny-server.html">Shiny</a> is an open source R package that provides an elegant and powerful web framework for building web applications using R. Shiny helps you turn your analyses into interactive web applications without requiring HTML, CSS, or JavaScript knowledge.The design of the Shiny server allows us to make the application available across the Internet (i.e. to the masses). The Shiny Server will host each app at its own web address and automatically start the app when a user visits the address. When the user leaves, Shiny Server will automatically stop the app. This reduces the need for maintenance and infrastructure costs, thus allowing us to provide our application to a wider audience for FREE.</p>
+<p>In terms of architecture: we have decided to design and develop Investing101 based on <strong>R Shiny</strong>. <a href="https://shiny.rstudio.com/articles/shiny-server.html">Shiny</a> is an open source R package that provides an elegant and powerful web framework for building web applications using R. Shiny helps you turn your analyses into interactive web applications without requiring HTML, CSS, or JavaScript knowledge.The design of the Shiny server allows us to make the application available across the Internet (i.e. to the masses). This reduces the need for maintenance and infrastructure costs, thus allowing us to provide our application to a wider audience for FREE.</p>
 <p>The other key packages used for modeling and visualizations are: <strong>Tidyquant</strong>, <strong>timetk</strong> , <strong>Modeltime</strong>, <strong>dygraphs</strong>, <strong>dendextend</strong>.</p>
 </div>
 <div id="application-optimisation-and-ux-choices" class="section level1">
@@ -421,180 +412,18 @@ Andre Lee<sup>1</sup>
 <li><p>Aesthetics. Some key considerations include: a) Using a dashboard layout, utilizing boxes and tabbed boxes to position objects logically, b) Updating the look and feel by changing the default dashboard theme, c) Adding various icons, and many other small quality of life tweaks around the app through experimentation and multiple iterations, etc.</p></li>
 </ol>
 </div>
-<div id="results" class="section level1">
-<h1>Results</h1>
-<p>Usually you want to have a nice table displaying some important results that you have calculated. In <code>posterdown</code> this is as easy as using the <code>kable</code> table formatting you are probably use to as per typical R Markdown formatting.</p>
-<p>You can reference tables like so: Table <a href="#tab:mytable">1</a>. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam placerat augue at velit tincidunt semper. Donec elementum porta posuere. Nullam interdum, odio at tincidunt feugiat, turpis nisi blandit eros, eu posuere risus felis non quam. Nam eget lorem odio. Duis et aliquet orci. Phasellus nec viverra est.</p>
-<table>
-<caption>
-<span id="tab:mytable">Table 1: </span>Table caption.
-</caption>
-<thead>
-<tr>
-<th style="text-align:center;">
-Sepal.Length
-</th>
-<th style="text-align:center;">
-Sepal.Width
-</th>
-<th style="text-align:center;">
-Petal.Length
-</th>
-<th style="text-align:center;">
-Petal.Width
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center;">
-5.1
-</td>
-<td style="text-align:center;">
-3.5
-</td>
-<td style="text-align:center;">
-1.4
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4.9
-</td>
-<td style="text-align:center;">
-3.0
-</td>
-<td style="text-align:center;">
-1.4
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4.7
-</td>
-<td style="text-align:center;">
-3.2
-</td>
-<td style="text-align:center;">
-1.3
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4.6
-</td>
-<td style="text-align:center;">
-3.1
-</td>
-<td style="text-align:center;">
-1.5
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-5.0
-</td>
-<td style="text-align:center;">
-3.6
-</td>
-<td style="text-align:center;">
-1.4
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-5.4
-</td>
-<td style="text-align:center;">
-3.9
-</td>
-<td style="text-align:center;">
-1.7
-</td>
-<td style="text-align:center;">
-0.4
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4.6
-</td>
-<td style="text-align:center;">
-3.4
-</td>
-<td style="text-align:center;">
-1.4
-</td>
-<td style="text-align:center;">
-0.3
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-5.0
-</td>
-<td style="text-align:center;">
-3.4
-</td>
-<td style="text-align:center;">
-1.5
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4.4
-</td>
-<td style="text-align:center;">
-2.9
-</td>
-<td style="text-align:center;">
-1.4
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4.9
-</td>
-<td style="text-align:center;">
-3.1
-</td>
-<td style="text-align:center;">
-1.5
-</td>
-<td style="text-align:center;">
-0.1
-</td>
-</tr>
-</tbody>
-</table>
-<p>Or with figures: Figure <a href="#fig:standard-plot">1</a>, or Figure <a href="#fig:morefigs"><strong>??</strong></a>.</p>
-<div class="figure" style="text-align: center"><span id="fig:standard-plot"></span>
-<img src="Poster_files/figure-html/standard-plot-1.png" alt="Great figure!" width="80%" />
-<p class="caption">
-Figure 1: Great figure!
-</p>
-</div>
+<div id="results-key-functions" class="section level1">
+<h1>Results / Key Functions</h1>
+<p>One key feature from each sub-module of the application will be highlighted and due to space limitations.</p>
+<p><strong>Charting and Technical Analysis</strong></p>
+<p>Under the Portfolio Analysis tab, users are able to compare the performance of various portfolios (constructed using different weights) across time. Users are able to specify a starting equity amount, and visualize the equity curve over time.Users can tweak the weightage of the various stocks in the portfolio to achieve an equity curve that exhibits strong growth, but yet tolerable periods of drawdown(periods when the portfolio performance exhibits a downwards trend from most recent highs). Crucially, users will be able to construct up to 3 different portfolio weightages and compare their relative performances against each other. In the example below, portfolio 1 outperforms 2 and 3.</p>
+<p><img src="images/portfolio_analysis.png" width="710" height="300px" style="display: block; margin: auto;" /></p>
+<p><strong>Clustering</strong></p>
+<p>In the clustering module, after the clustering process is completed. Users can view a line graph showing the characteristics of each cluster. For each cluster, the value seen on the line graph for each variable is the average value of that variable for all the stocks in the cluster. For example, if Cluster 19 has a value of -6% for 1-Year Return, it means that the average 1-Year Return for all the stocks in Cluster 19 is -6%. There is an interactivity option to isolate the view for a single cluster to strip out the noise from the other clusters. This allows users to pick clusters based on their preferences and to identify stocks that fits their risk profile.</p>
+<p><img src="images/linegraph.PNG" width="675px" height="300px" style="display: block; margin: auto;" /></p>
+<p><strong>Time Series Forecasting</strong></p>
+<p>Users can use our application to forecast stock prices from 1 - 4 weeks ahead of present day. Orr ensemble forecast method generates forecasts from 5 models and takes in the results of the 3 top performing models based on the selected accuracy measure and drops the other 2 . The ensemble model calculates the mean of 3 models which were retained, which is then presented as the forecast of the application. This gives users a good idea of what the future price movements will be and how to time their movements. For example: Looking at the forecast for AAPL over the next week. The prices are expected to remain stable and hence it might be good for the users to wait before taking up a position.</p>
+<p><img src="images/forecast.png" width="620" style="display: block; margin: auto;" /></p>
 </div>
 <div id="next-steps" class="section level1">
 <h1>Next Steps</h1>
@@ -606,15 +435,12 @@ Figure 1: Great figure!
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
-<p>This application was targeted at investors to provide useful tools to aid them in their investing process that traditional sources do not provide. This motivation was brought about by the heightened interest in investing following the market volatility which was brought about by COVID-19.</p>
-</div>
-<div id="references" class="section level1">
-<h1>References</h1>
+<p>This application was targeted at investors to provide useful tools to aid them in their investing process that traditional sources do not provide. While every possible care and effort has been taken to make the application as accurate as possible. The application is meant as decision support and users are advised to exercise due dilligence on their part when investing. InVIZments shall not in any event be liable for any damages or injury arising out of your access to, or inability to access, this site or from your reliance on any information provided here.</p>
 </div>
 
 </div>
 <div class="main">
-<p>inVIZments is the helping hand you always need but never got when making investment decisions.</p>
+<p>inVIZment - The helping hand you always needed but never got</p>
 </div>
 <div class="main_bottom">
 <img id="main-img-left" src=https://raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png>

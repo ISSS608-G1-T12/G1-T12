@@ -255,7 +255,7 @@ After the forecasting model is run in the server with the inputs, two outputs wi
 
 ### Accuracy Table
 
-The accuracy table shows the performance breakdown of each one of the 5 forecasting models by different accuracy measures. The ensemble forecast takes in the results of the 3 top performing models based on the selected accuracy measure and drops the other 2 and this table gives a brief overview of how each model fared compared to the others and which 3 of the models were actually retained. In the test case below, you can see that based on the selection of MAPE. The ARIMA/ Prophet/ Prophet with XG Boost models had the superior performances. This means that those 3 models were eventually taken in to form the ensemble model while the other 2 (GLMNet/Random Forest) were dropped. Of course, the user can change this by simply changing the input "Accuracy Measure". 
+The accuracy table shows the performance breakdown of each one of the 5 forecasting models by different accuracy measures. The ensemble forecast generates forecasts from 5 models and takes in the results of the 3 top performing models based on the selected accuracy measure and drops the other 2 and this table gives a brief overview of how each model fared compared to the others and which 3 of the models were actually retained. In the test case below, you can see that based on the selection of MAPE. The ARIMA/ Prophet/ Prophet with XG Boost models had the superior performances. This means that those 3 models were eventually taken in to form the ensemble model while the other 2 (GLMNet/Random Forest) were dropped. Of course, the user can change this by simply changing the input "Accuracy Measure". 
 
 ![](images/accuracy_table.PNG)
 
