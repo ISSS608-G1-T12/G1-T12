@@ -117,7 +117,7 @@ combine <- dplyr::inner_join(bloomberg_data, returns_yearly_final, by =c("Ticker
 options(spinner.type = 6) 
 
 sidebar <- dashboardSidebar(
-    minified = TRUE, collapsed = TRUE, width = 265,
+    minified = TRUE, collapsed = FALSE, width = 265,
     
     sidebarMenu(
         # style = "position: fixed; overflow: visible;",
@@ -172,15 +172,10 @@ sidebar <- dashboardSidebar(
     )
 )
 
-# menuItem("Technical Indicators", tabName = "tab1", icon = icon("bar-chart-line-fill", lib = "glyphicon")),
-# menuItem("Correlation Analysis", tabName = "tab2", icon = icon("uncharted", lib = "glyphicon")),
-# menuItem("Portfolio Analysis", tabName = "tab3", icon = icon("stack", lib = "glyphicon")),
-# menuItem("Correlation and Clustering Analysis", tabName = "tab4", icon = icon("network-wired", lib = "glyphicon")),
-# menuItem("Forecasting Analysis", tabName = "tab5", icon = icon("chart-line")),
-
 
 
 body <- dashboardBody(
+
     disconnectMessage(
         text = "Your session timed out, reload the application.",
         refresh = "Reload now",
@@ -196,32 +191,117 @@ body <- dashboardBody(
                     tabBox(width = 12,
                            tabPanel(title = "All About inVIZments",
                                     fluidRow(
-                                        box(width = 6,
+                                        box(width = 4,
                                             uiOutput("active_side"),
                                             flipBox(
-                                                id = "flipbox1", width = 6,
+                                                id = "flipbox1", width = 12,
                                                 front = div(class = "text-center",
-                                                            h1("Flip on Click"),
-                                                            img(src = 'inVIZments_noR.png', height = "400px", width = "100%")
+                                                            h2("Click me"),
+                                                            img(src = 'inVIZments_noR.png', height = "400px", width = "80%")
                                                 ),
                                                 back = div(
                                                     class = "text-center", height = "400px", width = "100%",
-                                                    h1("Flip on click"), p("More information...")
+                                                    h2("Click to flip"),
+                                                    p("inVIZments was built on R and deployed using shiny."),
+                                                    br(),
+                                                    p("Multiple R packages were used to build the final product. The key analysis packages used are: Tidyquant, timetk, Modeltime, dygraphs, dendextend."),
+                                                    br(),
+                                                    p("It is mainly put together based on the shinydashboardPlus package. Various other packages helped to add
+                                                      towards improving the responsiveness, aesthetics, and general quality of life benefits to improve user experience.")
                                                 )
                                             )),
-                                        box(title = "Using inVIZments", width = 6)
+                                        box(title = "Using inVIZments", width = 8,
+                                            div(
+                                                class = "text-left",
+                                                p("Navigate using tabs on the left sidebar to get started IMMEDIATELY."),
+                                                br(),
+                                                p("Alternatively, this page serves to provide a new user with some basic familiarity of inVIZments."),
+                                                br(),
+                                                p("Most retail investors rely on traditional financial data websites such as Yahoo Finance to retrieve relevant financial data to aid in their investing decisions.
+                                                However, these sites' offerings tend to be homogeneous and comprise usual information such as price quotes, market commentary and corporate actions.
+                                                Investors are left on their own to make sense of these information, without tools to further perform actions such as price forecasting or segmenting stocks into groups."),
+                                                br(),
+                                                p("Having identified this gap, we developed InVIZMents, an interactive visual analytics dashboard to allow investors to not only retrieve basic price information of stocks,
+                                                but also apply models such as ARIMA forecasting and hierarchical clustering.  The application will also allow users to construct bespoke portfolios and see their historical performances.
+                                                  On top of this, the dashboard also provides users with a tool that readily aggregates and interprets candlestick patterns for the user.
+                                                  All these different tools come together to deliver a product that adds value that far exceeds what traditional finance data websites can provide."),
+                                                br(),
+                                                p("This application was targeted at investors to provide useful tools to aid them in their investing process that traditional sources do not provide.
+                                                  There are many ways to use InVIZments and how each user interacts with InVIZments depends on his or her own objectives, investing timeframes and risk profile."),
+                                                br(),
+                                                p("While every possible care and effort has been taken to make the application as accurate as possible.
+                                                  The application is meant as decision support and users are advised to exercise due diligence on their part when investing.
+                                                  InVIZments shall not in any event be liable for any damages or injury arising out of your access to,
+                                                  or inability to access the application or from your reliance on any information provided within it.")
+                                            ))
                                     )),
-                           tabPanel(title = "Technical Analysis"),
-                           tabPanel(title = "Correlation Analysis"),
-                           tabPanel(title = "Portfolio Analysis"),
-                           tabPanel(title = "Correlation and Clustering Analysis"),
-                           tabPanel(title = "Forecasting Analysis"))
+                           tabPanel(title = "Sub-Modules",
+                                    fluidRow(width = 6,
+                                        box(title = "(A) Input Parameters",
+                                            div(
+                                                class = "text-left",
+                                                p("Input Parameters allows users to key in and change various parameters to interaact with the app."),
+                                                p("1) Users can select the start and end period."),
+                                                p("2) Users can select up to 5 stock symbols."),
+                                                p("3) The 1st stock symbol is used by default for sub-modules focusing on single stocks."),
+                                                p("4) The Benchmark stock symbol is used to provide a form of comparison to the other stocks."),
+                                                p("5) Users can also change the periodicity (eg. days/ weeks/ etc.) for certain sub-modules where relevant.")
+                                            )),
+                                        box(title = "(D) Portfolio Analysis",
+                                            div(
+                                                class = "text-left",
+                                                p("The Portfolio Analysis tab is split into 3 main logical segments:"),
+                                                p("1) Top - Initial Equity amount and individual stock weights for 3 portfolios under comparison."),
+                                                p("2) Middle - Charts depicting monthly returns of the 3 constructed portfolios."),
+                                                p("3) Bottom - Chart comparing the Portfolio Equity Curves of the 3 constructed portfolios.")
+                                            ))
+                                        
+                                    ),
+                                    fluidRow(width = 6,
+                                             box(title = "(B) Technical Indicators",
+                                                 div(
+                                                     class = "text-left",
+                                                     p("The Technical Indicators tab is split into 2 main logical segments:"),
+                                                     p("1) Top - A tabbed box offering users a choice of 3 types of candlestick charts: Plain, Simple Moving Averages, or with Bollinger Bands."),
+                                                     p("2) Bottom - A tabbed box offering users useful data on both Stock Symbol 1 and the Benchmark Stock Symbol. Users are also able to download these data.")
+                                                 )),
+                                             box(title = "(E) Correlation & Clustering Analysis",
+                                                 div(
+                                                 class = "text-left",
+                                                 p("The Correlation and Clustering Analysis tab is split into 3 main logical segments:"),
+                                                 p("1) Top left - Variable selection and other inputs for clustering"),
+                                                 p("2) Top right - Data tables containing details on cluster constituent stocks and cluster returns/volatility"),
+                                                 p("3) Bottom - Charts such as: Univariate analysis, Correlation plot, Dendrogram, Line graph for cluster variables breakdown")
+                                                 )
+                                             )
+                                             
+                                             ),
+                                    fluidRow(width = 6,
+                                             box(title = "(C) Correlation Analysis",
+                                                 div(
+                                                     class = "text-left",
+                                                     p("The Correlation Analysis tab is split into 4 main logical segments:"),
+                                                     p("1) Top left - Time Series Rolling Correlations are calculated between the 4 stocks and the benchmark symbol."),
+                                                     p("2) Top right - Data tables containing details on calculated rolling correlations are available for use and download."),
+                                                     p("3) Bottom left - Interactive charts containing monthly stock prices for the 4 stocks."),
+                                                     p("4) Bottom right - Interactive charts containing Anomaly Diagnostics on certain potential turning points in the price action of the 4 stocks.")
+                                                 )),
+                                             box(title = "(F) Forecasting Analysis",
+                                                 div(
+                                                     class = "text-left",
+                                                     p("The Time Series Forecasting tab is split into 3 main logical segments:"),
+                                                     p("1) Top left - Forecasting parameters that users can select and change"),
+                                                     p("2) Top right - Data tables containing accuracy measures of the various forecasting models"),
+                                                     p("3) Bottom - Forecast plot showing historical and forecasted prices based on the mean forecast of the top 3 performing models")
+                                                 )))
+                                    ))
                 )
                 
                 ),
         tabItem(tabName = "tab1",
                 # Button to simulate and test for disconnection, and disconnect message
                 # actionButton("disconnect", "Disconnect the app"),
+                
                 fluidRow(
                     box(title = "Technical Analysis Charts", collapsible = TRUE, width = 12,
                         tabBox(width = 12,
@@ -463,8 +543,6 @@ ui <- dashboardPage(
     controlbar = dashboardControlbar(collapsed = TRUE, skinSelector()),
     footer = dashboardFooter(left = "Made with R Shiny", right = "Singapore, 2021"),
     title = "Skin Selector")
-
-# tags$img(src = './www/inVIZments_noR.jpg')
 
 # Server Object
 server <- function(input, output, session){
