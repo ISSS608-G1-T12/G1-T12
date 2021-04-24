@@ -1,5 +1,7 @@
 ---
-title: Investing101 - Bringing financial literacy to the masses
+title: inVIZments - An RShiny Visual Application
+poster_height: "33.11in"
+poster_width: "23.39in"
 author:
   - name: Andre Lee
     affil: 1
@@ -9,16 +11,24 @@ author:
     affil: 3
 affiliation:
   - num: 1
-    address: Singapore Management University
+    address: MITB, Singapore Management University
   - num: 2
-    address: Singapore Management University
+    address: MITB, Singapore Management University
   - num: 3
-    address: Singapore Management University
+    address: MITB, Singapore Management University
 column_numbers: 3
+main_fontfamily: "rasa"
+main_findings: inVIZments is the helping hand you always need but never got when making investment decisions.
 logoright_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png
 logoleft_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png
+main_textsize: "120px"
+title_textsize: "70px"
+body_textsize: "25px"
+primary_colour: "#41485C"
+secondary_colour: "#41485C"
+accent_colour: "#41485C"
 output: 
-  posterdown::posterdown_html:
+  posterdown::posterdown_betterport:
     self_contained: false
 bibliography: packages.bib
 ---
@@ -35,15 +45,40 @@ In 2020, the combination of unprecedented stock market volatility and COVID-19 l
   
   Having identified this gap, we developed Investing101, an interactive visual analytics application to allow investors to not only retrieve basic price information of stocks, but also apply machine learning models such as ARIMA forecasting and hierarchical clustering. 
   
-## Main Components
+# Motivation & Objectives
+Our research was motivated by the lack of effective and easy to use web-enabled analytics tools for investment planning especially in heightened investment interest brought about by Covid-19. We aim to provide investors with an analytical tool that supports the following analysis requirements: 
 
-1. Technical Indicators
+1. To be able to conduct technical, portfolio analysis and correlation analysis amongst multiple stocks; 
+2. To create a clustering visualization of related stocks so users can diversify their holdings; 
+3. To provide a forecast of future stock prices for users to identify suitable entry/exit points.
+
+1. To be able to conduct technical, portfolio analysis and correlation analysis amongst multiple stocks; 
+2. To create a clustering visualization of related stocks so users can diversify their holdings; 
+3. To provide a forecast of future stock prices for users to identify suitable entry/exit points.  
+  
+The Main Components of the App will be:
+
+1. Charting and Technical Analysis
 2. Stock clustering
 3. Stock price forecasting
 
-# Methods
+# Methods 
 
-This package uses the same workflow approach as the R Markdown you know and love. Basically it goes from RMarkdown > Knitr > Markdown > Pandoc > HTML/CSS > PDF. You can even use the bibliography the same way [@R-posterdown].
+The whole application is built on R using a host of open source R packages. 
+
+In terms of architecture: we have decided to design and develop Investing101 based on **R Shiny**. [Shiny](https://shiny.rstudio.com/articles/shiny-server.html) is an open source R package that provides an elegant and powerful web framework for building web applications using R. Shiny helps you turn your analyses into interactive web applications without requiring HTML, CSS, or JavaScript knowledge.The design of the Shiny server allows us to make the application available across the Internet (i.e. to the masses). The Shiny Server will host each app at its own web address and automatically start the app when a user visits the address. When the user leaves, Shiny Server will automatically stop the app. This reduces the need for maintenance and infrastructure costs, thus allowing us to provide our application to a wider audience for FREE.
+
+The other key packages used for modeling and visualizations are: **Tidyquant**, **timetk** , **Modeltime**, **dygraphs**, **dendextend**.
+
+# Application optimisation and UX Choices
+
+Some of the key features of the application were built with the following considerations in mind:
+
+1. Functionality. To allow a variety of users to fulfil different investment objectives, be it a short-term trader, a long term investor, a user looking to compare portfolios, and more. In addition, a few other key design choices include: a) opting for interactive charts such as plotly and dygraphs, b) allowing users to download data tables (both current and all pages), c) taking a screenshot, etc.
+
+2. User experience. Some key considerations include: a) Sequencing of sub-modules in the tabs, b) Using tabbed box for logically grouped objects, while reducing clutter, c) Relevant user feedback such as shinycssloader package (loading animation), shinydisconnect package (useful information in case of server disconnect), d) Adding a “getting started” landing page to allow users to quickly get familiarized, e) Compartmentalizing code into modules, allowing future users to better make sense of the inner makings of this complex app (code base in main app.R reduced from 1.8k lines to around 1k), f) Using reactivity for certain calculations, improving responsiveness and efficiency, etc.
+
+3. Aesthetics. Some key considerations include: a) Using a dashboard layout, utilizing boxes and tabbed boxes to position objects logically, b) Updating the look and feel by changing the default dashboard theme, c) Adding various icons, and many other small quality of life tweaks around the app through experimentation and multiple iterations, etc.
 
 # Results
 
@@ -61,28 +96,16 @@ Or with figures: Figure \@ref(fig:standard-plot), or Figure \@ref(fig:morefigs).
 plot(mtcars[1:2])
 ```
 
-```{r morefigs, out.width='80%', echo=TRUE, fig.cap='Amazing, right?!', fig.height=5}
-data <- iris
-
-plot(x = data$Sepal.Length, 
-     y = data$Sepal.Width, 
-     col = data$Species,
-     pch = 19, 
-     xlab = "Sepal Length (cm)",
-     ylab = "Sepal Width (cm)")
-
-```
-
 # Next Steps
 
-Aliquam sed faucibus risus, quis efficitur erat. Vestibulum semper mauris quis tempus eleifend. Aliquam sagittis dictum ipsum, quis viverra ligula eleifend ut. Curabitur sagittis vitae arcu eget faucibus. In non elementum felis. Duis et aliquam nunc. Nunc pulvinar sapien nunc, vel pretium nisi efficitur in. Fusce fringilla maximus leo et maximus. Fusce at ligula laoreet, iaculis mi at, auctor odio. Praesent sed elementum justo. Aenean consectetur risus rhoncus tincidunt efficitur. Praesent dictum mauris at diam maximus maximus [@R-posterdown].
+1. For the Charting sub-module, we can include a wider range of technical indicators for the investor to overlay on the candlestick charts. A backtesting module can also be incorporated to simulate trading performance based on technical analysis.
+
+2. For the Time Series Forecasting sub-module, we can potentially include more choices of forecasting models which the investor may wish to explore. This will also allow for comparison of forecasts across models.
+
+3. For the clustering sub-module, explore incorporating a wider range of financial variables to cluster upon. The financial variables data used in this sub-module was manually pulled from Bloomberg as there is no current R package that allows for the pulling of historical financial variables. Work can be done to pull data from a wider range of both financial variables as well as stocks, so that investors can do cluster analysis on more classes of stocks other than technology stocks, and also on more financial variables than is currently available on our application.
 
 # Conclusion
 
-Try `posterdown` out! Hopefully you like it!
-
-```{r, include=FALSE}
-knitr::write_bib(c('knitr','rmarkdown','posterdown','pagedown'), 'packages.bib')
-```
+This application was targeted at investors to provide useful tools to aid them in their investing process that traditional sources do not provide. This motivation was brought about by the heightened interest in investing following the market volatility which was brought about by COVID-19. 
 
 # References
