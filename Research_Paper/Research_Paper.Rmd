@@ -32,7 +32,7 @@ library(kableExtra)
 # Introduction 
 Most retail investors rely on traditional financial data websites such as Yahoo Finance to retrieve relevant financial data to aid in their investing decisions. However, these sites' offerings tend to be homogeneous and comprise usual information such as price quotes, market commentary and corporate actions. Investors are left on their own to make sense of these information, without tools to further perform actions such as price forecasting or segmenting stocks into groups.
 
-Having identified this gap, we developed Investing101, an interactive visual analytics dashboard to allow investors to not only retrieve basic price information of stocks, but also apply models such as ARIMA forecasting and hierarchical clustering.  The application will also allow users to construct bespoke portfolios and see their historical performances. On top of this, the dashboard also provides users with a tool that readily aggregates and interprets candlestick patterns for the user. All these different tools come together to deliver a product that adds value that far exceeds what traditional finance data websites can provide.
+Having identified this gap, we developed InVIZments, an interactive visual analytics dashboard to allow investors to not only retrieve basic price information of stocks, but also apply models such as ARIMA forecasting and hierarchical clustering.  The application will also allow users to construct bespoke portfolios and see their historical performances. On top of this, the dashboard also provides users with a tool that readily aggregates and interprets candlestick patterns for the user. All these different tools come together to deliver a product that adds value that far exceeds what traditional finance data websites can provide.
 
 
 # Motivation & Objectives
@@ -68,7 +68,7 @@ This research provides opportunities to address the limitations of existing lite
 
 ## System Design & Architecture
 
-After careful consideration and specially taking into account the need to bring financial literacy to the masses we have decided to design and develop Investing101 based on R Shiny. [Shiny](https://shiny.rstudio.com/articles/shiny-server.html) is an open source R package that provides an elegant and powerful web framework for building web applications using R. Shiny helps you turn your analyses into interactive web applications without requiring HTML, CSS, or JavaScript knowledge.
+After careful consideration and specially taking into account the need to bring financial literacy to the masses we have decided to design and develop InVIZments based on R Shiny. [Shiny](https://shiny.rstudio.com/articles/shiny-server.html) is an open source R package that provides an elegant and powerful web framework for building web applications using R. Shiny helps you turn your analyses into interactive web applications without requiring HTML, CSS, or JavaScript knowledge.
 
 The design of the Shiny server allows us to make the application available across the Internet (i.e. to the masses). The Shiny Server will host each app at its own web address and automatically start the app when a user visits the address. When the user leaves, Shiny Server will automatically stop the app. This reduces the need for maintenance and infrastructure costs, thus allowing us to provide our application to a wider audience for FREE.
 
