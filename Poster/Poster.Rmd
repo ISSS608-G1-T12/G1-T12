@@ -15,8 +15,8 @@ affiliation:
 column_numbers: 3
 main_fontfamily: "rasa"
 main_findings: inVIZment - The helping hand you always needed but never got
-logoright_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png
-logoleft_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/betterhexlogo.png
+logoright_name: images/inVIZments.png
+logoleft_name: images/inVIZments.png
 main_textsize: "120px"
 title_textsize: "70px"
 body_textsize: "25px"
